@@ -115,7 +115,7 @@ export async function POST(request: Request) {
 
     if (missingEnvironmentVariables.length) {
       console.error("[quote] Missing environment variables:", missingEnvironmentVariables);
-      return NextResponse.json({ ok: false }, { status: 500 });
+      return NextResponse.json({ ok: false }, { status: 503 });
     }
 
     const body = (await request.json()) as QuoteRequest;
