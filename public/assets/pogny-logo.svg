@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="310" height="76" viewBox="0 0 310 76" role="img" aria-labelledby="title desc">
+  <title id="title">POGNY FILM</title>
+  <desc id="desc">Shield window film logo with POGNY FILM text</desc>
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f9e3ba"/>
+      <stop offset="0.48" stop-color="#c99664"/>
+      <stop offset="1" stop-color="#f4d9ad"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M39 8c13 0 27 8 27 8v22c0 15-9 24-27 31C21 62 12 53 12 38V16s14-8 27-8Z" stroke-width="4"/>
+    <path d="M39 17c9 0 18 5 18 5v16c0 10-6 17-18 22-12-5-18-12-18-22V22s9-5 18-5Z" stroke-width="3"/>
+    <path d="M22 48 59 27" stroke-width="5"/>
+    <path d="M26 58 60 38" stroke-width="4"/>
+    <path d="M19 36h30M23 48h27M32 24v35M45 21v32" stroke-width="3" opacity=".82"/>
+    <path d="M31 31c2-8 14-8 16 0" stroke-width="3"/>
+  </g>
+  <g fill="url(#gold)">
+    <text x="86" y="29" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="1.4">
+      Block Heat, Stay Protect
+    </text>
+    <text x="84" y="61" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="31" font-weight="900" letter-spacing="1">
+      POGNY FILM
+    </text>
+  </g>
+</svg>
