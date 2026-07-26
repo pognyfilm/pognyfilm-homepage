@@ -1,5 +1,6 @@
 import LegacyInteractions from "./LegacyInteractions";
 import FilmFinder from "../components/FilmFinder";
+import FaqSection from "../components/FaqSection";
 
 const legacyHtml = String.raw`<header class="site-header">
       <a class="logo" href="#home" aria-label="포그니필름 홈">
@@ -25,7 +26,7 @@ const legacyHtml = String.raw`<header class="site-header">
           <p class="eyebrow">PG PERFORMANCE LAB</p>
           <h1>공간에 맞는 필름은<br /><span>따로 있습니다</span></h1>
           <p class="hero-copy">
-            제조부터 시공, 품질보증까지<br />
+            상담부터 시공, 품질보증까지<br />
             포그니필름이 직접 책임집니다.
           </p>
           <div class="hero-actions">
@@ -41,12 +42,12 @@ const legacyHtml = String.raw`<header class="site-header">
               <dd><strong>99%</strong><span>자외선 차단</span></dd>
             </div>
             <div>
-              <dt>VLT</dt>
-              <dd><strong>05-70</strong><span>제품별 가시광선</span></dd>
+              <dt>IRR</dt>
+              <dd><strong>99%</strong><span>적외선차단</span></dd>
             </div>
             <div>
-              <dt>IRR</dt>
-              <dd><strong>DATA</strong><span>시험성적서 확인</span></dd>
+              <dt>VLT</dt>
+              <dd><strong>5~70%</strong><span>제품별 가시광선</span></dd>
             </div>
           </dl>
         </aside>
@@ -56,11 +57,11 @@ const legacyHtml = String.raw`<header class="site-header">
         <div class="stats-inner">
           <article>
             <span><b>01</b> 누적 시공</span>
-            <strong><span class="count-up" data-target="10000">0</span>건+</strong>
+            <strong><span class="count-up" data-target="10000">10,000</span>건 돌파</strong>
           </article>
           <article>
-            <span><b>02</b> 직접 운영하는</span>
-            <strong>본사 직영 시공팀</strong>
+            <span><b>02</b> 외주 없는</span>
+            <strong>직영 관리 시스템</strong>
           </article>
           <article>
             <span><b>03</b> 시공 후에도 안심</span>
@@ -530,44 +531,19 @@ const legacyHtml = String.raw`<header class="site-header">
           <div class="data-report-metrics" aria-label="시공 전 대비 1년 후 핵심 변화">
             <article class="data-report-metric primary">
               <span>전기사용량 변화</span>
-              <strong>436kWh → 343kWh</strong>
-              <em>93kWh 감소</em>
-              <p>시공 전 대비 21.3% 감소</p>
+              <strong>436kWh → 318kWh</strong>
+              <em>118kWh 감소</em>
+              <p>시공 전 대비 27.1% 감소</p>
             </article>
             <article class="data-report-metric primary">
               <span>세대전기요금 변화</span>
-              <strong>102,940원 → 68,190원</strong>
-              <em>34,750원 감소</em>
-              <p>시공 전 대비 33.8% 감소</p>
-            </article>
-            <article class="data-report-metric support">
-              <span>총 관리비 변화</span>
-              <strong>238,550원 → 189,300원</strong>
-              <em>49,250원 감소</em>
-              <p>시공 전 대비 20.6% 감소</p>
+              <strong>102,940원 → 62,100원</strong>
+              <em>40,840원 감소</em>
+              <p>시공 전 대비 39.7% 감소</p>
             </article>
           </div>
 
-          <p class="data-report-summary-note">2026년에는 2025년보다 전기사용량과 전기요금이 일부 증가했지만, 시공 전인 2024년과 비교하면 여전히 낮은 수준을 유지하고 있습니다.</p>
-
-          <div class="data-report-tech-grid" aria-label="데이터 변화를 뒷받침하는 포그니필름 기술 근거">
-            <article class="data-tech-card">
-              <span>Technology 01</span>
-              <h3>유리창으로 들어오는 열을 줄이는 열차단 성능</h3>
-              <p>태양열 유입을 줄여 실내 냉방 부담을 낮추고 쾌적한 실내 환경을 유지하는 데 도움을 줍니다.</p>
-            </article>
-            <article class="data-tech-card">
-              <span>Technology 02</span>
-              <h3>자외선·적외선 차단과 밝기 선택</h3>
-              <p>자외선과 적외선을 차단하면서 공간의 용도에 맞는 밝기를 선택할 수 있습니다.</p>
-              <div class="data-tech-chips">
-                <em>자외선 차단율 99%</em>
-                <em>적외선 차단율 99%</em>
-                <em>가시광선 투과율 5%~70%</em>
-              </div>
-              <small>제품별 시험성적서 기준 · 제품별 상이</small>
-            </article>
-          </div>
+          <p class="data-report-summary-note">2024년 열차단필름 시공 이후<br />2025년 전기사용량이 크게 감소하였으며,<br />2년이 지난 2026년에도 절감 효과가 안정적으로 유지되고 있습니다.</p>
 
           <div class="data-report-actions">
             <button class="data-report-source-button" type="button" data-report-open aria-haspopup="dialog" aria-controls="management-report-modal">실제 납부내역 확대보기</button>
@@ -636,12 +612,7 @@ const legacyHtml = String.raw`<header class="site-header">
         <div class="intro-inner">
           <div class="intro-copy">
             <p class="eyebrow">DIRECT TEAM PROMISE</p>
-            <h2 id="intro-title">상담부터 시공까지,<br />포그니가 직접 책임집니다</h2>
-            <p>
-              하루 최대 2곳만 시공하는 이유는 분명합니다.<br />
-              상담부터 현장 확인, 시공과 최종 검수까지 본사 직영팀이 직접 책임지기 때문입니다.
-            </p>
-            <strong>외주나 하청 없이, 한 팀이 끝까지 함께합니다.</strong>
+            <h2 id="intro-title"><span class="intro-yesman">YES맨</span><br />이반장 &amp; 이실장<br /><br /><span class="intro-subtitle">상담부터 시공까지,<br />포그니가 직접 책임집니다.</span></h2>
           </div>
           <aside class="intro-poster intro-team-photo" aria-label="포그니필름 본사 직영팀 사진">
             <img src="/assets/pogny-team-photo.jpg" alt="포그니필름 본사 직영팀" />
@@ -649,15 +620,12 @@ const legacyHtml = String.raw`<header class="site-header">
           </aside>
         </div>
         <div class="intro-closing" aria-label="포그니필름 책임 시공 약속">
-          <p class="intro-closing-lead">
-            좋은 시공은 작업이 끝나는 순간이 아니라,<br />
-            고객님의 일상이 더 편안해지는 순간 완성됩니다.
-          </p>
           <p>
-            필름 한 장을 시공하는 일이지만,<br />
-            그 공간에서 보내실 고객님의 시간까지 생각하겠습니다.<br />
-            처음 상담부터 마지막 검수까지, 포그니필름이 끝까지 책임지겠습니다.
+            수년간 하루 최대 2건만 시공하는 이유는 분명합니다. 상담부터 현장 확인, 시공, 마지막 검수까지 외주나 하청 없이 본사 직영팀이 직접 책임지고 진행하기 때문입니다.
+            좋은 시공은 작업이 끝나는 순간이 아니라 고객님의 일상이 더 편안해지는 순간 완성된다고 믿습니다.<br />
+            포그니필름은 처음 상담부터 마지막 검수까지 끝까지 책임지는 직영 관리 시스템을 운영합니다.
           </p>
+          <strong class="intro-signature"><span class="intro-signature-brand">포그니필름</span><span class="intro-signature-name">이반장</span></strong>
         </div>
       </section>
 
@@ -704,22 +672,10 @@ const legacyHtml = String.raw`<header class="site-header">
         </div>
       </section>
 
-      <section class="section quote" id="quote" aria-labelledby="quote-title">
+      <section class="section quote" id="quote" aria-label="자주 묻는 질문 및 견적 문의">
         <div class="quote-shell">
           <div class="quote-copy">
-            <p class="eyebrow">Contact</p>
-            <h2 id="quote-title">내 공간에 맞는 필름,<br />전문가에게 문의하세요</h2>
-            <p>공간의 용도와 유리 환경을 확인해 PG FILM Series 중 적합한 제품을 안내해드립니다. 남겨주신 문의는 담당자가 확인 후 빠르게 연락드립니다.</p>
-            <div class="quote-trust-list" aria-label="포그니필름 상담 신뢰 요소">
-              <span><i aria-hidden="true">✓</i>무료 방문 실측</span>
-              <span><i aria-hidden="true">✓</i>공간별 맞춤 제품 제안</span>
-              <span><i aria-hidden="true">✓</i>본사 직영 전문 시공팀</span>
-              <span><i aria-hidden="true">✓</i>정품 품질보증서 발급</span>
-            </div>
-            <a class="quote-phone" href="tel:18334236" aria-label="빠른 전화 상담 1833-4236">
-              <span>빠른 전화 상담</span>
-              <strong>1833-4236</strong>
-            </a>
+            <div id="faq-root"></div>
           </div>
           <form class="quote-form" data-quote-form>
             <div class="quote-form-head full">
@@ -768,20 +724,11 @@ const legacyHtml = String.raw`<header class="site-header">
         <div class="footer-main">
           <div class="footer-brand">
             <img class="footer-logo" src="/assets/pogny-logo-gold.png" alt="POGNY FILM" />
-            <p>제조부터 시공, 품질보증까지<br />포그니필름이 직접 책임집니다.</p>
+            <p>상담부터 시공, 품질보증까지<br />포그니필름이 직접 책임집니다.</p>
           </div>
-          <nav class="footer-links" aria-label="푸터 바로가기">
-            <strong>바로가기</strong>
-            <a href="#products">PG FILM Series</a>
-            <a href="#cases">시공사례</a>
-            <a href="#film-finder-root">필름 추천</a>
-            <a href="#warranty">품질보증</a>
-            <a href="#quote">견적 문의</a>
-          </nav>
           <div class="footer-contact">
             <strong>고객 상담</strong>
             <a class="footer-phone" href="tel:18334236">1833-4236</a>
-            <a href="mailto:pognyfilm@naver.com">pognyfilm@naver.com</a>
           </div>
         </div>
         <div class="footer-bottom">
@@ -804,7 +751,6 @@ const legacyHtml = String.raw`<header class="site-header">
           <path d="M32 12C18.2 12 7 20.7 7 31.5c0 7 4.7 13.1 11.7 16.5l-2 8.2 9.7-5.4c1.8.3 3.7.4 5.6.4 13.8 0 25-8.7 25-19.5S45.8 12 32 12Z" />
           <text x="32" y="36" text-anchor="middle">TALK</text>
         </svg>
-        <em>365</em>
       </a>
       <a class="quick-item quick-call" href="tel:18334236" aria-label="전화문의 1833-4236">
         <svg viewBox="0 0 64 64" aria-hidden="true">
@@ -823,7 +769,6 @@ const legacyHtml = String.raw`<header class="site-header">
           <path d="M24 49 32 57l8-8" />
           <text x="32" y="36" text-anchor="middle">blog</text>
         </svg>
-        <em>24</em>
       </a>
     </nav>`;
 
@@ -832,13 +777,13 @@ const legacyHtmlWithFinderSlot = legacyHtml.replace(
   filmFinderMarker,
   `      <div id="film-finder-root"></div>\n      ${filmFinderMarker}`,
 );
-
 export default function Home() {
   return (
     <>
       <div dangerouslySetInnerHTML={{ __html: legacyHtmlWithFinderSlot }} />
       <FilmFinder />
-      <LegacyInteractions />
+      <FaqSection />
+      <LegacyInteractions key={legacyHtmlWithFinderSlot} />
     </>
   );
 }

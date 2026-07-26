@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap");
+
 :root {
   --navy: #06172c;
   --deep: #020a14;
@@ -89,6 +91,16 @@ img {
   letter-spacing: 0;
 }
 
+.intro .intro-yesman {
+  color: var(--blue);
+  text-decoration: underline;
+  text-decoration-color: #e53935;
+}
+
+.intro .intro-subtitle {
+  font-size: 66%;
+}
+
 .intro .intro-copy > p:not(.eyebrow) {
   max-width: 760px;
   margin-top: 28px;
@@ -167,6 +179,31 @@ img {
   font-size: clamp(16px, 1.35vw, 18px);
   line-height: 1.78;
   font-weight: 700;
+}
+
+.intro .intro-signature {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 22px;
+  color: #07182e;
+  font-size: clamp(18px, 1.8vw, 26px);
+  text-align: right;
+}
+
+.intro .intro-signature-brand {
+  font-family: "Pretendard", "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.intro .intro-signature-name {
+  font-family: "Nanum Pen Script", cursive;
+  font-size: 1.55em;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
 }
 
 @media (max-width: 900px) {
@@ -5086,13 +5123,15 @@ h3 {
 }
 
 .warranty {
+  padding-top: clamp(54px, 7vw, 88px);
+  padding-bottom: clamp(54px, 7vw, 88px);
   background:
     linear-gradient(180deg, #f5f7fa 0%, #ffffff 38%, #f3f8fc 100%);
 }
 
 .warranty-hero {
   width: min(920px, 100%);
-  margin: 0 auto 46px;
+  margin: 0 auto 32px;
   text-align: center;
 }
 
@@ -5321,6 +5360,145 @@ h3 {
   background:
     radial-gradient(circle at 12% 18%, rgba(21, 94, 239, 0.11), transparent 32%),
     linear-gradient(135deg, #ffffff 0%, #f7fafe 42%, #eaf4ff 100%);
+}
+
+.faq {
+  width: 100%;
+}
+
+.faq-shell {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.faq-head {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.faq-head .eyebrow {
+  color: var(--blue);
+}
+
+.faq-head h2 {
+  margin: 10px 0 0;
+  color: var(--navy);
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.2;
+}
+
+.faq-head h2 span {
+  display: block;
+  white-space: nowrap;
+}
+
+.faq-head > p:last-child {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.faq-list {
+  display: grid;
+  gap: 10px;
+}
+
+.faq-item {
+  overflow: hidden;
+  border: 1px solid rgba(20, 105, 216, 0.16);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 12px 34px rgba(6, 23, 44, 0.06);
+}
+
+.faq-item button {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 24px;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  padding: 17px 18px;
+  border: 0;
+  color: var(--navy);
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+}
+
+.faq-item button strong {
+  font-size: clamp(15px, 1.35vw, 18px);
+  line-height: 1.45;
+}
+
+.faq-q {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--blue);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.faq-toggle {
+  color: var(--blue);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+}
+
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.faq-answer p {
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+  padding: 0 50px 0 62px;
+  color: #4b5d72;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.8;
+  transition: padding 0.25s ease;
+}
+
+.faq-item.is-open .faq-answer {
+  grid-template-rows: 1fr;
+}
+
+.faq-item.is-open .faq-answer p {
+  padding-top: 2px;
+  padding-bottom: 18px;
+}
+
+@media (max-width: 640px) {
+  .faq-head {
+    margin-bottom: 24px;
+  }
+
+  .faq-head > p:last-child {
+    font-size: 15px;
+  }
+
+  .faq-item button {
+    grid-template-columns: 34px minmax(0, 1fr) 24px;
+    gap: 10px;
+    padding: 18px 16px;
+  }
+
+  .faq-answer p {
+    padding-right: 52px;
+    padding-left: 60px;
+    font-size: 15px;
+  }
 }
 
 .quote-shell {
@@ -5568,7 +5746,7 @@ h3 {
 
 .footer {
   display: block;
-  padding: 48px clamp(20px, 5vw, 72px) 42px;
+  padding: 34px clamp(20px, 5vw, 72px) 30px;
   color: rgba(245, 241, 235, 0.78);
   background: var(--logo-dark);
 }
@@ -5594,15 +5772,15 @@ h3 {
 
 .footer-main {
   display: grid;
-  grid-template-columns: minmax(260px, 1.3fr) minmax(180px, 0.7fr) minmax(220px, 0.8fr);
+  grid-template-columns: minmax(260px, 1fr) auto;
   gap: clamp(28px, 5vw, 80px);
   align-items: start;
 }
 
 .footer-brand {
-  display: grid;
-  gap: 14px;
-  justify-items: start;
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
 .footer-brand p {
@@ -5651,8 +5829,8 @@ h3 {
 .footer-bottom {
   display: grid;
   gap: 14px;
-  margin: 34px 0 0;
-  padding-top: 18px;
+  margin: 27px 0 0;
+  padding-top: 14px;
   border-top: 1px solid rgba(217, 180, 138, 0.18);
 }
 
@@ -6022,7 +6200,7 @@ h3 {
   }
 
   .footer {
-    padding: 34px 20px 96px;
+    padding: 26px 20px 72px;
   }
 
   .footer-inner {
@@ -8279,9 +8457,14 @@ h3 {
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 18px 45px rgba(7, 24, 46, 0.08);
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.55s ease, transform 0.55s ease, border-color 0.22s ease;
+}
+
+.impact-lab.is-impact-pending .data-period-card {
   opacity: 0;
   transform: translateY(18px);
-  transition: opacity 0.55s ease, transform 0.55s ease, border-color 0.22s ease;
 }
 
 .impact-lab.is-impact-visible .data-period-card {
@@ -8448,14 +8631,14 @@ h3 {
 
 .data-report-summary-note {
   margin: 18px 0 0;
-  padding: 16px 20px;
+  padding: 24px 20px;
   border: 1px solid rgba(21, 94, 239, 0.16);
   border-radius: 16px;
   background: rgba(234, 244, 255, 0.72);
   color: #07182e;
-  font-size: 16px;
-  font-weight: 800;
-  line-height: 1.65;
+  font-size: 18.4px;
+  font-weight: 700;
+  line-height: 1.6;
   text-align: center;
 }
 

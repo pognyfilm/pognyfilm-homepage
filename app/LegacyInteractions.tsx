@@ -247,10 +247,22 @@ export default function LegacyInteractions() {
     }
 
     const counters = Array.from(document.querySelectorAll<HTMLElement>(".count-up"));
+    const counterFrames = new Map<HTMLElement, number>();
+    const finishCounter = (counter: HTMLElement) => {
+      const target = Number(counter.dataset.target || 0);
+      counter.textContent = formatNumber(target);
+      counter.dataset.hasAnimated = "true";
+      const frame = counterFrames.get(counter);
+      if (frame) cancelAnimationFrame(frame);
+      counterFrames.delete(counter);
+    };
+
     const animateCounter = (counter: HTMLElement) => {
       const target = Number(counter.dataset.target || 0);
       const duration = target === 0 ? 400 : 1800;
       const startTime = performance.now();
+      counter.dataset.hasAnimated = "true";
+      counter.textContent = "0";
 
       const tick = (now: number) => {
         const progress = Math.min((now - startTime) / duration, 1);
@@ -258,11 +270,13 @@ export default function LegacyInteractions() {
         counter.textContent = formatNumber(Math.round(target * eased));
 
         if (progress < 1) {
-          requestAnimationFrame(tick);
+          counterFrames.set(counter, requestAnimationFrame(tick));
+        } else {
+          finishCounter(counter);
         }
       };
 
-      requestAnimationFrame(tick);
+      counterFrames.set(counter, requestAnimationFrame(tick));
     };
 
     if (counters.length) {
@@ -271,7 +285,12 @@ export default function LegacyInteractions() {
           entries.forEach((entry) => {
             if (!entry.isIntersecting) return;
 
-            animateCounter(entry.target as HTMLElement);
+            const counter = entry.target as HTMLElement;
+            if (counter.dataset.hasAnimated === "true") {
+              finishCounter(counter);
+            } else {
+              animateCounter(counter);
+            }
             observer.unobserve(entry.target);
           });
         },
@@ -279,10 +298,17 @@ export default function LegacyInteractions() {
       );
 
       counters.forEach((counter) => {
-        counter.textContent = "0";
+        if (counter.dataset.hasAnimated === "true") {
+          finishCounter(counter);
+          return;
+        }
+        counter.textContent = formatNumber(Number(counter.dataset.target || 0));
         counterObserver.observe(counter);
       });
-      cleanupCallbacks.push(() => counterObserver.disconnect());
+      cleanupCallbacks.push(() => {
+        counterObserver.disconnect();
+        counters.forEach(finishCounter);
+      });
     }
 
     const productTabs = Array.from(document.querySelectorAll<HTMLElement>("[data-product-tab]"));
@@ -518,6 +544,7 @@ export default function LegacyInteractions() {
     const impactLab = document.querySelector<HTMLElement>(".impact-lab");
 
     if (impactLab) {
+      impactLab.classList.add("is-impact-pending");
       const animationFrames: number[] = [];
       const animationTimers: number[] = [];
       const impactCards = Array.from(impactLab.querySelectorAll<HTMLElement>(".impact-card"));
@@ -602,6 +629,7 @@ export default function LegacyInteractions() {
 
       const runImpactAnimation = () => {
         impactLab.classList.add("is-impact-visible");
+        impactLab.classList.remove("is-impact-pending");
         clearAnimationWork();
         impactCards.forEach((card) => runCardAnimation(card, false));
       };
@@ -671,6 +699,8 @@ export default function LegacyInteractions() {
 
       cleanupCallbacks.push(() => {
         impactObserver.disconnect();
+        impactLab.classList.remove("is-impact-pending");
+        impactLab.classList.add("is-impact-visible");
         clearAnimationWork();
         if (reportCloseTimer) {
           window.clearTimeout(reportCloseTimer);
