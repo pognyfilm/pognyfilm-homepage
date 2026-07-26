@@ -733,25 +733,76 @@ export default function LegacyInteractions() {
     const quoteForm = document.querySelector<HTMLFormElement>("[data-quote-form]");
     const quoteMessage = document.querySelector<HTMLElement>("[data-quote-message]");
     const quotePrivacy = document.querySelector<HTMLInputElement>("[data-quote-privacy]");
+    const quoteSubmitButton = quoteForm?.querySelector<HTMLButtonElement>('button[type="submit"]');
 
-    if (quoteForm && quoteMessage) {
+    if (quoteForm && quoteMessage && quoteSubmitButton) {
+      const defaultSubmitLabel = quoteSubmitButton.textContent || "무료 견적 요청하기";
+      let isSubmitting = false;
+
       const setQuoteMessage = (message: string, isSuccess = false) => {
         quoteMessage.textContent = message;
         quoteMessage.classList.toggle("success", isSuccess);
       };
 
-      addListener(quoteForm, "submit", (event) => {
+      const setSubmitting = (submitting: boolean) => {
+        isSubmitting = submitting;
+        quoteSubmitButton.disabled = submitting;
+        quoteSubmitButton.textContent = submitting ? "접수 중..." : defaultSubmitLabel;
+        quoteForm.setAttribute("aria-busy", String(submitting));
+      };
+
+      addListener(quoteForm, "submit", async (event) => {
+        event.preventDefault();
+
+        if (isSubmitting) return;
+
         if (!quoteForm.checkValidity()) {
-          event.preventDefault();
           setQuoteMessage("필수 항목과 개인정보 동의 여부를 확인해주세요.");
           quoteForm.reportValidity();
           return;
         }
 
-        if (!quoteForm.getAttribute("action")) {
-          event.preventDefault();
-          setQuoteMessage("문의 내용이 확인되었습니다. 담당자가 확인 후 빠르게 연락드리겠습니다.", true);
+        const formData = new FormData(quoteForm);
+        const phone = String(formData.get("phone") || "").replace(/[^0-9]/g, "");
+
+        if (!/^010\d{8}$/.test(phone)) {
+          setQuoteMessage("연락처를 010-0000-0000 형식으로 입력해주세요.");
+          quoteForm.querySelector<HTMLInputElement>('[name="phone"]')?.focus();
+          return;
+        }
+
+        setQuoteMessage("");
+        setSubmitting(true);
+
+        try {
+          const response = await fetch("/api/quote", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: String(formData.get("name") || ""),
+              phone,
+              area: String(formData.get("area") || ""),
+              space: String(formData.get("space") || ""),
+              message: String(formData.get("message") || ""),
+              privacyConsent: formData.get("privacyConsent") === "on",
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Quote request failed");
+          }
+
+          setQuoteMessage(
+            "문의가 정상적으로 접수되었습니다.\n담당자가 확인 후 빠르게 연락드리겠습니다.\n급한 상담은 1833-4236으로 연락주시면\n더 빠르게 상담받으실 수 있습니다.",
+            true,
+          );
           quoteForm.reset();
+        } catch {
+          setQuoteMessage(
+            "문의 접수에 실패했습니다.\n잠시 후 다시 시도해주세요.\n또는 1833-4236으로 전화주시면\n빠르게 상담 가능합니다.",
+          );
+        } finally {
+          setSubmitting(false);
         }
       });
 
