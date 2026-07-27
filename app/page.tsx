@@ -684,15 +684,15 @@ const legacyHtml = String.raw`<header class="site-header">
             </div>
             <label>
               <span>이름 <em>*</em></span>
-              <input type="text" name="name" placeholder="성함을 입력해주세요" required data-quote-required />
+              <input type="text" name="name" placeholder="성함을 입력해주세요" required data-quote-required data-clarity-mask="true" />
             </label>
             <label>
               <span>연락처 <em>*</em></span>
-              <input type="tel" inputmode="tel" autocomplete="tel" name="phone" placeholder="010-0000-0000" required data-quote-required />
+              <input type="tel" inputmode="tel" autocomplete="tel" name="phone" placeholder="010-0000-0000" required data-quote-required data-clarity-mask="true" />
             </label>
             <label>
               <span>지역</span>
-              <input type="text" name="area" placeholder="예: 서울 강남구" />
+              <input type="text" name="area" placeholder="예: 서울 강남구" data-clarity-mask="true" />
             </label>
             <label>
               <span>시공 장소</span>
@@ -705,7 +705,7 @@ const legacyHtml = String.raw`<header class="site-header">
             </label>
             <label class="full">
               <span>문의 내용</span>
-              <textarea name="message" rows="5" placeholder="시공 희망 공간, 대략적인 면적과 요청사항을 남겨주세요."></textarea>
+              <textarea name="message" rows="5" placeholder="시공 희망 공간, 대략적인 면적과 요청사항을 남겨주세요." data-clarity-mask="true"></textarea>
             </label>
             <label class="quote-consent full">
               <input type="checkbox" name="privacyConsent" data-quote-privacy required />
@@ -772,8 +772,21 @@ const legacyHtml = String.raw`<header class="site-header">
       </a>
     </nav>`;
 
+const impactSectionMarker = '<section class="section impact-lab data-report-lab" aria-labelledby="impact-lab-title">';
+const casesSectionMarker = '<section class="section cases" id="cases" aria-labelledby="cases-title">';
+const reasonsSectionMarker = '<section class="section reasons" aria-labelledby="reasons-title">';
+const impactSectionStart = legacyHtml.indexOf(impactSectionMarker);
+const impactSectionEnd = legacyHtml.indexOf(casesSectionMarker);
+const impactSection = legacyHtml.slice(impactSectionStart, impactSectionEnd);
+const legacyHtmlWithoutImpact =
+  legacyHtml.slice(0, impactSectionStart) + legacyHtml.slice(impactSectionEnd);
+const legacyHtmlReordered = legacyHtmlWithoutImpact.replace(
+  reasonsSectionMarker,
+  `${impactSection}${reasonsSectionMarker}`,
+);
+
 const filmFinderMarker = '<section class="section film-demo" aria-labelledby="film-demo-title">';
-const legacyHtmlWithFinderSlot = legacyHtml.replace(
+const legacyHtmlWithFinderSlot = legacyHtmlReordered.replace(
   filmFinderMarker,
   `      <div id="film-finder-root"></div>\n      ${filmFinderMarker}`,
 );

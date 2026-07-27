@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { GLASS_TYPES, PG_FILM_PRODUCTS, type FilmProduct } from "../app/film-recommendation-data";
+import { trackAnalyticsEvent } from "../app/analytics";
 
 type FinderState = {
   space: string;
@@ -225,10 +226,14 @@ export default function FilmFinder() {
     const primary = result.primary?.product.name || "현장 확인 후 안내";
     const message = `[PG FILM 추천 진단 결과]\n\n공간: ${getLabel("space", answers.space)}\n방향: ${answers.directions.map((item) => getLabel("directions", item)).join(", ")}\n중요 기능: ${answers.functions.map((item) => getLabel("functions", item)).join(", ")}\n밝기 선호: ${getLabel("preference", answers.preference)}\n실내 접근: ${getLabel("access", answers.access)}\n층수: ${getLabel("floor", answers.floor)}\n유리 종류: ${getLabel("glass", answers.glass)}\n추천 제품: ${primary}\n\n본 결과는 1차 추천이며, 실제 유리 종류와 현장 환경에 따라 최종 제품은 방문 실측 후 달라질 수 있습니다.`;
     const textarea = document.querySelector<HTMLTextAreaElement>('.quote-form textarea[name="message"]');
+    const quoteForm = document.querySelector<HTMLFormElement>("[data-quote-form]");
     if (textarea) {
       textarea.value = message;
       textarea.dispatchEvent(new Event("input", { bubbles: true }));
       textarea.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    if (quoteForm) {
+      quoteForm.dataset.recommendedProduct = result.primary?.product.code || "site_check_required";
     }
     document.getElementById("quote")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -327,8 +332,15 @@ export default function FilmFinder() {
                 className="primary"
                 disabled={!canProceed || (currentStep.key === "access" && !answers.floor)}
                 onClick={() => {
-                  if (stepIndex === STEPS.length - 1) setShowResult(true);
-                  else setStepIndex((value) => value + 1);
+                  if (stepIndex === STEPS.length - 1) {
+                    trackAnalyticsEvent("film_recommendation", {
+                      recommended_product: result.primary?.product.code || "site_check_required",
+                      space_type: answers.space,
+                    });
+                    setShowResult(true);
+                  } else {
+                    setStepIndex((value) => value + 1);
+                  }
                 }}
               >
                 {stepIndex === STEPS.length - 1 ? "결과 보기" : "다음"}

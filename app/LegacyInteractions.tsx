@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { trackAnalyticsEvent } from "./analytics";
 
 const formatNumber = (value: number) => new Intl.NumberFormat("ko-KR").format(value);
 
@@ -735,6 +736,31 @@ export default function LegacyInteractions() {
     const quotePrivacy = document.querySelector<HTMLInputElement>("[data-quote-privacy]");
     const quoteSubmitButton = quoteForm?.querySelector<HTMLButtonElement>('button[type="submit"]');
 
+    addListener(document, "click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const link = target.closest<HTMLAnchorElement>("a");
+      const button = target.closest<HTMLButtonElement>("button");
+
+      if (button === quoteSubmitButton) {
+        trackAnalyticsEvent("quote_button_click", { form_name: "free_quote" });
+        return;
+      }
+
+      if (!link) return;
+
+      if (link.href.startsWith("tel:")) {
+        trackAnalyticsEvent("phone_click", { link_url: link.href });
+      } else if (link.matches(".quick-kakao")) {
+        trackAnalyticsEvent("kakao_click", { link_url: link.href });
+      } else if (link.matches(".quick-youtube")) {
+        trackAnalyticsEvent("youtube_click", { link_url: link.href });
+      } else if (link.matches(".quick-blog, [data-case-blog]")) {
+        trackAnalyticsEvent("blog_click", { link_url: link.href });
+      }
+    });
+
     if (quoteForm && quoteMessage && quoteSubmitButton) {
       const defaultSubmitLabel = quoteSubmitButton.textContent || "무료 견적 요청하기";
       let isSubmitting = false;
@@ -796,7 +822,15 @@ export default function LegacyInteractions() {
             "문의가 정상적으로 접수되었습니다.\n담당자가 확인 후 빠르게 연락드리겠습니다.\n급한 상담은 1833-4236으로 연락주시면\n더 빠르게 상담받으실 수 있습니다.",
             true,
           );
+          trackAnalyticsEvent("generate_lead", {
+            form_name: "free_quote",
+            lead_source: "website",
+            region: String(formData.get("area") || ""),
+            space: String(formData.get("space") || ""),
+            recommended_product: quoteForm.dataset.recommendedProduct || "not_selected",
+          });
           quoteForm.reset();
+          delete quoteForm.dataset.recommendedProduct;
         } catch {
           setQuoteMessage(
             "문의 접수에 실패했습니다.\n잠시 후 다시 시도해주세요.\n또는 1833-4236으로 전화주시면\n빠르게 상담 가능합니다.",
