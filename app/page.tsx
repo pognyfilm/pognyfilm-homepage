@@ -634,7 +634,7 @@ const legacyHtml = String.raw`<header class="site-header">
           <p class="eyebrow">Support</p>
           <h2 id="warranty-title">품질보증서 조회</h2>
           <p>
-            시공 완료 고객님은 성함과 연락처를 입력해 포그니필름 품질보증서를 확인하실 수 있습니다.
+            시공 완료 고객님은 성함과 연락처를 입력해 포그니필름 품질보증서를 확인하실 수 있습니다.<br />
             등록된 정보와 일치할 경우 보증서 미리보기와 다운로드가 제공됩니다.
           </p>
         </div>
