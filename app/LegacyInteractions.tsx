@@ -830,7 +830,21 @@ export default function LegacyInteractions() {
             }),
           });
 
+          const responseBody = (await response.json().catch(() => null)) as
+            | { code?: string; message?: string }
+            | null;
+
           if (!response.ok) {
+            if (
+              response.status === 503 &&
+              responseBody?.code === "SERVICE_UNAVAILABLE"
+            ) {
+              setQuoteMessage(
+                responseBody.message ||
+                  "현재 상담 접수 시스템 점검 중입니다.\n잠시 후 다시 시도해주세요.",
+              );
+              return;
+            }
             throw new Error("Quote request failed");
           }
 

@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { SolapiMessageService } from "solapi";
-import { createServiceClient } from "../../../lib/supabase/admin";
+import {
+  createServiceClient,
+  hasSupabaseServerConfig,
+  missingSupabaseEnvironmentVariables,
+} from "../../../lib/supabase/admin";
 
 export const runtime = "nodejs";
+
+const SERVICE_MAINTENANCE_MESSAGE =
+  "현재 상담 접수 시스템 점검 중입니다.\n잠시 후 다시 시도해주세요.";
 
 type QuoteRequest = {
   name?: unknown;
@@ -110,6 +117,20 @@ const createEmailHtml = ({
 
 export async function POST(request: Request) {
   try {
+    if (!hasSupabaseServerConfig) {
+      console.error("[quote] Inquiry intake is unavailable due to server configuration.", {
+        missingEnvironmentVariables: missingSupabaseEnvironmentVariables,
+      });
+      return NextResponse.json(
+        {
+          ok: false,
+          code: "SERVICE_UNAVAILABLE",
+          message: SERVICE_MAINTENANCE_MESSAGE,
+        },
+        { status: 503, headers: { "Cache-Control": "no-store" } },
+      );
+    }
+
     const body = (await request.json()) as QuoteRequest;
     const name = normalizeText(body.name, 50);
     const phone = normalizePhone(body.phone);
@@ -124,8 +145,17 @@ export async function POST(request: Request) {
 
     const supabase = createServiceClient();
     if (!supabase) {
-      console.error("[quote] Supabase service configuration is missing.");
-      return NextResponse.json({ ok: false }, { status: 503 });
+      console.error(
+        "[quote] Supabase configuration passed validation but the service client was not created.",
+      );
+      return NextResponse.json(
+        {
+          ok: false,
+          code: "SERVICE_UNAVAILABLE",
+          message: SERVICE_MAINTENANCE_MESSAGE,
+        },
+        { status: 503, headers: { "Cache-Control": "no-store" } },
+      );
     }
 
     const { data: inquiry, error: insertError } = await supabase
