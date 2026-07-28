@@ -201,6 +201,71 @@ const legacyHtml = String.raw`<header class="site-header">
         </div>
       </section>
 
+      <section class="section tser-guide" aria-labelledby="tser-guide-title">
+        <div class="tser-guide-shell">
+          <header class="tser-guide-head">
+            <div class="tser-kicker">
+              <span aria-hidden="true">!</span>
+              <p>잠깐!<br /><strong>혹시 알고 계셨나요?</strong></p>
+            </div>
+            <h2 id="tser-guide-title">미국에서는<br /><span>'열차단율'보다</span><br /><strong>TSER</strong>을 먼저 봅니다.</h2>
+          </header>
+
+          <div class="tser-guide-main">
+            <div class="tser-explainer">
+              <p class="tser-question">“열차단율이 몇 %인가요?”</p>
+              <p>
+                많은 분들이 가장 먼저 묻는 질문이지만,
+                <strong>940nm 적외선 차단율만으로는 필름의 성능을 모두 판단하기 어렵습니다.</strong>
+              </p>
+              <div class="tser-key-message">
+                <span aria-hidden="true">→</span>
+                <p>정말 중요한 것은<br /><strong>태양이 보내는 전체 에너지를 얼마나 차단하는가</strong>입니다.</p>
+              </div>
+            </div>
+
+            <article class="tser-focus-card">
+              <div class="tser-sun" aria-hidden="true">
+                <i></i><i></i><i></i>
+                <span>TSER</span>
+              </div>
+              <div>
+                <p>필름 성능을 보는 올바른 기준</p>
+                <h3>TSER</h3>
+                <strong>총태양에너지차단율</strong>
+                <span>태양 에너지 전체를 기준으로 필름 성능을 확인하는 중요한 기준 중 하나입니다.</span>
+              </div>
+            </article>
+          </div>
+
+          <div class="tser-compare" aria-label="필름 성능 질문 기준 비교">
+            <article class="tser-compare-card is-wrong">
+              <span class="tser-compare-icon" aria-hidden="true">×</span>
+              <div>
+                <small>숫자 하나만 묻기보다</small>
+                <h3>열차단율이<br />얼마예요?</h3>
+              </div>
+            </article>
+            <div class="tser-compare-arrow" aria-hidden="true">→</div>
+            <article class="tser-compare-card is-right">
+              <span class="tser-compare-icon" aria-hidden="true">✓</span>
+              <div>
+                <small>전체 에너지를 확인하는</small>
+                <h3>TSER이<br />얼마예요?</h3>
+              </div>
+            </article>
+          </div>
+
+          <footer class="tser-conclusion">
+            <span class="tser-conclusion-check" aria-hidden="true">✓</span>
+            <div>
+              <h3>숫자보다 중요한 것은 <strong>올바른 기준</strong>입니다.</h3>
+              <p>포그니필름은 시험성적서를 기반으로<br />실제 성능 데이터를 안내해드립니다.</p>
+            </div>
+          </footer>
+        </div>
+      </section>
+
       <section class="section products" id="products" aria-labelledby="products-title">
         <div class="product-lineup">
           <div class="product-series-title">
