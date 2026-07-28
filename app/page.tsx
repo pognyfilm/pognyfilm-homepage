@@ -25,15 +25,19 @@ const legacyHtml = String.raw`<header class="site-header">
         </video>
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="hero-content">
-          <p class="eyebrow">PG PERFORMANCE LAB</p>
+          <p class="eyebrow hero-tags">
+            <span>#열차단필름</span>
+            <span>#단열필름</span>
+            <span>#건물썬팅</span>
+          </p>
           <h1>공간에 맞는 필름은<br /><span>따로 있습니다</span></h1>
           <p class="hero-copy">
-            상담부터 시공, 품질보증까지<br />
-            포그니필름이 직접 책임집니다.
+            내 공간에 맞는 필름부터 전문 시공까지,<br />
+            데이터로 증명하는 단열필름 솔루션
           </p>
           <div class="hero-actions">
             <a class="btn primary" href="#film-finder">내 공간 필름 추천받기 <span aria-hidden="true">→</span></a>
-            <a class="btn secondary" href="#cases">시공 사례 보기 <span aria-hidden="true">→</span></a>
+            <a class="btn secondary" href="#quote">1:1 문의상담 <span aria-hidden="true">→</span></a>
           </div>
         </div>
         <aside class="hero-data-panel" aria-label="포그니필름 제품 데이터">
