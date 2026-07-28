@@ -8,11 +8,9 @@ import { trackAnalyticsEvent } from "../app/analytics";
 type FinderState = {
   space: string;
   functions: string[];
-  directions: string[];
   preference: string;
   access: string;
   floor: string;
-  glass: string;
 };
 
 type Step = {
@@ -27,11 +25,9 @@ type Step = {
 const INITIAL_STATE: FinderState = {
   space: "",
   functions: [],
-  directions: [],
   preference: "",
   access: "",
   floor: "",
-  glass: "",
 };
 
 const STEPS: Step[] = [
@@ -50,29 +46,16 @@ const STEPS: Step[] = [
   },
   {
     key: "functions",
-    question: "어떤 기능이 가장 필요한가요?",
+    question: "가장 원하는 효과를 선택해주세요.",
     type: "multi",
-    max: 3,
+    max: 2,
+    helper: "(최대 2개 선택)",
     options: [
       { value: "heat", label: "강한 열차단" },
       { value: "glare", label: "눈부심 감소" },
-      { value: "bright", label: "밝은 조망 유지" },
-      { value: "privacy", label: "낮 시간 사생활 보호" },
+      { value: "privacy", label: "사생활 보호" },
       { value: "uv", label: "자외선 차단" },
-      { value: "safety", label: "안전·비산 방지" },
       { value: "energy", label: "냉난방 효율 개선" },
-    ],
-  },
-  {
-    key: "directions",
-    question: "창문은 어느 방향을 향하고 있나요?",
-    type: "multi",
-    options: [
-      { value: "east", label: "동향" },
-      { value: "west", label: "서향" },
-      { value: "south", label: "남향" },
-      { value: "north", label: "북향" },
-      { value: "multi", label: "여러 방향" },
     ],
   },
   {
@@ -89,31 +72,19 @@ const STEPS: Step[] = [
   },
   {
     key: "access",
-    question: "실내에서 유리창 전체에 접근할 수 있나요?",
+    question: "필름 시공이\n실내에서 가능한가요?",
     type: "single",
     options: [
-      { value: "all", label: "모든 유리창에 접근 가능" },
-      { value: "partial", label: "일부 유리창만 접근 가능" },
-      { value: "external", label: "외부 시공이 필요해 보임" },
-    ],
-  },
-  {
-    key: "glass",
-    question: "유리 종류를 알고 계신가요?",
-    type: "single",
-    options: [
-      { value: "single", label: GLASS_TYPES.single },
-      { value: "double", label: GLASS_TYPES.double },
-      { value: "lowE", label: GLASS_TYPES.lowE },
-      { value: "tempered", label: GLASS_TYPES.tempered },
+      { value: "interior", label: "네\n실내에서 가능합니다." },
+      { value: "exterior", label: "아니요\n외부에서 가능합니다." },
     ],
   },
 ];
 
 const FLOOR_OPTIONS = [
-  { value: "1-5", label: "1~5층" },
-  { value: "6-15", label: "6~15층" },
-  { value: "16+", label: "16층 이상" },
+  { value: "1-3", label: "1~3층" },
+  { value: "4-10", label: "4~10층" },
+  { value: "11+", label: "11층 이상" },
 ];
 
 function getLabel(stepKey: keyof FinderState, value: string) {
@@ -126,9 +97,8 @@ function scoreProduct(product: FilmProduct, state: FinderState) {
   const notes: string[] = [];
   let score = 20 - product.priority;
 
-  if (state.access === "external" && product.installType !== "exterior") return null;
-  if ((state.access === "all" || state.access === "partial") && product.installType === "exterior") score -= 8;
-  if (state.glass && !product.glassTypes.includes(state.glass)) return null;
+  if (state.access === "exterior" && product.installType !== "exterior") return null;
+  if (state.access === "interior" && product.installType === "exterior") return null;
 
   if (product.recommendedSpaces.includes(state.space)) {
     score += 12;
@@ -136,21 +106,13 @@ function scoreProduct(product: FilmProduct, state: FinderState) {
   }
   if (state.space === "etc") score += 2;
 
-  if (state.directions.includes("west") || state.directions.includes("south")) {
-    if (product.heatPerformance.includes("99") || product.heatPerformance.includes("98")) score += 10;
-    if (product.glareReduction === "high") score += 5;
-    notes.push("서향·남향 창문의 강한 햇빛과 열 유입 조건을 반영했습니다.");
-  }
-
   if (state.functions.includes("heat") || state.functions.includes("energy")) {
     if (product.heatPerformance.includes("99") || product.heatPerformance.includes("98")) score += 10;
     else score += 5;
   }
   if (state.functions.includes("glare") && product.glareReduction === "high") score += 8;
-  if (state.functions.includes("bright") && product.brightness === "bright") score += 10;
   if (state.functions.includes("privacy")) score += product.privacy === "high" ? 10 : product.privacy === "medium" ? 6 : 0;
   if (state.functions.includes("uv")) score += 6;
-  if (state.functions.includes("safety") && product.safety) score += 8;
 
   if (state.preference === "bright" && product.brightness === "bright") {
     score += 12;
@@ -169,8 +131,8 @@ function scoreProduct(product: FilmProduct, state: FinderState) {
     notes.push("낮 시간 사생활 보호 선호를 반영했습니다.");
   }
 
-  if (state.floor === "16+" || state.access === "partial" || !state.glass) {
-    notes.push("층수, 접근 조건, 유리 종류는 방문 실측 시 최종 확인이 필요합니다.");
+  if (state.floor === "11+") {
+    notes.push("고층 시공 조건과 유리 종류는 방문 실측 시 최종 확인이 필요합니다.");
   }
 
   return { product, score, notes: [...notes, ...product.strengths].slice(0, 3) };
@@ -187,7 +149,7 @@ export default function FilmFinder() {
   }, []);
 
   const currentStep = STEPS[stepIndex];
-  const stepLabels = ["공간", "기능", "방향", "사용감", "시공 조건", "유리"];
+  const stepLabels = ["공간", "효과", "사용감", "시공 조건"];
   const progress = ((stepIndex + 1) / STEPS.length) * 100;
   const currentValue = answers[currentStep.key];
   const canProceed = Array.isArray(currentValue) ? currentValue.length > 0 : Boolean(currentValue);
@@ -196,7 +158,7 @@ export default function FilmFinder() {
     const candidates = PG_FILM_PRODUCTS.map((product) => scoreProduct(product, answers))
       .filter((item): item is NonNullable<ReturnType<typeof scoreProduct>> => Boolean(item))
       .sort((a, b) => b.score - a.score);
-    const uncertain = !answers.glass || !answers.access || candidates.length === 0;
+    const uncertain = candidates.length === 0;
     return { candidates, primary: candidates[0], uncertain };
   }, [answers]);
 
@@ -224,7 +186,7 @@ export default function FilmFinder() {
 
   const fillQuote = () => {
     const primary = result.primary?.product.name || "현장 확인 후 안내";
-    const message = `[PG FILM 추천 진단 결과]\n\n공간: ${getLabel("space", answers.space)}\n방향: ${answers.directions.map((item) => getLabel("directions", item)).join(", ")}\n중요 기능: ${answers.functions.map((item) => getLabel("functions", item)).join(", ")}\n밝기 선호: ${getLabel("preference", answers.preference)}\n실내 접근: ${getLabel("access", answers.access)}\n층수: ${getLabel("floor", answers.floor)}\n유리 종류: ${getLabel("glass", answers.glass)}\n추천 제품: ${primary}\n\n본 결과는 1차 추천이며, 실제 유리 종류와 현장 환경에 따라 최종 제품은 방문 실측 후 달라질 수 있습니다.`;
+    const message = `[PG FILM 추천 진단 결과]\n\n공간: ${getLabel("space", answers.space)}\n원하는 효과: ${answers.functions.map((item) => getLabel("functions", item)).join(", ")}\n사용감: ${getLabel("preference", answers.preference)}\n시공 위치: ${getLabel("access", answers.access)}\n층수: ${getLabel("floor", answers.floor)}\n추천 제품: ${primary}\n\n본 결과는 1차 추천이며, 실제 유리 종류와 현장 환경에 따라 최종 제품은 방문 실측 후 달라질 수 있습니다.`;
     const textarea = document.querySelector<HTMLTextAreaElement>('.quote-form textarea[name="message"]');
     const quoteForm = document.querySelector<HTMLFormElement>("[data-quote-form]");
     if (textarea) {
@@ -268,7 +230,7 @@ export default function FilmFinder() {
             <p className="eyebrow">PG FILM MATCH</p>
             <h2 id="film-finder-title">내 공간에 맞는 필름,<br />포그니가 찾아드립니다.</h2>
           </div>
-          <p>여섯 가지 항목에 답변을 선택하면 PG FILM Series 중 가장 적합한 제품을 포그니가 추천해드립니다.</p>
+          <p>네 가지 항목에 답변을 선택하면 PG FILM Series 중 가장 적합한 제품을 포그니가 추천해드립니다.</p>
         </div>
 
         {!showResult ? (
@@ -288,12 +250,18 @@ export default function FilmFinder() {
                   const selected = Array.isArray(currentValue)
                     ? currentValue.includes(option.value)
                     : currentValue === option.value;
+                  const selectionLimitReached =
+                    Array.isArray(currentValue)
+                    && Boolean(currentStep.max)
+                    && currentValue.length >= (currentStep.max || 0)
+                    && !selected;
                   return (
                     <button
                       key={option.value}
                       type="button"
                       className={selected ? "selected" : ""}
                       aria-pressed={selected}
+                      disabled={selectionLimitReached}
                       onClick={() => selectOption(option.value)}
                     >
                       <span aria-hidden="true">{selected ? "✓" : ""}</span>
@@ -354,10 +322,9 @@ export default function FilmFinder() {
               <h3>고객님의 공간에 적합한 PG FILM을 찾았습니다</h3>
               <div className="finder-summary">
                 <span>공간: {getLabel("space", answers.space)}</span>
-                <span>방향: {answers.directions.map((item) => getLabel("directions", item)).join(", ")}</span>
-                <span>중요 기능: {answers.functions.map((item) => getLabel("functions", item)).join(", ")}</span>
-                <span>실내 접근: {getLabel("access", answers.access)}</span>
-                <span>유리 종류: {getLabel("glass", answers.glass)}</span>
+                <span>원하는 효과: {answers.functions.map((item) => getLabel("functions", item)).join(", ")}</span>
+                <span>시공 위치: {getLabel("access", answers.access)}</span>
+                <span>층수: {getLabel("floor", answers.floor)}</span>
               </div>
             </div>
 
