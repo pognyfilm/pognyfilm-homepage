@@ -7658,33 +7658,7 @@ h3 {
   }
 }
 
-@media (max-width: 760px) {
-  .reason-lead h2 {
-    font-size: clamp(31px, 9vw, 42px);
-    line-height: 1.24;
-  }
-
-  .reason-lead p {
-    font-size: 15px;
-    line-height: 1.72;
-  }
-
-  .reason-standard-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-    margin-top: 30px;
-  }
-
-  .reason-standard-card {
-    min-height: 0;
-    padding: 24px 22px;
-    border-radius: 18px;
-  }
-
-  .reason-standard-card h3 {
-    margin-top: 22px;
-  }
-
+@media (max-width: 900px) {
   .reason-premium-table-wrap {
     overflow: visible;
     border: 0;
@@ -7713,65 +7687,102 @@ h3 {
 
   .reason-premium-table tbody {
     display: grid;
-    gap: 14px;
+    gap: 16px;
   }
 
   .reason-premium-table tbody tr {
+    display: grid;
     overflow: hidden;
-    border: 1px solid rgba(98, 166, 224, 0.28);
+    border: 1px solid rgba(98, 166, 224, 0.26);
     border-radius: 18px;
     background: #fff;
-    box-shadow: 0 18px 44px rgba(6, 23, 44, 0.08);
+    box-shadow: 0 14px 36px rgba(6, 23, 44, 0.08);
   }
 
   .reason-premium-table tbody th {
+    order: 1;
     padding: 15px 18px;
     border: 0;
     background: linear-gradient(135deg, #062a52 0%, #1269d8 100%);
-    text-align: center;
+    text-align: left;
     font-size: 17px;
-  }
-
-  .reason-premium-table tbody th span {
-    display: inline-flex;
-    margin: 0 9px 0 0;
-    color: #bfe8ff;
   }
 
   .reason-premium-table tbody td {
     position: relative;
     height: auto;
     min-height: 0;
-    padding: 18px 18px 18px 20px;
+    padding: 17px 18px 18px;
     border-right: 0;
     border-bottom: 1px solid rgba(98, 166, 224, 0.16);
     text-align: left;
     font-size: 15px;
-    line-height: 1.55;
+    line-height: 1.58;
+    overflow-wrap: anywhere;
   }
 
   .reason-premium-table tbody td::before {
-    content: attr(data-label);
     display: block;
-    margin: 0 0 8px;
-    color: #7b8a99;
+    margin: 0 0 7px;
     font-size: 12px;
     font-weight: 950;
+    line-height: 1.4;
   }
 
   .reason-premium-table tbody td:first-child {
+    order: 2;
+    color: var(--navy);
+    background: linear-gradient(120deg, #e8f8ff, #f5fbff);
     font-size: 16px;
   }
 
-  .reason-premium-table tbody td:last-child {
-    border-bottom: 0;
+  .reason-premium-table tbody td:first-child::before {
+    content: "✅ 포그니필름";
+    color: var(--blue);
   }
 
-  .reason-check {
-    width: 19px;
-    height: 19px;
-    margin-right: 9px;
-    font-size: 12px;
+  .reason-premium-table tbody td:last-child {
+    order: 3;
+    border-bottom: 0;
+    color: #566574;
+    background: linear-gradient(180deg, #f7f9fb, #eef2f5);
+  }
+
+  .reason-premium-table tbody td:last-child::before {
+    content: "❌ 일반 저가형·염색 필름";
+    color: #6d7b88;
+  }
+
+  .reason-premium-table .reason-check {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .reason-lead h2 {
+    font-size: clamp(31px, 9vw, 42px);
+    line-height: 1.24;
+  }
+
+  .reason-lead p {
+    font-size: 15px;
+    line-height: 1.72;
+  }
+
+  .reason-standard-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 30px;
+  }
+
+  .reason-standard-card {
+    min-height: 0;
+    padding: 24px 22px;
+    border-radius: 18px;
+  }
+
+  .reason-standard-card h3 {
+    margin-top: 22px;
   }
 
   .reason-compare {
