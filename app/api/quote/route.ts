@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { SolapiMessageService } from "solapi";
+import { createServiceClient } from "../../../lib/supabase/admin";
 
 export const runtime = "nodejs";
 
@@ -13,7 +14,7 @@ type QuoteRequest = {
   privacyConsent?: unknown;
 };
 
-const requiredEnvironmentVariables = [
+const notificationEnvironmentVariables = [
   "SOLAPI_API_KEY",
   "SOLAPI_API_SECRET",
   "SOLAPI_SENDER_NUMBER",
@@ -109,15 +110,6 @@ const createEmailHtml = ({
 
 export async function POST(request: Request) {
   try {
-    const missingEnvironmentVariables = requiredEnvironmentVariables.filter(
-      (name) => !process.env[name],
-    );
-
-    if (missingEnvironmentVariables.length) {
-      console.error("[quote] Missing environment variables:", missingEnvironmentVariables);
-      return NextResponse.json({ ok: false }, { status: 503 });
-    }
-
     const body = (await request.json()) as QuoteRequest;
     const name = normalizeText(body.name, 50);
     const phone = normalizePhone(body.phone);
@@ -128,6 +120,45 @@ export async function POST(request: Request) {
 
     if (!name || !/^010\d{8}$/.test(phone) || !privacyConsent) {
       return NextResponse.json({ ok: false }, { status: 400 });
+    }
+
+    const supabase = createServiceClient();
+    if (!supabase) {
+      console.error("[quote] Supabase service configuration is missing.");
+      return NextResponse.json({ ok: false }, { status: 503 });
+    }
+
+    const { data: inquiry, error: insertError } = await supabase
+      .from("inquiries")
+      .insert({
+        customer_name: name,
+        phone,
+        region: area || null,
+        place: space || null,
+        message: message || null,
+        source: "homepage",
+        status: "new",
+        manager: null,
+      })
+      .select("id")
+      .single();
+
+    if (insertError || !inquiry) {
+      console.error("[quote] Inquiry insert failed:", insertError);
+      return NextResponse.json({ ok: false }, { status: 503 });
+    }
+
+    const missingEnvironmentVariables =
+      notificationEnvironmentVariables.filter((name) => !process.env[name]);
+    if (missingEnvironmentVariables.length) {
+      console.error("[quote] Inquiry saved, notification configuration is missing:", {
+        inquiryId: inquiry.id,
+        missingEnvironmentVariables,
+      });
+      return NextResponse.json(
+        { ok: true, inquiryId: inquiry.id, notificationSent: false },
+        { status: 200, headers: { "Cache-Control": "no-store" } },
+      );
     }
 
     const receivedAt = formatKoreanTime();
@@ -172,6 +203,19 @@ export async function POST(request: Request) {
       emailResult.status === "rejected" ||
       Boolean(emailResult.value.error);
 
+    if (!smsFailed) {
+      const { error: smsUpdateError } = await supabase
+        .from("inquiries")
+        .update({ sms_sent: true, sms_sent_at: new Date().toISOString() })
+        .eq("id", inquiry.id);
+      if (smsUpdateError) {
+        console.error("[quote] SMS status update failed:", {
+          inquiryId: inquiry.id,
+          error: smsUpdateError,
+        });
+      }
+    }
+
     if (smsFailed || emailFailed) {
       console.error("[quote] Delivery failed:", {
         sms:
@@ -183,11 +227,14 @@ export async function POST(request: Request) {
             ? emailResult.reason
             : emailResult.value.error,
       });
-      return NextResponse.json({ ok: false }, { status: 502 });
+      return NextResponse.json(
+        { ok: true, inquiryId: inquiry.id, notificationSent: false },
+        { status: 200, headers: { "Cache-Control": "no-store" } },
+      );
     }
 
     return NextResponse.json(
-      { ok: true },
+      { ok: true, inquiryId: inquiry.id, notificationSent: true },
       {
         status: 200,
         headers: { "Cache-Control": "no-store" },

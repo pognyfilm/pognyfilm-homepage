@@ -1,6 +1,8 @@
 import LegacyInteractions from "./LegacyInteractions";
 import FilmFinder from "../components/FilmFinder";
 import FaqSection from "../components/FaqSection";
+import PublicPortfolioSection from "../components/portfolio/PublicPortfolioSection";
+import FilmRecommendationChatbot from "../components/FilmRecommendationChatbot";
 
 const legacyHtml = String.raw`<header class="site-header">
       <a class="logo" href="#home" aria-label="포그니필름 홈">
@@ -790,13 +792,24 @@ const legacyHtmlWithFinderSlot = legacyHtmlReordered.replace(
   filmFinderMarker,
   `      <div id="film-finder-root"></div>\n      ${filmFinderMarker}`,
 );
+const portfolioSectionStart = legacyHtmlWithFinderSlot.indexOf(casesSectionMarker);
+const introSectionMarker = '<section class="section intro" aria-labelledby="intro-title">';
+const portfolioSectionEnd = legacyHtmlWithFinderSlot.indexOf(introSectionMarker);
+const legacyHtmlBeforePortfolio =
+  legacyHtmlWithFinderSlot.slice(0, portfolioSectionStart) + "</main>";
+const legacyHtmlAfterPortfolio =
+  "<main>" + legacyHtmlWithFinderSlot.slice(portfolioSectionEnd);
+
 export default function Home() {
   return (
     <>
-      <div dangerouslySetInnerHTML={{ __html: legacyHtmlWithFinderSlot }} />
+      <div dangerouslySetInnerHTML={{ __html: legacyHtmlBeforePortfolio }} />
+      <PublicPortfolioSection />
+      <div dangerouslySetInnerHTML={{ __html: legacyHtmlAfterPortfolio }} />
       <FilmFinder />
+      <FilmRecommendationChatbot />
       <FaqSection />
-      <LegacyInteractions key={legacyHtmlWithFinderSlot} />
+      <LegacyInteractions key={legacyHtmlBeforePortfolio + legacyHtmlAfterPortfolio} />
     </>
   );
 }

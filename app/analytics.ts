@@ -5,7 +5,13 @@ export type AnalyticsEventName =
   | "kakao_click"
   | "youtube_click"
   | "blog_click"
-  | "film_recommendation";
+  | "film_recommendation"
+  | "chatbot_open"
+  | "chatbot_start"
+  | "chatbot_step_complete"
+  | "chatbot_recommendation_view"
+  | "chatbot_lead_click"
+  | "chatbot_phone_click";
 
 declare global {
   interface Window {

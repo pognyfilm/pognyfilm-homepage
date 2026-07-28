@@ -14,6 +14,8 @@ export type FilmProduct = {
   safety: boolean;
   warranty: string;
   caseLabel: string;
+  image: string;
+  tagline: string;
   priority: number;
   summary: string;
   strengths: string[];
@@ -43,6 +45,8 @@ export const PG_FILM_PRODUCTS: FilmProduct[] = [
     safety: false,
     warranty: "최대 10년 정품 품질보증서",
     caseLabel: "주거공간 밝은 조망 라인",
+    image: "/assets/product-pg-air.png",
+    tagline: "Bright Comfort",
     priority: 3,
     summary: "밝은 조망을 유지하면서 열과 자외선을 줄이고 싶은 주거 공간에 적합합니다.",
     strengths: ["밝은 실내감 유지", "자외선 99% 차단", "주거공간 추천"],
@@ -63,6 +67,8 @@ export const PG_FILM_PRODUCTS: FilmProduct[] = [
     safety: false,
     warranty: "최대 10년 정품 품질보증서",
     caseLabel: "사무실·매장 밸런스 라인",
+    image: "/assets/product-pg-x.png",
+    tagline: "Premium Balance",
     priority: 2,
     summary: "열차단, 눈부심, 프라이버시, 시야의 균형을 원하는 공간에 적합합니다.",
     strengths: ["텅스텐 스퍼터링", "자연스러운 반사감", "업무공간 추천"],
@@ -83,6 +89,8 @@ export const PG_FILM_PRODUCTS: FilmProduct[] = [
     safety: false,
     warranty: "최대 10년 정품 품질보증서",
     caseLabel: "대형 유리·강한 일사 대응 라인",
+    image: "/assets/product-pg-pro.png",
+    tagline: "Professional Grade",
     priority: 1,
     summary: "강한 햇빛과 눈부심이 큰 대형 유리 공간에 적합합니다.",
     strengths: ["나노 세라믹 메탈", "강한 눈부심 감소", "상업·공공공간 추천"],
@@ -103,6 +111,8 @@ export const PG_FILM_PRODUCTS: FilmProduct[] = [
     safety: false,
     warranty: "최대 10년 정품 품질보증서",
     caseLabel: "외부 전용 스퍼터링 라인",
+    image: "/assets/product-pg-xo.png",
+    tagline: "Premium Privacy",
     priority: 0,
     summary: "실내 접근이 어렵거나 외부 유리면에서 열을 먼저 제어해야 하는 공간에 적합합니다.",
     strengths: ["외부 전용 시공", "3.5MIL 하드코팅 구조", "대형 통유리 추천"],

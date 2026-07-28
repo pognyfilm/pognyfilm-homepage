@@ -22,6 +22,7 @@ type CaseStudy = {
   summary: string;
   cover: string;
   blogUrl?: string;
+  youtubeUrl?: string;
   stages: CaseStage[];
 };
 
@@ -344,6 +345,8 @@ export default function LegacyInteractions() {
     const caseModalMeta = document.querySelector<HTMLElement>("[data-case-meta]");
     const caseModalStages = document.querySelector<HTMLElement>("[data-case-stages]");
     const caseModalBlog = document.querySelector<HTMLAnchorElement>("[data-case-blog]");
+    const caseModalYoutube = document.querySelector<HTMLAnchorElement>("[data-case-youtube]");
+    const caseExternalLinks = document.querySelector<HTMLElement>(".case-external-links-legacy");
     const caseCloseButtons = Array.from(document.querySelectorAll<HTMLElement>("[data-case-close]"));
 
     const renderCaseStudies = (filter = "all") => {
@@ -401,6 +404,19 @@ export default function LegacyInteractions() {
           caseModalBlog.hidden = true;
           caseModalBlog.removeAttribute("href");
         }
+      }
+
+      if (caseModalYoutube) {
+        if (item.youtubeUrl) {
+          caseModalYoutube.href = item.youtubeUrl;
+          caseModalYoutube.hidden = false;
+        } else {
+          caseModalYoutube.hidden = true;
+          caseModalYoutube.removeAttribute("href");
+        }
+      }
+      if (caseExternalLinks) {
+        caseExternalLinks.hidden = !item.blogUrl && !item.youtubeUrl;
       }
 
       caseModalStages.innerHTML = item.stages
