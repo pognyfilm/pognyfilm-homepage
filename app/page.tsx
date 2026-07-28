@@ -7,7 +7,7 @@ import { AI_CHAT_ENABLED } from "../lib/features";
 
 const legacyHtml = String.raw`<header class="site-header">
       <a class="logo" href="#home" aria-label="포그니필름 홈">
-        <img src="/assets/pogny-logo-gold.png" alt="POGNY FILM" />
+        <img src="/assets/pogny-logo-gold.png" width="1001" height="229" alt="POGNY FILM" decoding="async" />
       </a>
       <nav class="nav" aria-label="주요 메뉴">
         <a href="#products">PG FILM Series</a>
@@ -20,7 +20,7 @@ const legacyHtml = String.raw`<header class="site-header">
 
     <main id="home">
       <section class="hero">
-        <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="https://images.unsplash.com/photo-1497366672149-e5e4b4d34eb3?auto=format&fit=crop&w=1800&q=85" aria-hidden="true">
+        <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="https://images.unsplash.com/photo-1497366672149-e5e4b4d34eb3?auto=format&fit=crop&w=1800&q=85" aria-hidden="true">
           <source src="/assets/pogny-main-hero.mp4" type="video/mp4" />
           <source src="https://videos.pexels.com/video-files/3773486/3773486-uhd_2560_1440_30fps.mp4" type="video/mp4" />
         </video>
@@ -288,7 +288,7 @@ const legacyHtml = String.raw`<header class="site-header">
             </div>
             <div class="product-detail">
               <div class="product-photo">
-                <img src="/assets/product-pg-air.png" alt="PG AIR 필름 추천 공간 이미지" />
+                <img src="/assets/product-pg-air.webp" width="900" height="900" loading="lazy" decoding="async" alt="PG AIR 필름 추천 공간 이미지" />
                 <span>PG AIR · Bright Comfort</span>
               </div>
             </div>
@@ -319,7 +319,7 @@ const legacyHtml = String.raw`<header class="site-header">
             </div>
             <div class="product-detail">
               <div class="product-photo">
-                <img src="/assets/product-pg-x.png" alt="PG X 필름 추천 공간 이미지" />
+                <img src="/assets/product-pg-x.webp" width="900" height="900" loading="lazy" decoding="async" alt="PG X 필름 추천 공간 이미지" />
                 <span>PG X · Premium Balance</span>
               </div>
             </div>
@@ -350,7 +350,7 @@ const legacyHtml = String.raw`<header class="site-header">
             </div>
             <div class="product-detail">
               <div class="product-photo">
-                <img src="/assets/product-pg-pro.png" alt="PG PRO 필름 추천 공간 이미지" />
+                <img src="/assets/product-pg-pro.webp" width="900" height="900" loading="lazy" decoding="async" alt="PG PRO 필름 추천 공간 이미지" />
                 <span>PG PRO · Professional Grade</span>
               </div>
             </div>
@@ -381,7 +381,7 @@ const legacyHtml = String.raw`<header class="site-header">
             </div>
             <div class="product-detail">
               <div class="product-photo">
-                <img src="/assets/product-pg-xo.png" alt="PG XO 필름 추천 공간 이미지" />
+                <img src="/assets/product-pg-xo.webp" width="900" height="900" loading="lazy" decoding="async" alt="PG XO 필름 추천 공간 이미지" />
                 <span>PG XO · Premium Privacy</span>
               </div>
             </div>
@@ -400,7 +400,11 @@ const legacyHtml = String.raw`<header class="site-header">
           <div class="compare-stage">
             <img
               class="compare-image"
-              src="/assets/compare-window.png"
+              src="/assets/compare-window.webp"
+              width="1200"
+              height="676"
+              loading="lazy"
+              decoding="async"
               alt="강한 햇살이 들어오는 사무실 유리창"
             />
             <div class="compare-after" aria-hidden="true"></div>
@@ -435,6 +439,7 @@ const legacyHtml = String.raw`<header class="site-header">
             <iframe
               src="https://www.youtube.com/embed/jHv2b61iciE"
               title="포그니필름 쇼츠 영상 1"
+              loading="lazy"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen
             ></iframe>
@@ -443,6 +448,7 @@ const legacyHtml = String.raw`<header class="site-header">
             <iframe
               src="https://www.youtube.com/embed/tbonvgbhTpU"
               title="포그니필름 쇼츠 영상 2"
+              loading="lazy"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen
             ></iframe>
@@ -451,6 +457,7 @@ const legacyHtml = String.raw`<header class="site-header">
             <iframe
               src="https://www.youtube.com/embed/WF-aCU1EY4Y"
               title="포그니필름 쇼츠 영상 3"
+              loading="lazy"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen
             ></iframe>
@@ -511,25 +518,25 @@ const legacyHtml = String.raw`<header class="site-header">
           <button class="chat-nav prev" type="button" aria-label="이전 후기">‹</button>
           <div class="phone-track">
             <article class="phone-chat">
-              <img src="/assets/review-kakao-01.png" alt="영등포 주택 고객 카카오톡 후기" />
+              <img src="/assets/review-kakao-01.png" width="390" height="665" loading="lazy" decoding="async" alt="영등포 주택 고객 카카오톡 후기" />
             </article>
             <article class="phone-chat">
-              <img src="/assets/review-kakao-02.png" alt="강남 12층 사무실 고객 카카오톡 후기" />
+              <img src="/assets/review-kakao-02.png" width="390" height="665" loading="lazy" decoding="async" alt="강남 12층 사무실 고객 카카오톡 후기" />
             </article>
             <article class="phone-chat">
-              <img src="/assets/review-kakao-03.png" alt="인천 청라 아파트 고객 카카오톡 후기" />
+              <img src="/assets/review-kakao-03.png" width="390" height="665" loading="lazy" decoding="async" alt="인천 청라 아파트 고객 카카오톡 후기" />
             </article>
             <article class="phone-chat">
-              <img src="/assets/review-kakao-04.png" alt="광명 아파트 고객 카카오톡 후기" />
+              <img src="/assets/review-kakao-04.png" width="390" height="665" loading="lazy" decoding="async" alt="광명 아파트 고객 카카오톡 후기" />
             </article>
             <article class="phone-chat">
-              <img src="/assets/review-kakao-05.png" alt="서초동 사무실 고객 카카오톡 후기" />
+              <img src="/assets/review-kakao-05.png" width="390" height="665" loading="lazy" decoding="async" alt="서초동 사무실 고객 카카오톡 후기" />
             </article>
             <article class="phone-chat">
-              <img src="/assets/review-kakao-06.png" alt="부천 아파트 고객 카카오톡 후기" />
+              <img src="/assets/review-kakao-06.png" width="390" height="665" loading="lazy" decoding="async" alt="부천 아파트 고객 카카오톡 후기" />
             </article>
             <article class="phone-chat">
-              <img src="/assets/review-kakao-07.png" alt="일산 오피스텔 고객 카카오톡 후기" />
+              <img src="/assets/review-kakao-07.png" width="390" height="665" loading="lazy" decoding="async" alt="일산 오피스텔 고객 카카오톡 후기" />
             </article>
           </div>
           <button class="chat-nav next" type="button" aria-label="다음 후기">›</button>
@@ -628,7 +635,7 @@ const legacyHtml = String.raw`<header class="site-header">
               <span>2024년 6월 · 2025년 6월 · 2026년 6월</span>
             </div>
             <div class="data-report-modal-body">
-              <img src="/assets/management-fee-report-2024-2026.png" alt="포그니필름 시공 전후 3개년 전기사용량 및 관리비 비교 자료" />
+              <img src="/assets/management-fee-report-2024-2026.webp" width="1200" height="800" loading="lazy" decoding="async" alt="포그니필름 시공 전후 3개년 전기사용량 및 관리비 비교 자료" />
             </div>
           </div>
         </div>
@@ -678,7 +685,7 @@ const legacyHtml = String.raw`<header class="site-header">
             <h2 id="intro-title"><span class="intro-yesman">YES맨</span><br />이반장 &amp; 이실장<br /><br /><span class="intro-subtitle">상담부터 시공까지,<br />포그니가 직접 책임집니다.</span></h2>
           </div>
           <aside class="intro-poster intro-team-photo" aria-label="포그니필름 본사 직영팀 사진">
-            <img src="/assets/pogny-team-photo.jpg" alt="포그니필름 본사 직영팀" />
+            <img src="/assets/pogny-team-photo.webp" width="1000" height="785" loading="lazy" decoding="async" alt="포그니필름 본사 직영팀" />
             <span>포그니필름 본사 직영팀</span>
           </aside>
         </div>
@@ -793,7 +800,7 @@ const legacyHtml = String.raw`<header class="site-header">
       <div class="footer-inner">
         <div class="footer-main">
           <div class="footer-brand">
-            <img class="footer-logo" src="/assets/pogny-logo-gold.png" alt="POGNY FILM" />
+            <img class="footer-logo" src="/assets/pogny-logo-gold.png" width="1001" height="229" loading="lazy" decoding="async" alt="POGNY FILM" />
             <p>상담부터 시공, 품질보증까지<br />포그니필름이 직접 책임집니다.</p>
           </div>
           <div class="footer-contact">

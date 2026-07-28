@@ -673,15 +673,15 @@ h3 {
 }
 
 .proof-card.direct::before {
-  background-image: url("/assets/proof-direct-team.png");
+  background-image: url("/assets/proof-direct-team.webp");
 }
 
 .proof-card.detail::before {
-  background-image: url("/assets/proof-onestop-system.png");
+  background-image: url("/assets/proof-onestop-system.webp");
 }
 
 .proof-card.trust::before {
-  background-image: url("/assets/proof-trust-skill.png");
+  background-image: url("/assets/proof-trust-skill.webp");
 }
 
 .proof-grid span {
@@ -1950,6 +1950,7 @@ h3 {
   display: flex;
   align-items: center;
   gap: 22px;
+  min-width: 0;
   min-height: 170px;
   padding: 28px 32px;
   border-radius: 20px;
@@ -1999,6 +2000,7 @@ h3 {
   color: var(--navy);
   font-size: clamp(23px, 2.6vw, 31px);
   line-height: 1.22;
+  overflow-wrap: anywhere;
 }
 
 .tser-compare-arrow {
@@ -2186,6 +2188,10 @@ h3 {
   .tser-compare-card {
     min-height: 0;
     padding: 24px 22px;
+  }
+
+  .tser-compare-card > div {
+    min-width: 0;
   }
 
   .tser-compare-card h3 br {
@@ -2736,7 +2742,7 @@ h3 {
     radial-gradient(ellipse at 43% 9%, rgba(245, 250, 255, 0.14) 0%, rgba(206, 226, 238, 0.08) 12%, transparent 34%),
     linear-gradient(180deg, rgba(216, 234, 244, 0.08) 0%, rgba(170, 200, 214, 0.05) 38%, rgba(32, 68, 88, 0.06) 100%),
     linear-gradient(120deg, rgba(15, 52, 76, 0.08), rgba(125, 165, 185, 0.02) 46%, rgba(8, 31, 48, 0.06)),
-    url("/assets/compare-window.png") center / cover;
+    url("/assets/compare-window.webp") center / cover;
   filter: saturate(0.94) contrast(1.12) brightness(0.91) hue-rotate(-3deg);
 }
 
@@ -3131,7 +3137,7 @@ h3 {
   background:
     linear-gradient(180deg, rgba(4, 14, 27, 0.3), rgba(4, 14, 27, 0.78)),
     linear-gradient(90deg, rgba(6, 23, 44, 0.58), rgba(6, 23, 44, 0.1)),
-    url("/assets/pg-pro-1590-after.jpg") center / cover;
+    url("/assets/pg-pro-1590-after.webp") center / cover;
 }
 
 .product-card.pro .product-visual::before {
@@ -3389,25 +3395,25 @@ h3 {
   padding: 26px;
   background:
     linear-gradient(180deg, rgba(2, 10, 20, 0.18), rgba(2, 10, 20, 0.88)),
-    url("/assets/compare-window.png") center / cover;
+    url("/assets/compare-window.webp") center / cover;
 }
 
 .products .product-card.air .product-visual {
   background:
     linear-gradient(180deg, rgba(2, 10, 20, 0.08), rgba(6, 23, 44, 0.82)),
-    url("/assets/proof-trust-skill.png") center 48% / cover;
+    url("/assets/proof-trust-skill.webp") center 48% / cover;
 }
 
 .products .product-card.x .product-visual {
   background:
     linear-gradient(180deg, rgba(2, 10, 20, 0.14), rgba(6, 23, 44, 0.82)),
-    url("/assets/proof-onestop-system.png") center / cover;
+    url("/assets/proof-onestop-system.webp") center / cover;
 }
 
 .products .product-card.pro .product-visual {
   background:
     linear-gradient(180deg, rgba(2, 10, 20, 0.08), rgba(2, 10, 20, 0.86)),
-    url("/assets/pg-pro-1590-after.jpg") center / cover;
+    url("/assets/pg-pro-1590-after.webp") center / cover;
 }
 
 .products .product-visual::before {
@@ -4204,27 +4210,27 @@ h3 {
 }
 
 .step-consult::before {
-  background-image: url("/assets/process-01-consult.png");
+  background-image: url("/assets/process-01-consult.webp");
 }
 
 .step-visit::before {
-  background-image: url("/assets/process-02-visit.png");
+  background-image: url("/assets/process-02-visit.webp");
 }
 
 .step-film::before {
-  background-image: url("/assets/process-03-film.png");
+  background-image: url("/assets/process-03-film.webp");
 }
 
 .step-measure::before {
-  background-image: url("/assets/process-04-measure.png");
+  background-image: url("/assets/process-04-measure.webp");
 }
 
 .step-install::before {
-  background-image: url("/assets/process-05-install.png");
+  background-image: url("/assets/process-05-install.webp");
 }
 
 .step-check::before {
-  background-image: url("/assets/process-06-check.png");
+  background-image: url("/assets/process-06-check.webp");
 }
 
 .process-step span,
@@ -6145,6 +6151,12 @@ h3 {
   }
 }
 
+@media (max-width: 360px) {
+  .quote-copy .faq-head h2 {
+    font-size: 24px;
+  }
+}
+
 .quote-shell {
   display: grid;
   grid-template-columns: minmax(280px, 0.8fr) minmax(420px, 1.2fr);
@@ -6157,6 +6169,7 @@ h3 {
 .quote-copy,
 .quote-form {
   width: 100%;
+  min-width: 0;
 }
 
 .quote-copy {

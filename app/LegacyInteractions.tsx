@@ -40,7 +40,7 @@ const CASE_STUDIES: CaseStudy[] = [
       {
         label: "시공 전",
         images: [
-          "/assets/pg-pro-1590-before.jpg",
+          "/assets/pg-pro-1590-before.webp",
           "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80",
           "https://images.unsplash.com/photo-1600607687644-c7171b42498b?auto=format&fit=crop&w=900&q=80",
         ],
@@ -58,7 +58,7 @@ const CASE_STUDIES: CaseStudy[] = [
       {
         label: "시공 후",
         images: [
-          "/assets/pg-pro-1590-after.jpg",
+          "/assets/pg-pro-1590-after.webp",
           "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=900&q=80",
           "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=80",
         ],

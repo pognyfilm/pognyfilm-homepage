@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { CSSProperties, useEffect, useMemo, useState } from "react";
 import type {
   PortfolioImageStage,
@@ -130,9 +131,12 @@ export default function PortfolioGallery({
                 key={item.id}
               >
                 {item.cover_public_url && (
-                  <img
+                  <Image
                     src={item.cover_public_url}
                     alt={item.cover_image_alt_text || item.title}
+                    width={800}
+                    height={600}
+                    sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
                   />
                 )}
                 <span>{categoryLabels[item.category || ""] || item.category || "시공"}</span>
@@ -231,9 +235,12 @@ export default function PortfolioGallery({
                       {group.images.map((image, index) => (
                         <figure className="case-stage-image" key={image.id || image.storage_path}>
                           {image.public_url && (
-                            <img
+                            <Image
                               src={image.public_url}
                               alt={image.alt_text || `${selected.title} ${stageLabels[group.stage]} ${index + 1}`}
+                              width={1200}
+                              height={900}
+                              sizes="(max-width: 760px) 100vw, 80vw"
                             />
                           )}
                           <span>{index + 1}</span>
