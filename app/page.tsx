@@ -3,6 +3,7 @@ import FilmFinder from "../components/FilmFinder";
 import FaqSection from "../components/FaqSection";
 import PublicPortfolioSection from "../components/portfolio/PublicPortfolioSection";
 import FilmRecommendationChatbot from "../components/FilmRecommendationChatbot";
+import { AI_CHAT_ENABLED } from "../lib/features";
 
 const legacyHtml = String.raw`<header class="site-header">
       <a class="logo" href="#home" aria-label="포그니필름 홈">
@@ -40,23 +41,6 @@ const legacyHtml = String.raw`<header class="site-header">
             <a class="btn secondary" href="#quote">1:1 문의상담 <span aria-hidden="true">→</span></a>
           </div>
         </div>
-        <aside class="hero-data-panel" aria-label="포그니필름 제품 데이터">
-          <p>PRODUCT DATA</p>
-          <dl>
-            <div>
-              <dt>UVR</dt>
-              <dd><strong>99%</strong><span>자외선 차단</span></dd>
-            </div>
-            <div>
-              <dt>IRR</dt>
-              <dd><strong>99%</strong><span>적외선차단</span></dd>
-            </div>
-            <div>
-              <dt>VLT</dt>
-              <dd><strong>5~70%</strong><span>제품별 가시광선</span></dd>
-            </div>
-          </dl>
-        </aside>
       </section>
 
       <section class="stats hero-proof" aria-label="포그니필름 신뢰 지표">
@@ -883,7 +867,7 @@ export default function Home() {
       <PublicPortfolioSection />
       <div dangerouslySetInnerHTML={{ __html: legacyHtmlAfterPortfolio }} />
       <FilmFinder />
-      <FilmRecommendationChatbot />
+      {AI_CHAT_ENABLED && <FilmRecommendationChatbot />}
       <FaqSection />
       <LegacyInteractions key={legacyHtmlBeforePortfolio + legacyHtmlAfterPortfolio} />
     </>

@@ -393,8 +393,9 @@ img {
 }
 
 .hero-tags {
-  flex-wrap: wrap;
-  row-gap: 6px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  font-size: 16px;
 }
 
 .hero-tags span {
@@ -474,64 +475,6 @@ h3 {
   border: 1px solid rgba(6, 23, 44, 0.22);
   background: rgba(255, 255, 255, 0.72);
   box-shadow: none;
-}
-
-.hero-data-panel {
-  position: absolute;
-  right: clamp(28px, 5vw, 72px);
-  top: 50%;
-  z-index: 2;
-  width: clamp(170px, 13vw, 220px);
-  padding: 28px 24px;
-  color: var(--navy);
-  background: rgba(245, 250, 255, 0.72);
-  border: 1px solid rgba(20, 105, 216, 0.28);
-  box-shadow: 0 22px 54px rgba(6, 23, 44, 0.1);
-  backdrop-filter: blur(10px);
-  transform: translateY(-42%);
-}
-
-.hero-data-panel p {
-  margin: 0 0 18px;
-  color: var(--blue);
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 0.16em;
-}
-
-.hero-data-panel dl {
-  margin: 0;
-}
-
-.hero-data-panel div {
-  padding: 18px 0;
-  border-top: 1px solid rgba(6, 23, 44, 0.12);
-}
-
-.hero-data-panel dt {
-  margin-bottom: 6px;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.hero-data-panel dd {
-  margin: 0;
-}
-
-.hero-data-panel strong {
-  display: block;
-  color: var(--blue);
-  font-size: clamp(28px, 3vw, 38px);
-  line-height: 1;
-}
-
-.hero-data-panel span {
-  display: block;
-  margin-top: 6px;
-  color: #64758a;
-  font-size: 12px;
-  font-weight: 700;
 }
 
 .stats {
@@ -6729,16 +6672,6 @@ h3 {
     font-size: clamp(44px, 8vw, 68px);
   }
 
-  .hero-data-panel {
-    right: 22px;
-    width: 172px;
-    padding: 20px 18px;
-  }
-
-  .hero-data-panel strong {
-    font-size: 28px;
-  }
-
   .stats {
     margin-top: -54px;
   }
@@ -7679,44 +7612,6 @@ h3 {
     min-height: 52px;
     padding: 0 18px;
     font-size: 15px;
-  }
-
-  .hero-data-panel {
-    position: relative;
-    right: auto;
-    top: auto;
-    z-index: 2;
-    align-self: end;
-    width: calc(100% - 32px);
-    margin: 28px auto 98px;
-    padding: 16px;
-    transform: none;
-  }
-
-  .hero-data-panel p {
-    margin-bottom: 10px;
-  }
-
-  .hero-data-panel dl {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .hero-data-panel div {
-    padding: 10px 8px;
-    border-top: 1px solid rgba(6, 23, 44, 0.1);
-  }
-
-  .hero-data-panel div + div {
-    border-left: 1px solid rgba(6, 23, 44, 0.1);
-  }
-
-  .hero-data-panel strong {
-    font-size: 22px;
-  }
-
-  .hero-data-panel span {
-    font-size: 10px;
   }
 
   .hero-rail {
