@@ -6129,6 +6129,8 @@ h3 {
 .faq-item button strong {
   font-size: clamp(15px, 1.35vw, 18px);
   line-height: 1.45;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .faq-q {
