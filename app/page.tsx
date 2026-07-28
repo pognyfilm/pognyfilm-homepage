@@ -21,7 +21,7 @@ const legacyHtml = String.raw`<header class="site-header">
     <main id="home">
       <section class="hero">
         <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="https://images.unsplash.com/photo-1497366672149-e5e4b4d34eb3?auto=format&fit=crop&w=1800&q=85" aria-hidden="true">
-          <source src="/assets/pogne-hero.mp4" type="video/mp4" />
+          <source src="/assets/pogny-main-hero.mp4" type="video/mp4" />
           <source src="https://videos.pexels.com/video-files/3773486/3773486-uhd_2560_1440_30fps.mp4" type="video/mp4" />
         </video>
         <div class="hero-overlay" aria-hidden="true"></div>
