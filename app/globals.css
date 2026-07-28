@@ -670,8 +670,8 @@ h3 {
 .proof {
   color: var(--white);
   background:
-    linear-gradient(135deg, rgba(20, 105, 216, 0.14), transparent 30%),
-    linear-gradient(180deg, #06172c 0%, #020a14 100%);
+    linear-gradient(135deg, rgba(47, 132, 240, 0.18), transparent 32%),
+    linear-gradient(180deg, #0a2440 0%, #06182b 100%);
 }
 
 .proof h2,
