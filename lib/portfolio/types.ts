@@ -45,20 +45,14 @@ export type PortfolioItem = {
 
 export type PortfolioSaveInput = {
   id: string;
-  slug: string;
   title: string;
-  region: string;
-  place: string;
   category: string;
   installationType: string;
   product: string;
-  installationDate: string;
-  summary: string;
   description: string;
   blogUrl: string;
   youtubeUrl: string;
   coverImagePath: string;
-  coverImageAlt: string;
   beforeTitle: string;
   beforeDescription: string;
   duringTitle: string;

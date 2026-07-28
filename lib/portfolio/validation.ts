@@ -6,7 +6,6 @@ import type {
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const allowedStatuses = new Set<PortfolioStatus>([
   "draft",
   "published",
@@ -50,11 +49,7 @@ export function validatePortfolioInput(raw: PortfolioSaveInput) {
   if (!UUID_PATTERN.test(id)) throw new Error("포트폴리오 ID가 올바르지 않습니다.");
 
   const title = text(raw.title, 160);
-  const slug = text(raw.slug, 160).toLowerCase();
   if (!title) throw new Error("제목을 입력해주세요.");
-  if (!SLUG_PATTERN.test(slug)) {
-    throw new Error("슬러그는 영문 소문자, 숫자, 하이픈만 사용할 수 있습니다.");
-  }
   if (!allowedStatuses.has(raw.status)) throw new Error("상태 값이 올바르지 않습니다.");
 
   const coverImagePath = raw.coverImagePath
@@ -85,27 +80,16 @@ export function validatePortfolioInput(raw: PortfolioSaveInput) {
     }
   }
 
-  const date = text(raw.installationDate, 10);
-  if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    throw new Error("시공일 형식이 올바르지 않습니다.");
-  }
-
   return {
     id,
-    slug,
     title,
-    region: text(raw.region, 120) || null,
-    place: text(raw.place, 160) || null,
     category: text(raw.category, 80) || null,
     installation_type: text(raw.installationType, 120) || null,
     product: text(raw.product, 120) || null,
-    installation_date: date || null,
-    summary: text(raw.summary, 500) || null,
     description: text(raw.description, 10000) || null,
     blog_url: optionalUrl(raw.blogUrl) || null,
     youtube_url: optionalUrl(raw.youtubeUrl) || null,
     cover_image_path: coverImagePath || null,
-    cover_image_alt_text: text(raw.coverImageAlt, 240) || null,
     before_title: text(raw.beforeTitle, 160) || null,
     before_description: text(raw.beforeDescription, 2000) || null,
     during_title: text(raw.duringTitle, 160) || null,
@@ -142,4 +126,9 @@ export const createSlug = (value: string) => {
     .join("-")
     .slice(0, 120);
   return encoded ? `portfolio-${encoded}` : "";
+};
+
+export const createPortfolioSlug = (title: string, id: string) => {
+  const base = (createSlug(title) || "portfolio").slice(0, 120);
+  return `${base}-${id.replace(/-/g, "")}`;
 };

@@ -12,7 +12,6 @@ import type {
   PortfolioSaveInput,
   PortfolioStatus,
 } from "../../lib/portfolio/types";
-import { createSlug } from "../../lib/portfolio/validation";
 import { savePortfolioAction } from "../../app/admin/(protected)/portfolio/actions";
 
 type StructuredStage = Exclude<PortfolioImageStage, "general">;
@@ -80,8 +79,6 @@ export default function PortfolioForm({
   initialItem?: PortfolioItem | null;
 }) {
   const router = useRouter();
-  const [slug, setSlug] = useState(initialItem?.slug || "");
-  const [slugTouched, setSlugTouched] = useState(Boolean(initialItem?.slug));
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState(
     initialItem?.cover_public_url || "",
@@ -138,10 +135,6 @@ export default function PortfolioForm({
     return path;
   };
 
-  const handleTitleChange = (title: string) => {
-    if (!slugTouched) setSlug(createSlug(title));
-  };
-
   const selectCover = (file: File | undefined) => {
     if (!file) return;
     if (coverPreview.startsWith("blob:")) URL.revokeObjectURL(coverPreview);
@@ -177,15 +170,6 @@ export default function PortfolioForm({
     } else {
       setMessage("");
     }
-    setIsDirty(true);
-  };
-
-  const updateImage = (localId: string, patch: Partial<EditableImage>) => {
-    setImages((current) =>
-      current.map((image) =>
-        image.localId === localId ? { ...image, ...patch } : image,
-      ),
-    );
     setIsDirty(true);
   };
 
@@ -313,19 +297,13 @@ export default function PortfolioForm({
       const input: PortfolioSaveInput = {
         id: portfolioId,
         title: String(formData.get("title") || ""),
-        slug,
-        region: String(formData.get("region") || ""),
-        place: String(formData.get("place") || ""),
         category: String(formData.get("category") || ""),
         installationType: String(formData.get("installationType") || ""),
         product: String(formData.get("product") || ""),
-        installationDate: String(formData.get("installationDate") || ""),
-        summary: String(formData.get("summary") || ""),
         description: String(formData.get("description") || ""),
         blogUrl: String(formData.get("blogUrl") || ""),
         youtubeUrl: String(formData.get("youtubeUrl") || ""),
         coverImagePath: coverPath,
-        coverImageAlt: String(formData.get("coverImageAlt") || ""),
         beforeTitle: String(formData.get("beforeTitle") || ""),
         beforeDescription: String(
           formData.get("beforeDescription") || "",
@@ -395,33 +373,6 @@ export default function PortfolioForm({
               required
               maxLength={160}
               defaultValue={initialItem?.title || ""}
-              onChange={(event) => handleTitleChange(event.target.value)}
-            />
-          </label>
-          <label className="admin-field-full">
-            <span>Slug *</span>
-            <input
-              name="slug"
-              required
-              value={slug}
-              onChange={(event) => {
-                setSlug(event.target.value.toLowerCase());
-                setSlugTouched(true);
-              }}
-              pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
-              placeholder="office-window-film"
-            />
-          </label>
-          <label>
-            <span>지역</span>
-            <input name="region" defaultValue={initialItem?.region || ""} />
-          </label>
-          <label>
-            <span>시공 장소</span>
-            <input
-              name="place"
-              defaultValue={initialItem?.place || ""}
-              placeholder="예: 서울 강남구"
             />
           </label>
           <label>
@@ -453,23 +404,6 @@ export default function PortfolioForm({
               name="product"
               defaultValue={initialItem?.product || ""}
               placeholder="예: PG PRO 1590"
-            />
-          </label>
-          <label>
-            <span>시공일</span>
-            <input
-              type="date"
-              name="installationDate"
-              defaultValue={initialItem?.installation_date || ""}
-            />
-          </label>
-          <label className="admin-field-full">
-            <span>요약 설명</span>
-            <textarea
-              name="summary"
-              rows={3}
-              maxLength={500}
-              defaultValue={initialItem?.summary || ""}
             />
           </label>
           <label className="admin-field-full">
@@ -549,17 +483,6 @@ export default function PortfolioForm({
             />
           )}
         </label>
-        <div className="admin-form-grid">
-          <label className="admin-field-full">
-            <span>대표 이미지 대체 텍스트</span>
-            <input
-              name="coverImageAlt"
-              maxLength={240}
-              defaultValue={initialItem?.cover_image_alt_text || ""}
-              placeholder="이미지 내용을 간결하게 설명해주세요."
-            />
-          </label>
-        </div>
       </section>
 
       {stages.map((stage, stageIndex) => {
@@ -632,26 +555,6 @@ export default function PortfolioForm({
                   )}
                   <div>
                     <span className="admin-image-order">이미지 {index + 1}</span>
-                    <input
-                      value={image.alt_text || ""}
-                      maxLength={240}
-                      onChange={(event) =>
-                        updateImage(image.localId, {
-                          alt_text: event.target.value,
-                        })
-                      }
-                      placeholder="이미지 대체 텍스트"
-                    />
-                    <input
-                      value={image.caption || ""}
-                      maxLength={500}
-                      onChange={(event) =>
-                        updateImage(image.localId, {
-                          caption: event.target.value,
-                        })
-                      }
-                      placeholder="이미지별 설명"
-                    />
                   </div>
                   <div className="admin-image-actions">
                     <button

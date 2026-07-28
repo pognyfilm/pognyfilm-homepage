@@ -158,7 +158,7 @@ export default function PortfolioGallery({
                     {categoryLabels[selected.category || ""] || "Portfolio"}
                   </p>
                   <h2 id="portfolio-modal-title">{selected.title}</h2>
-                  <p>{selected.summary}</p>
+                  {selected.summary && <p>{selected.summary}</p>}
                 </div>
                 {(selected.blog_url || selected.youtube_url) && (
                   <div className="case-external-links">
@@ -232,7 +232,8 @@ export default function PortfolioGallery({
                       <p>
                         {group.description ||
                           selected.description ||
-                          selected.summary}
+                          selected.summary ||
+                          selected.title}
                       </p>
                     </div>
                   </article>

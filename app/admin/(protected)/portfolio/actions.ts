@@ -7,7 +7,11 @@ import type {
   PortfolioSaveInput,
   PortfolioStatus,
 } from "../../../../lib/portfolio/types";
-import { createSlug, validatePortfolioInput } from "../../../../lib/portfolio/validation";
+import {
+  createPortfolioSlug,
+  createSlug,
+  validatePortfolioInput,
+} from "../../../../lib/portfolio/validation";
 
 type ActionResult =
   | { success: true; warning?: string }
@@ -77,20 +81,14 @@ export async function savePortfolioAction(
     const now = new Date().toISOString();
     const item = {
       id: input.id,
-      slug: input.slug,
       title: input.title,
-      region: input.region,
-      place: input.place,
       category: input.category,
       installation_type: input.installation_type,
       product: input.product,
-      installation_date: input.installation_date,
-      summary: input.summary,
       description: input.description,
       blog_url: input.blog_url,
       youtube_url: input.youtube_url,
       cover_image_path: input.cover_image_path,
-      cover_image_alt_text: input.cover_image_alt_text,
       before_title: input.before_title,
       before_description: input.before_description,
       during_title: input.during_title,
@@ -107,6 +105,7 @@ export async function savePortfolioAction(
       mode === "create"
         ? supabase.from("portfolio_items").insert({
             ...item,
+            slug: createPortfolioSlug(input.title, input.id),
             created_by: session.user.id,
           })
         : supabase.from("portfolio_items").update(item).eq("id", input.id);
