@@ -1,4 +1,7 @@
-import { getFeaturedPublishedPortfolioItems } from "../../lib/portfolio/queries";
+import {
+  getFeaturedPublishedPortfolioItems,
+  getPublishedPortfolioItems,
+} from "../../lib/portfolio/queries";
 import PortfolioGallery from "./PortfolioGallery";
 
 function LegacyPortfolioFallback() {
@@ -41,7 +44,18 @@ function LegacyPortfolioFallback() {
 }
 
 export default async function PublicPortfolioSection() {
-  const { items } = await getFeaturedPublishedPortfolioItems();
-  if (items === null) return <LegacyPortfolioFallback />;
-  return <PortfolioGallery items={items} showAllLink />;
+  const [{ items: featuredItems }, { items: publishedItems }] = await Promise.all([
+    getFeaturedPublishedPortfolioItems(),
+    getPublishedPortfolioItems(),
+  ]);
+  if (featuredItems === null || publishedItems === null) {
+    return <LegacyPortfolioFallback />;
+  }
+  return (
+    <PortfolioGallery
+      items={featuredItems}
+      categoryItems={publishedItems}
+      showAllLink
+    />
+  );
 }

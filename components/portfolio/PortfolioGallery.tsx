@@ -51,9 +51,11 @@ const stageContent = (
 
 export default function PortfolioGallery({
   items,
+  categoryItems = items,
   showAllLink = false,
 }: {
   items: PortfolioItem[];
+  categoryItems?: PortfolioItem[];
   showAllLink?: boolean;
 }) {
   const [filter, setFilter] = useState("all");
@@ -62,8 +64,8 @@ export default function PortfolioGallery({
     () =>
       filter === "all"
         ? items
-        : items.filter((item) => item.category === filter),
-    [filter, items],
+        : categoryItems.filter((item) => item.category === filter),
+    [categoryItems, filter, items],
   );
 
   useEffect(() => {
