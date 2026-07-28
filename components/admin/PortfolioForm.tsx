@@ -315,6 +315,7 @@ export default function PortfolioForm({
         afterTitle: String(formData.get("afterTitle") || ""),
         afterDescription: String(formData.get("afterDescription") || ""),
         status: String(formData.get("status") || "draft") as PortfolioStatus,
+        isFeatured: formData.get("isFeatured") === "on",
         sortOrder: Number(formData.get("sortOrder") || 0),
         tags: String(formData.get("tags") || "")
           .split(",")
@@ -626,6 +627,17 @@ export default function PortfolioForm({
               name="sortOrder"
               defaultValue={initialItem?.sort_order || 0}
             />
+          </label>
+          <label className="admin-feature-toggle admin-field-full">
+            <input
+              type="checkbox"
+              name="isFeatured"
+              defaultChecked={initialItem?.is_featured === true}
+            />
+            <span>
+              <strong>메인 대표 노출</strong>
+              <small>메인 홈페이지에 노출합니다. 최대 6개까지 선택할 수 있습니다.</small>
+            </span>
           </label>
         </div>
       </section>

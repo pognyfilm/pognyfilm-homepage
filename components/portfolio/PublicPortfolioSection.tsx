@@ -1,4 +1,4 @@
-import { getPublishedPortfolioItems } from "../../lib/portfolio/queries";
+import { getFeaturedPublishedPortfolioItems } from "../../lib/portfolio/queries";
 import PortfolioGallery from "./PortfolioGallery";
 
 function LegacyPortfolioFallback() {
@@ -41,7 +41,7 @@ function LegacyPortfolioFallback() {
 }
 
 export default async function PublicPortfolioSection() {
-  const { items } = await getPublishedPortfolioItems();
-  if (items === null || !items.length) return <LegacyPortfolioFallback />;
-  return <PortfolioGallery items={items} />;
+  const { items } = await getFeaturedPublishedPortfolioItems();
+  if (items === null) return <LegacyPortfolioFallback />;
+  return <PortfolioGallery items={items} showAllLink />;
 }

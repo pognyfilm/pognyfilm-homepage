@@ -112,6 +112,7 @@ export default function PortfolioList({
                 <th>지역</th>
                 <th>제품</th>
                 <th>상태</th>
+                <th>메인 노출</th>
                 <th>시공일</th>
                 <th>수정일</th>
                 <th>관리</th>
@@ -136,6 +137,13 @@ export default function PortfolioList({
                       <option value="draft">임시저장</option>
                       <option value="hidden">숨김</option>
                     </select>
+                  </td>
+                  <td data-label="메인 노출">
+                    <span
+                      className={`admin-feature-badge ${item.is_featured ? "is-on" : "is-off"}`}
+                    >
+                      {item.is_featured ? "대표 노출" : "OFF"}
+                    </span>
                   </td>
                   <td data-label="시공일">{item.installation_date || "—"}</td>
                   <td data-label="수정일">

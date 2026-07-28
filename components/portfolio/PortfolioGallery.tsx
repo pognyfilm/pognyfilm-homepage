@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { CSSProperties, useEffect, useMemo, useState } from "react";
 import type {
   PortfolioImageStage,
@@ -50,8 +51,10 @@ const stageContent = (
 
 export default function PortfolioGallery({
   items,
+  showAllLink = false,
 }: {
   items: PortfolioItem[];
+  showAllLink?: boolean;
 }) {
   const [filter, setFilter] = useState("all");
   const [selected, setSelected] = useState<PortfolioItem | null>(null);
@@ -95,38 +98,49 @@ export default function PortfolioGallery({
             <p className="eyebrow">Portfolio</p>
             <h2 id="cases-title">시공사례</h2>
           </div>
-          <div className="filters" aria-label="시공사례 필터">
-            {categories.map(([value, label]) => (
+          <div className="portfolio-section-tools">
+            <div className="filters" aria-label="시공사례 필터">
+              {categories.map(([value, label]) => (
+                <button
+                  className={filter === value ? "active" : ""}
+                  type="button"
+                  onClick={() => setFilter(value)}
+                  key={value}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            {showAllLink && (
+              <Link className="portfolio-all-link" href="/portfolio">
+                전체 시공사례 보기 <span aria-hidden="true">→</span>
+              </Link>
+            )}
+          </div>
+        </div>
+        {visible.length > 0 ? (
+          <div className="case-grid">
+            {visible.map((item) => (
               <button
-                className={filter === value ? "active" : ""}
+                className="case-item"
                 type="button"
-                onClick={() => setFilter(value)}
-                key={value}
+                onClick={() => setSelected(item)}
+                key={item.id}
               >
-                {label}
+                {item.cover_public_url && (
+                  <img
+                    src={item.cover_public_url}
+                    alt={item.cover_image_alt_text || item.title}
+                  />
+                )}
+                <span>{categoryLabels[item.category || ""] || item.category || "시공"}</span>
+                <strong>{item.title}</strong>
               </button>
             ))}
           </div>
-        </div>
-        <div className="case-grid">
-          {visible.map((item) => (
-            <button
-              className="case-item"
-              type="button"
-              onClick={() => setSelected(item)}
-              key={item.id}
-            >
-              {item.cover_public_url && (
-                <img
-                  src={item.cover_public_url}
-                  alt={item.cover_image_alt_text || item.title}
-                />
-              )}
-              <span>{categoryLabels[item.category || ""] || item.category || "시공"}</span>
-              <strong>{item.title}</strong>
-            </button>
-          ))}
-        </div>
+        ) : (
+          <div className="portfolio-public-empty">표시할 시공사례가 없습니다.</div>
+        )}
       </section>
 
       <div className="case-modal" aria-hidden={selected ? "false" : "true"}>

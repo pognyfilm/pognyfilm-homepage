@@ -97,6 +97,7 @@ export function validatePortfolioInput(raw: PortfolioSaveInput) {
     after_title: text(raw.afterTitle, 160) || null,
     after_description: text(raw.afterDescription, 2000) || null,
     status: raw.status,
+    is_featured: raw.isFeatured === true,
     sort_order: Number.isFinite(raw.sortOrder)
       ? Math.trunc(raw.sortOrder)
       : 0,

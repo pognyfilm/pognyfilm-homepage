@@ -38,6 +38,7 @@ const normalizeItem = (row: Record<string, unknown>): PortfolioItem => {
 
   return {
     ...(row as unknown as PortfolioItem),
+    is_featured: row.is_featured === true,
     portfolio_images: (
       (row.portfolio_images as PortfolioImage[] | undefined) || []
     ).sort((a, b) => a.sort_order - b.sort_order),
@@ -104,6 +105,26 @@ export async function getPublishedPortfolioItems() {
     .eq("status", "published")
     .order("sort_order", { ascending: true })
     .order("published_at", { ascending: false });
+  if (error) return { items: null, error: error.message };
+  return {
+    items: await attachPublicUrls(
+      (data || []).map((row) => normalizeItem(row as Record<string, unknown>)),
+    ),
+    error: null,
+  };
+}
+
+export async function getFeaturedPublishedPortfolioItems() {
+  const supabase = await createClient();
+  if (!supabase) return { items: null, error: "Supabase 연결이 필요합니다." };
+  const { data, error } = await supabase
+    .from("portfolio_items")
+    .select(portfolioSelect)
+    .eq("status", "published")
+    .eq("is_featured", true)
+    .order("sort_order", { ascending: true })
+    .order("published_at", { ascending: false })
+    .limit(6);
   if (error) return { items: null, error: error.message };
   return {
     items: await attachPublicUrls(

@@ -1169,6 +1169,71 @@
   grid-column: 1 / -1;
 }
 
+.admin-form-grid label.admin-feature-toggle {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 16px 18px;
+  border: 1px solid #d8e2ed;
+  border-radius: 14px;
+  background: #f8fbff;
+  cursor: pointer;
+}
+
+.admin-form-grid .admin-feature-toggle > input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  min-height: 20px;
+  flex: 0 0 20px;
+  margin: 0;
+  padding: 0;
+  accent-color: #1267c4;
+  cursor: pointer;
+}
+
+.admin-feature-toggle > span {
+  display: grid;
+  gap: 4px;
+}
+
+.admin-feature-toggle strong {
+  color: #18293a;
+  font-size: 14px;
+}
+
+.admin-feature-toggle small {
+  color: #718196;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.admin-feature-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 68px;
+  padding: 5px 9px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.admin-feature-badge.is-on {
+  border-color: #b8dafc;
+  background: #e8f4ff;
+  color: #0c62bd;
+}
+
+.admin-feature-badge.is-off {
+  border-color: #dce3ea;
+  background: #f4f6f8;
+  color: #7b8794;
+}
+
 .admin-upload-field {
   margin-bottom: 20px;
   padding: 18px;

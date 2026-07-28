@@ -35,6 +35,7 @@ export type PortfolioItem = {
   after_description: string | null;
   cover_public_url?: string;
   status: PortfolioStatus;
+  is_featured: boolean;
   sort_order: number;
   published_at: string | null;
   created_at: string;
@@ -60,6 +61,7 @@ export type PortfolioSaveInput = {
   afterTitle: string;
   afterDescription: string;
   status: PortfolioStatus;
+  isFeatured: boolean;
   sortOrder: number;
   tags: string[];
   images: PortfolioImage[];

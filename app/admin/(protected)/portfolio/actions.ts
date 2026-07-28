@@ -79,6 +79,19 @@ export async function savePortfolioAction(
     const input = validatePortfolioInput(rawInput);
     const { session, supabase } = await getContext();
     const now = new Date().toISOString();
+
+    if (input.is_featured) {
+      const { count, error: featuredCountError } = await supabase
+        .from("portfolio_items")
+        .select("id", { count: "exact", head: true })
+        .eq("is_featured", true)
+        .neq("id", input.id);
+      if (featuredCountError) throw featuredCountError;
+      if ((count || 0) >= 6) {
+        throw new Error("대표 노출은 최대 6개까지 선택할 수 있습니다.");
+      }
+    }
+
     const item = {
       id: input.id,
       title: input.title,
@@ -96,6 +109,7 @@ export async function savePortfolioAction(
       after_title: input.after_title,
       after_description: input.after_description,
       status: input.status,
+      is_featured: input.is_featured,
       sort_order: input.sort_order,
       published_at: input.status === "published" ? now : null,
       updated_by: session.user.id,
