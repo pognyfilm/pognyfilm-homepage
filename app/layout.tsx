@@ -1,13 +1,40 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import GoogleAnalytics from "../components/GoogleAnalytics";
 import "./globals.css";
 
 const GA_MEASUREMENT_ID = "G-22MMZD6XVR";
 const CLARITY_PROJECT_ID = "xsrswb4u08";
+const siteTitle = "포그니필름 | 프리미엄 단열필름 전문 브랜드";
+const siteDescription =
+  "열차단, 자외선 차단, 눈부심 완화, 주간 사생활 보호까지. 전문 시공과 품질보증을 제공하는 포그니필름입니다.";
 
 export const metadata: Metadata = {
-  title: "포그니필름",
-  description: "포그니필름 Next.js 마이그레이션 기본 프로젝트입니다.",
+  metadataBase: new URL("https://pogny.co.kr"),
+  title: siteTitle,
+  description: siteDescription,
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    url: "https://pogny.co.kr",
+    siteName: "포그니필름",
+    title: siteTitle,
+    description: siteDescription,
+    images: [
+      {
+        url: "/assets/pogny-og.png",
+        width: 1200,
+        height: 630,
+        alt: "포그니필름 프리미엄 단열필름 전문 브랜드",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: ["/assets/pogny-og.png"],
+  },
 };
 
 export default function RootLayout({
@@ -18,35 +45,6 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        <Script id="google-consent-mode" strategy="beforeInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            window.gtag = gtag;
-            gtag('consent', 'default', {
-              analytics_storage: 'granted',
-              ad_storage: 'denied',
-              ad_user_data: 'denied',
-              ad_personalization: 'denied',
-              wait_for_update: 500
-            });
-          `}
-        </Script>
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="beforeInteractive"
-        />
-        <Script id="google-analytics" strategy="beforeInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            window.gtag = window.gtag || function(){dataLayer.push(arguments);}
-            window.gtag('js', new Date());
-            window.gtag('config', '${GA_MEASUREMENT_ID}', {
-              send_page_view: true,
-              debug_mode: ${process.env.NODE_ENV !== "production"}
-            });
-          `}
-        </Script>
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`
             (function(c,l,a,r,i,t,y){
@@ -57,7 +55,10 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body>{children}</body>
+      <body>
+        <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
+        {children}
+      </body>
     </html>
   );
 }

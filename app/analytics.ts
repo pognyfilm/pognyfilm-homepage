@@ -17,6 +17,7 @@ declare global {
   interface Window {
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
+    updateAnalyticsConsent?: (granted: boolean) => void;
   }
 }
 
@@ -32,4 +33,7 @@ export const trackAnalyticsEvent = (
     ...parameters,
     debug_mode: process.env.NODE_ENV !== "production",
   });
+  if (window.location.hostname === "localhost") {
+    console.info(`[analytics:test] event ${eventName}`);
+  }
 };
