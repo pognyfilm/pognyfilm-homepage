@@ -541,7 +541,7 @@ const legacyHtml = String.raw`<header class="site-header">
           <div class="data-report-section-head">
             <p class="eyebrow">Real Data Report</p>
             <h2 id="impact-lab-title">포그니필름 시공 후,<br />실제 전기 사용량은 이렇게 달라졌습니다</h2>
-            <p>동일 세대의 6월 납부내역을 시공 전·시공 직후·1년 후로 비교했습니다.</p>
+            <p>동일 세대의 6월 납부내역을 시공 전·시공 후 1년 뒤·2년 뒤로 비교했습니다.</p>
             <small>단순한 예상 수치가 아닌 실제 납부내역을 바탕으로 확인한 변화입니다.</small>
           </div>
 
@@ -561,7 +561,7 @@ const legacyHtml = String.raw`<header class="site-header">
             <article class="data-period-card after">
               <div class="data-period-top">
                 <span>2025년 6월</span>
-                <em>시공 직후</em>
+                <em>시공 후 1년 뒤</em>
               </div>
               <dl>
                 <div><dt>총 관리비</dt><dd>204,130원</dd></div>
@@ -573,7 +573,7 @@ const legacyHtml = String.raw`<header class="site-header">
             <article class="data-period-card sustain">
               <div class="data-period-top">
                 <span>2026년 6월</span>
-                <em>1년 후에도 효과 유지</em>
+                <em>시공 후 2년 뒤</em>
               </div>
               <dl>
                 <div><dt>총 관리비</dt><dd>189,300원</dd></div>
@@ -583,18 +583,26 @@ const legacyHtml = String.raw`<header class="site-header">
             </article>
           </div>
 
-          <div class="data-report-metrics" aria-label="시공 전 대비 1년 후 핵심 변화">
+          <div class="data-report-metrics" aria-label="시공 전 대비 핵심 변화">
             <article class="data-report-metric primary">
               <span>전기사용량 변화</span>
-              <strong>436kWh → 318kWh</strong>
-              <em>118kWh 감소</em>
-              <p>시공 전 대비 27.1% 감소</p>
+              <div class="data-report-metric-row">
+                <strong>436kWh → 318kWh</strong>
+                <div class="data-report-saving">
+                  <em>118kWh 감소</em>
+                  <p aria-label="시공 전 대비 27.1% 감소"><span aria-hidden="true">▼</span> 27.1% 감소</p>
+                </div>
+              </div>
             </article>
             <article class="data-report-metric primary">
               <span>세대전기요금 변화</span>
-              <strong>102,940원 → 62,100원</strong>
-              <em>40,840원 감소</em>
-              <p>시공 전 대비 39.7% 감소</p>
+              <div class="data-report-metric-row">
+                <strong>102,940원 → 62,100원</strong>
+                <div class="data-report-saving">
+                  <em>40,840원 감소</em>
+                  <p aria-label="시공 전 대비 39.7% 감소"><span aria-hidden="true">▼</span> 39.7% 감소</p>
+                </div>
+              </div>
             </article>
           </div>
 
