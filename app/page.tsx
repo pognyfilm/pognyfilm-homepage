@@ -587,7 +587,7 @@ const legacyHtml = String.raw`<header class="site-header">
             <article class="data-report-metric primary">
               <span>전기사용량 변화</span>
               <div class="data-report-metric-row">
-                <strong>436kWh → 318kWh</strong>
+                <strong>436kWh<br /><small class="data-report-target">→ 318kWh</small></strong>
                 <div class="data-report-saving">
                   <em>118kWh 감소</em>
                   <p aria-label="시공 전 대비 27.1% 감소"><span aria-hidden="true">▼</span> 27.1% 감소</p>
@@ -606,7 +606,7 @@ const legacyHtml = String.raw`<header class="site-header">
             </article>
           </div>
 
-          <p class="data-report-summary-note">2024년 열차단필름 시공 이후<br />2025년 전기사용량이 크게 감소하였으며,<br />2년이 지난 2026년에도 절감 효과가 안정적으로 유지되고 있습니다.</p>
+          <p class="data-report-summary-note">2024년 열차단필름 시공 이후 2025년 전기사용량이 크게 감소하였으며,<br />2년이 지난 2026년에도 절감 효과가 안정적으로 유지되고 있습니다.</p>
 
           <div class="data-report-actions">
             <button class="data-report-source-button" type="button" data-report-open aria-haspopup="dialog" aria-controls="management-report-modal">실제 납부내역 확대보기</button>

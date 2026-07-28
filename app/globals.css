@@ -9942,6 +9942,12 @@ h3 {
   letter-spacing: 0;
 }
 
+.data-report-metric strong .data-report-target {
+  color: inherit;
+  font: inherit;
+  white-space: nowrap;
+}
+
 .data-report-metric-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
