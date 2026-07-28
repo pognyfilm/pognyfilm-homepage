@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { SolapiMessageService } from "solapi";
+import {
+  normalizeKoreanPhone,
+  sendManagerInquirySms,
+} from "../../../lib/notifications/sms";
 import {
   createServiceClient,
   hasSupabaseServerConfig,
@@ -35,7 +38,7 @@ const normalizeText = (value: unknown, maxLength: number) =>
   (typeof value === "string" ? value : "").trim().slice(0, maxLength);
 
 const normalizePhone = (value: unknown) =>
-  (typeof value === "string" ? value : "").replace(/[^0-9]/g, "");
+  normalizeKoreanPhone(value);
 
 const escapeHtml = (value: string) =>
   value.replace(
@@ -192,32 +195,29 @@ export async function POST(request: Request) {
     }
 
     const receivedAt = formatKoreanTime();
-    const shortMessage = message
-      ? `${message.slice(0, 120)}${message.length > 120 ? "…" : ""}`
-      : "미입력";
-    const smsText = `[포그니필름 신규 견적]
+    const smsText = `[포그니필름 신규 상담문의]
+
 고객명: ${name}
 연락처: ${phone}
+문의 유형: 홈페이지 상담
 지역: ${area || "미입력"}
-시공 장소: ${space || "미입력"}
-문의: ${shortMessage}
-접수시간: ${receivedAt}`;
 
-    const solapi = new SolapiMessageService(
-      process.env.SOLAPI_API_KEY!,
-      process.env.SOLAPI_API_SECRET!,
-    );
+새로운 상담 문의가 접수되었습니다.
+관리자 페이지에서 확인해주세요.`;
+
+    const smsConfig = {
+      apiKey: process.env.SOLAPI_API_KEY!,
+      apiSecret: process.env.SOLAPI_API_SECRET!,
+      senderNumber: process.env.SOLAPI_SENDER_NUMBER!,
+    };
     const resend = new Resend(process.env.RESEND_API_KEY!);
 
-    const [smsResult, emailResult] = await Promise.allSettled([
-      solapi.send(
-        {
-          to: normalizePhone(process.env.INQUIRY_SMS_RECEIVER),
-          from: normalizePhone(process.env.SOLAPI_SENDER_NUMBER),
-          text: smsText,
-        },
-        { showMessageList: true },
-      ),
+    const [managerSmsResult, emailResult] = await Promise.allSettled([
+      sendManagerInquirySms({
+        config: smsConfig,
+        recipientNumber: process.env.INQUIRY_SMS_RECEIVER!,
+        text: smsText,
+      }),
       resend.emails.send({
         from: process.env.INQUIRY_EMAIL_FROM!,
         to: [process.env.INQUIRY_EMAIL_RECEIVER!],
@@ -226,14 +226,14 @@ export async function POST(request: Request) {
       }),
     ]);
 
-    const smsFailed =
-      smsResult.status === "rejected" ||
-      smsResult.value.messageList?.some((item) => item.statusCode !== "2000");
+    const managerSmsAccepted =
+      managerSmsResult.status === "fulfilled" &&
+      managerSmsResult.value.accepted;
     const emailFailed =
       emailResult.status === "rejected" ||
       Boolean(emailResult.value.error);
 
-    if (!smsFailed) {
+    if (managerSmsAccepted) {
       const { error: smsUpdateError } = await supabase
         .from("inquiries")
         .update({ sms_sent: true, sms_sent_at: new Date().toISOString() })
@@ -246,16 +246,19 @@ export async function POST(request: Request) {
       }
     }
 
-    if (smsFailed || emailFailed) {
+    if (!managerSmsAccepted || emailFailed) {
       console.error("[quote] Delivery failed:", {
-        sms:
-          smsResult.status === "rejected"
-            ? smsResult.reason
-            : smsResult.value.messageList,
+        managerSms:
+          managerSmsResult.status === "rejected"
+            ? {
+                accepted: false,
+                failureStage: "unexpected_rejection",
+              }
+            : managerSmsResult.value,
         email:
           emailResult.status === "rejected"
-            ? emailResult.reason
-            : emailResult.value.error,
+            ? { failed: true }
+            : { failed: Boolean(emailResult.value.error) },
       });
       return NextResponse.json(
         { ok: true, inquiryId: inquiry.id, notificationSent: false },
@@ -264,7 +267,11 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { ok: true, inquiryId: inquiry.id, notificationSent: true },
+      {
+        ok: true,
+        inquiryId: inquiry.id,
+        notificationSent: true,
+      },
       {
         status: 200,
         headers: { "Cache-Control": "no-store" },
