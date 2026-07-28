@@ -142,8 +142,8 @@ const legacyHtml = String.raw`<header class="site-header">
           </article>
           <article class="proof-card trust">
             <span>03</span>
-            <h3>시공 후 확인 가능한<br />품질보증서 조회 서비스</h3>
-            <p>출처가 불분명한 필름으로 불안하게 시공받지 마세요.<br /><br />정품 필름으로 안심하고 시공받으실 수 있도록, 언제든 확인 가능한 품질보증서 조회 서비스를 제공합니다.</p>
+            <h3>시공 후 확인 가능한<br />품질보증서 조회</h3>
+            <p>정품 필름으로 안심하고 시공받으실 수 있도록, 언제든 확인 가능한 품질보증서 조회 서비스를 제공합니다.</p>
           </article>
         </div>
       </section>
