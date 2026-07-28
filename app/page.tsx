@@ -692,9 +692,16 @@ const legacyHtml = String.raw`<header class="site-header">
         </div>
         <div class="intro-closing" aria-label="포그니필름 책임 시공 약속">
           <p>
-            수년간 하루 최대 2건만 시공하는 이유는 분명합니다. 상담부터 현장 확인, 시공, 마지막 검수까지 외주나 하청 없이 본사 직영팀이 직접 책임지고 진행하기 때문입니다.
-            좋은 시공은 작업이 끝나는 순간이 아니라 고객님의 일상이 더 편안해지는 순간 완성된다고 믿습니다.<br />
-            포그니필름은 처음 상담부터 마지막 검수까지 끝까지 책임지는 직영 관리 시스템을 운영합니다.
+            수년간 하루 최대 2건만 시공하는 이유는 분명합니다.
+          </p>
+          <p>
+            상담부터 현장 확인, 시공, 마지막 검수까지 외주나 하청 없이 본사 직영팀이 직접 책임지고 진행하기 때문입니다.
+          </p>
+          <p>
+            좋은 시공은 작업이 끝나는 순간이 아니라 고객님의 일상이 더 편안해지는 순간 완성된다고 믿습니다.
+          </p>
+          <p>
+            거짓 없는 믿을 수 있는 좋은 품질의 필름으로 좋은 시공을 약속드립니다.
           </p>
           <strong class="intro-signature"><span class="intro-signature-brand">포그니필름</span><span class="intro-signature-name">이반장</span></strong>
         </div>
