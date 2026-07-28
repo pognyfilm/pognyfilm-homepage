@@ -5,9 +5,9 @@ import "./globals.css";
 
 const GA_MEASUREMENT_ID = "G-22MMZD6XVR";
 const CLARITY_PROJECT_ID = "xsrswb4u08";
-const siteTitle = "포그니필름 | 프리미엄 단열필름 전문 브랜드";
+const siteTitle = "단열필름 전문 브랜드 | 포그니필름";
 const siteDescription =
-  "열차단, 자외선 차단, 눈부심 완화, 주간 사생활 보호까지. 전문 시공과 품질보증을 제공하는 포그니필름입니다.";
+  "NSN 스퍼터링 기술로 검증된 열차단 성능, 측정 장비를 통한 실시간 현장 확인, 정품 품질보증서 발급 및 공식 홈페이지 조회 서비스, 본사 직영 시공팀의 무제한 책임 시공제를 제공합니다.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pogny.co.kr"),
