@@ -195,15 +195,17 @@ export async function POST(request: Request) {
     }
 
     const receivedAt = formatKoreanTime();
-    const smsText = `[포그니필름 신규 상담문의]
+    const smsText = `[포그니필름 신규 상담]
 
-고객명: ${name}
-연락처: ${phone}
-문의 유형: 홈페이지 상담
-지역: ${area || "미입력"}
+👤 고객명 : ${name}
+📞 연락처 : ${phone}
+📍 지역 : ${area || "미입력"}
+🪟 문의유형 : ${space || "미입력"}
 
-새로운 상담 문의가 접수되었습니다.
-관리자 페이지에서 확인해주세요.`;
+💬 문의내용
+${message || "미입력"}
+
+관리자 페이지에서 상세 내용을 확인하세요.`;
 
     const smsConfig = {
       apiKey: process.env.SOLAPI_API_KEY!,
