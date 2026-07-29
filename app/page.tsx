@@ -224,10 +224,6 @@ const legacyHtml = String.raw`<header class="site-header">
           </footer>
 
           <aside class="section-cta-banner section-cta-banner-soft" aria-label="TSER 맞춤 필름 견적 안내">
-            <div class="section-cta-copy">
-              <h3>수치보다 중요한 것은<br />우리 공간에 맞는 필름입니다.</h3>
-              <p>시험성적서와 공간 조건을 기준으로<br />적합한 필름을 비교해드립니다.</p>
-            </div>
             <a class="section-cta-button" href="#quote">무료 견적 받아보기</a>
           </aside>
         </div>
@@ -447,10 +443,6 @@ const legacyHtml = String.raw`<header class="site-header">
           </article>
         </div>
         <aside class="section-cta-banner section-cta-banner-bright" aria-label="영상 시공 사례 상담 안내">
-          <div class="section-cta-copy">
-            <h3>영상으로 확인하셨다면<br />이제 우리 공간에 맞춰 비교해보세요.</h3>
-            <p>시공 환경과 필요한 기능을 확인해<br />적합한 제품을 안내해드립니다.</p>
-          </div>
           <a class="section-cta-button" href="#quote">무료 상담 신청하기</a>
         </aside>
       </section>
@@ -532,10 +524,6 @@ const legacyHtml = String.raw`<header class="site-header">
           <button class="chat-nav next" type="button" aria-label="다음 후기">›</button>
         </div>
         <aside class="section-cta-banner section-cta-banner-soft" aria-label="포그니필름 견적 안내">
-          <div class="section-cta-copy">
-            <h3>상담은 빠르게,<br />시공은 꼼꼼하게 진행합니다.</h3>
-            <p>문의 내용을 남겨주시면<br />본사 담당자가 확인 후 연락드립니다.</p>
-          </div>
           <a class="section-cta-button" href="#quote">무료 견적 받아보기</a>
         </aside>
       </section>
@@ -617,10 +605,6 @@ const legacyHtml = String.raw`<header class="site-header">
               <button class="data-report-source-button" type="button" data-report-open aria-haspopup="dialog" aria-controls="management-report-modal">실제 납부내역 확대보기</button>
             </div>
             <aside class="section-cta-banner section-cta-banner-bright" aria-label="실제 절감 효과 상담 안내">
-              <div class="section-cta-copy">
-                <h3>실제 절감 효과,<br />우리 공간에서도 확인해보세요.</h3>
-                <p>공간과 유리 조건을 확인해<br />적합한 필름과 예상 효과를 안내해드립니다.</p>
-              </div>
               <a class="section-cta-button" href="#quote">무료 상담 신청하기</a>
             </aside>
           </div>

@@ -10756,9 +10756,10 @@ body.report-modal-open {
 /* In-content consultation banners */
 .data-report-conversion-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: max-content max-content;
   gap: 20px;
   align-items: center;
+  justify-content: center;
   margin-top: 24px;
 }
 
@@ -10769,16 +10770,14 @@ body.report-modal-open {
 
 .section-cta-banner {
   width: 100%;
-  min-height: 138px;
-  padding: 18px clamp(22px, 3vw, 36px);
-  display: flex;
-  gap: 28px;
-  align-items: center;
-  justify-content: space-between;
+  min-height: 94px;
+  padding: 16px 22px;
+  display: grid;
+  place-items: center;
   border: 1px solid rgba(21, 94, 239, 0.16);
-  border-radius: 22px;
+  border-radius: 18px;
   background: linear-gradient(120deg, #f5f9ff 0%, #eaf3ff 100%);
-  box-shadow: 0 14px 34px rgba(22, 74, 145, 0.08);
+  box-shadow: 0 10px 26px rgba(22, 74, 145, 0.07);
 }
 
 .section-cta-banner-soft {
@@ -10790,52 +10789,36 @@ body.report-modal-open {
   background: linear-gradient(120deg, #eef6ff 0%, #f9fcff 100%);
 }
 
-.section-cta-copy {
-  min-width: 0;
-}
-
-.section-cta-copy h3 {
-  margin: 0;
-  color: #0a2547;
-  font-size: clamp(21px, 1.8vw, 25px);
-  font-weight: 950;
-  line-height: 1.2;
-  letter-spacing: -0.035em;
-}
-
-.section-cta-copy p {
-  margin: 7px 0 0;
-  color: #52657d;
-  font-size: clamp(14px, 1.1vw, 15px);
-  font-weight: 700;
-  line-height: 1.4;
-}
-
 .section-cta-button {
-  flex: 0 0 auto;
-  min-width: 184px;
+  width: max-content;
+  min-width: 188px;
   padding: 14px 22px;
   border-radius: 12px;
-  background: #155eef;
-  color: #fff;
+  background: #ffd43b;
+  color: #10243f;
   font-size: 15px;
   font-weight: 900;
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
-  box-shadow: 0 12px 24px rgba(21, 94, 239, 0.22);
+  box-shadow: 0 10px 22px rgba(168, 119, 0, 0.18);
   transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .section-cta-button:hover {
-  background: #0f4fd4;
-  box-shadow: 0 15px 28px rgba(21, 94, 239, 0.27);
+  background: #f5c927;
+  box-shadow: 0 13px 25px rgba(168, 119, 0, 0.22);
   transform: translateY(-2px);
 }
 
 .section-cta-button:focus-visible {
-  outline: 3px solid rgba(21, 94, 239, 0.28);
+  outline: 3px solid rgba(181, 128, 0, 0.3);
   outline-offset: 3px;
+}
+
+.data-report-conversion-row .section-cta-banner {
+  width: auto;
+  min-width: 236px;
 }
 
 .tser-guide .section-cta-banner,
@@ -10854,32 +10837,21 @@ body.report-modal-open {
 
 @media (max-width: 760px) {
   .section-cta-banner {
-    min-height: 0;
+    min-height: 100px;
     padding: 16px;
-    display: grid;
-    gap: 12px;
-    border-radius: 18px;
-  }
-
-  .section-cta-copy h3 {
-    font-size: clamp(19px, 5.6vw, 22px);
-  }
-
-  .section-cta-copy p {
-    margin-top: 6px;
-    font-size: 13.5px;
-    line-height: 1.4;
+    border-radius: 16px;
   }
 
   .section-cta-button {
-    width: 100%;
-    min-width: 0;
+    width: max-content;
+    min-width: 188px;
+    max-width: 100%;
     padding: 12px 16px;
   }
 
-  .data-report-conversion-row {
-    grid-template-columns: 1fr;
-    gap: 16px;
+  .data-report-conversion-row .section-cta-banner {
+    width: 100%;
+    min-width: 0;
   }
 
   .review-chat > .section-cta-banner {
@@ -10894,7 +10866,13 @@ body.report-modal-open {
 
 @media (max-width: 900px) {
   .data-report-conversion-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: max-content max-content;
+  }
+}
+
+@media (max-width: 540px) {
+  .data-report-conversion-row {
+    grid-template-columns: minmax(0, 1fr);
     gap: 16px;
   }
 }
