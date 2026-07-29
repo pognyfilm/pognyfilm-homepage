@@ -387,7 +387,7 @@ img {
 
 .hero .eyebrow::before {
   content: "";
-  width: 36px;
+  width: 44px;
   height: 1px;
   background: currentColor;
 }
@@ -395,7 +395,12 @@ img {
 .hero-tags {
   flex-wrap: nowrap;
   white-space: nowrap;
-  font-size: 16px;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.hero .hero-tags {
+  gap: 16px;
 }
 
 .hero-tags span {
@@ -7960,12 +7965,17 @@ h3 {
   }
 
   .hero .eyebrow {
-    font-size: 11px;
+    font-size: 13.5px;
     letter-spacing: 0.12em;
   }
 
   .hero .eyebrow::before {
-    width: 24px;
+    width: 30px;
+  }
+
+  .hero .hero-tags {
+    gap: 14px;
+    margin-bottom: 11px;
   }
 
   h1 {
