@@ -12,8 +12,8 @@ const legacyHtml = String.raw`<header class="site-header">
       <nav class="nav" aria-label="주요 메뉴">
         <a href="#products">PG FILM Series</a>
         <a href="#cases">시공사례</a>
-        <a href="#film-finder">필름 추천</a>
-        <a href="#warranty">품질보증</a>
+        <a href="#film-finder">AI 필름 추천</a>
+        <a href="#warranty">품질보증서 조회</a>
       </nav>
       <a class="header-call" href="tel:18334236">전화상담 1833-4236</a>
     </header>
