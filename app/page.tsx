@@ -847,7 +847,15 @@ const legacyHtml = String.raw`<header class="site-header">
           <text x="32" y="36" text-anchor="middle">blog</text>
         </svg>
       </a>
-    </nav>`;
+    </nav>
+
+    <a class="mobile-quick-call" href="tel:18334236" aria-label="빠른 전화 상담 1833-4236">
+      <span>
+        <small>궁금한 점을 바로 상담해보세요</small>
+        <strong>전화상담 1833-4236</strong>
+      </span>
+      <b>빠른 상담하기 <i aria-hidden="true">›</i></b>
+    </a>`;
 
 const impactSectionMarker = '<section class="section impact-lab data-report-lab" aria-labelledby="impact-lab-title">';
 const casesSectionMarker = '<section class="section cases" id="cases" aria-labelledby="cases-title">';
