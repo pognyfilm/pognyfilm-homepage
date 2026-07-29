@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { trackAnalyticsEvent } from "../app/analytics";
+import { scrollToQuote } from "../lib/scroll-to-quote";
 import {
   emptyRecommendationAnswers,
   getRecommendationSummary,
@@ -149,10 +150,7 @@ export default function FilmRecommendationChatbot() {
     });
     setIsOpen(false);
     window.setTimeout(() => {
-      document.getElementById("quote")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      scrollToQuote();
       textarea?.focus({ preventScroll: true });
     }, 50);
   };

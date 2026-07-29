@@ -743,12 +743,12 @@ const legacyHtml = String.raw`<header class="site-header">
         </div>
       </section>
 
-      <section class="section quote" id="quote" aria-label="자주 묻는 질문 및 견적 문의">
+      <section class="section quote" aria-label="자주 묻는 질문 및 견적 문의">
         <div class="quote-shell">
           <div class="quote-copy">
             <div id="faq-root"></div>
           </div>
-          <form class="quote-form" data-quote-form>
+          <form class="quote-form" id="quote" data-quote-form aria-label="빠른 견적 문의">
             <div class="quote-form-head full">
               <span>빠른 견적 문의</span>
               <p>기본 정보를 남겨주시면 확인 후 빠르게 연락드리겠습니다.</p>
@@ -843,7 +843,7 @@ const legacyHtml = String.raw`<header class="site-header">
       </a>
     </nav>
 
-    <a class="mobile-quick-call" href="tel:18334236" aria-label="빠른 전화 상담 1833-4236">
+    <a class="mobile-quick-call" href="#quote" aria-label="빠른 견적 문의로 이동">
       <span>
         <small>궁금한 점을 바로 상담해보세요</small>
         <strong>전화상담 1833-4236</strong>

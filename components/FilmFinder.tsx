@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { GLASS_TYPES, PG_FILM_PRODUCTS, type FilmProduct } from "../app/film-recommendation-data";
 import { trackAnalyticsEvent } from "../app/analytics";
+import { scrollToQuote } from "../lib/scroll-to-quote";
 
 type FinderState = {
   space: string;
@@ -197,7 +198,7 @@ export default function FilmFinder() {
     if (quoteForm) {
       quoteForm.dataset.recommendedProduct = result.primary?.product.code || "site_check_required";
     }
-    document.getElementById("quote")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    scrollToQuote();
   };
 
   const renderProductCard = (item: NonNullable<ReturnType<typeof scoreProduct>>, rank: string) => (
