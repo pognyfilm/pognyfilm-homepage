@@ -53,20 +53,27 @@ const stageContent = (
 export default function PortfolioGallery({
   items,
   categoryItems = items,
+  categoryLimit,
   showAllLink = false,
 }: {
   items: PortfolioItem[];
   categoryItems?: PortfolioItem[];
+  categoryLimit?: number;
   showAllLink?: boolean;
 }) {
   const [filter, setFilter] = useState("all");
   const [selected, setSelected] = useState<PortfolioItem | null>(null);
   const visible = useMemo(
-    () =>
-      filter === "all"
-        ? items
-        : categoryItems.filter((item) => item.category === filter),
-    [categoryItems, filter, items],
+    () => {
+      if (filter === "all") return items;
+      const filteredItems = categoryItems.filter(
+        (item) => item.category === filter,
+      );
+      return categoryLimit === undefined
+        ? filteredItems
+        : filteredItems.slice(0, categoryLimit);
+    },
+    [categoryItems, categoryLimit, filter, items],
   );
 
   useEffect(() => {

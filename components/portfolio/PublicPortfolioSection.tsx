@@ -55,6 +55,7 @@ export default async function PublicPortfolioSection() {
     <PortfolioGallery
       items={featuredItems}
       categoryItems={publishedItems}
+      categoryLimit={6}
       showAllLink
     />
   );
