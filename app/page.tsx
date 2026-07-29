@@ -188,7 +188,7 @@ const legacyHtml = String.raw`<header class="site-header">
       <section class="section tser-guide" aria-labelledby="tser-guide-title">
         <div class="tser-guide-shell">
           <header class="tser-guide-head">
-            <h2 id="tser-guide-title">열차단필름의 고향 미국에서는<br /><span>'열차단율'보다</span><br /><strong>TSER</strong>을 먼저 봅니다.</h2>
+            <h2 id="tser-guide-title">열차단필름의 고향 <strong class="tser-country">미국</strong>에서는<br /><span>'열차단율'보다</span><br /><strong>TSER</strong>을 먼저 봅니다.</h2>
           </header>
 
           <article class="tser-unified-card">
@@ -215,7 +215,7 @@ const legacyHtml = String.raw`<header class="site-header">
           <div class="tser-compare-bar" aria-label="필름 성능 확인 기준 비교">
             <span class="is-wrong"><i aria-hidden="true">×</i> 열차단율만 확인</span>
             <b aria-hidden="true">→</b>
-            <span class="is-right"><i aria-hidden="true">✓</i> TSER로 전체 성능 확인</span>
+            <span class="is-right"><i aria-hidden="true">✓</i> TSER로 필름 최종 성능 체크</span>
           </div>
 
           <footer class="tser-conclusion">
