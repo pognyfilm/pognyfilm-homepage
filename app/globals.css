@@ -10818,7 +10818,7 @@ body.report-modal-open {
   grid-template-columns: max-content;
   align-items: center;
   justify-content: center;
-  margin-top: 24px;
+  margin-top: 18px;
 }
 
 .data-report-conversion-row .data-report-actions {
@@ -10828,23 +10828,23 @@ body.report-modal-open {
 
 .section-cta-banner {
   width: 100%;
-  min-height: 94px;
-  padding: 16px 22px;
+  min-height: 0;
+  padding: 0;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(21, 94, 239, 0.16);
-  border-radius: 18px;
-  background: linear-gradient(120deg, #f5f9ff 0%, #eaf3ff 100%);
-  box-shadow: 0 10px 26px rgba(22, 74, 145, 0.07);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .section-cta-banner-soft {
-  background: linear-gradient(120deg, #f8fbff 0%, #edf5ff 100%);
+  background: transparent;
 }
 
 .section-cta-banner-bright {
-  border-color: rgba(66, 133, 244, 0.2);
-  background: linear-gradient(120deg, #eef6ff 0%, #f9fcff 100%);
+  border-color: transparent;
+  background: transparent;
 }
 
 .section-cta-button {
@@ -10881,12 +10881,12 @@ body.report-modal-open {
 
 .tser-guide .section-cta-banner,
 .shorts .section-cta-banner {
-  margin-top: 24px;
+  margin-top: 18px;
 }
 
 .review-chat > .section-cta-banner {
   width: min(1180px, calc(100% - 48px));
-  margin: 26px auto 0;
+  margin: 20px auto 0;
 }
 
 #quote {
@@ -10902,9 +10902,9 @@ body.report-modal-open {
   }
 
   .section-cta-banner {
-    min-height: 100px;
-    padding: 16px;
-    border-radius: 16px;
+    min-height: 0;
+    padding: 0;
+    border-radius: 0;
   }
 
   .section-cta-button {
@@ -10921,7 +10921,7 @@ body.report-modal-open {
 
   .review-chat > .section-cta-banner {
     width: calc(100% - 32px);
-    margin-top: 22px;
+    margin-top: 18px;
   }
 
   #quote {
