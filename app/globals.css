@@ -11171,3 +11171,118 @@ body.report-modal-open {
     line-height: 1.45;
   }
 }
+
+/* Certified technology image */
+.certified-technology {
+  background: linear-gradient(180deg, #ffffff 0%, #f3f9ff 100%);
+}
+
+.certified-technology-shell {
+  display: grid;
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  justify-items: center;
+  text-align: center;
+}
+
+.certified-technology-head .eyebrow {
+  color: var(--blue);
+}
+
+.certified-technology-head h2 {
+  margin-top: 10px;
+  color: var(--navy);
+  font-size: clamp(34px, 4.5vw, 54px);
+  line-height: 1.15;
+  word-break: keep-all;
+}
+
+.certified-technology-head > p:last-child {
+  margin-top: 18px;
+  color: #56687b;
+  font-size: clamp(15px, 1.5vw, 18px);
+  font-weight: 700;
+  line-height: 1.65;
+}
+
+.certified-technology-visual {
+  width: 100%;
+  margin: clamp(28px, 4vw, 44px) 0 0;
+  padding: clamp(6px, 0.8vw, 10px);
+  border: 1px solid rgba(20, 105, 216, 0.15);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 18px 46px rgba(6, 23, 44, 0.1);
+}
+
+.certified-technology-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.certified-technology-trust {
+  margin-top: clamp(24px, 3.5vw, 38px);
+}
+
+.certified-technology-trust strong {
+  color: var(--navy);
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.25;
+}
+
+.certified-technology-trust p {
+  margin-top: 12px;
+  color: #607286;
+  font-size: clamp(14px, 1.35vw, 17px);
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.certified-technology-cta {
+  margin-top: clamp(22px, 3vw, 30px);
+}
+
+@media (max-width: 767px) {
+  .certified-technology {
+    padding: 54px 10px;
+  }
+
+  .certified-technology-head h2 {
+    max-width: 300px;
+    margin-inline: auto;
+    font-size: clamp(28px, 8.5vw, 36px);
+    line-height: 1.2;
+  }
+
+  .certified-technology-head > p:last-child {
+    margin-top: 14px;
+    font-size: 14px;
+    line-height: 1.58;
+  }
+
+  .certified-technology-visual {
+    margin-top: 24px;
+    padding: 3px;
+    border-radius: 6px;
+    box-shadow: 0 12px 30px rgba(6, 23, 44, 0.09);
+  }
+
+  .certified-technology-trust {
+    margin-top: 22px;
+  }
+
+  .certified-technology-trust strong {
+    font-size: 23px;
+  }
+
+  .certified-technology-trust p {
+    margin-top: 9px;
+    font-size: 14px;
+  }
+
+  .certified-technology-cta {
+    margin-top: 20px;
+  }
+}

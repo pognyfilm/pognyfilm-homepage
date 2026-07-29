@@ -231,6 +231,33 @@ const legacyHtml = String.raw`<header class="site-header">
         </div>
       </section>
 
+      <section class="section certified-technology" aria-labelledby="certified-technology-title">
+        <div class="certified-technology-shell">
+          <header class="certified-technology-head">
+            <p class="eyebrow">CERTIFIED TECHNOLOGY</p>
+            <h2 id="certified-technology-title">말보다 확실한 기술의 증명</h2>
+            <p>포그니필름은 특허와 상표등록,<br />공인 시험성적서를 바탕으로<br />제품의 기술력과 성능을 투명하게 증명합니다.</p>
+          </header>
+
+          <figure class="certified-technology-visual">
+            <img
+              src="/assets/certified-technology.png"
+              width="1110"
+              height="624"
+              loading="lazy"
+              alt="포그니필름 특허증, 상표등록증 및 공인 시험성적서"
+            />
+          </figure>
+
+          <div class="certified-technology-trust">
+            <strong>검증된 자료가<br />포그니필름의 기준입니다.</strong>
+            <p>보이지 않는 수치까지<br />공인 시험자료를 기준으로 안내합니다.</p>
+          </div>
+
+          <a class="section-cta-button certified-technology-cta" href="#quote">검증된 필름 상담받기</a>
+        </div>
+      </section>
+
       <section class="section products" id="products" aria-labelledby="products-title">
         <div class="product-lineup">
           <div class="product-series-title">
