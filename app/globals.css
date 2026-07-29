@@ -10941,3 +10941,69 @@ body.report-modal-open {
     gap: 16px;
   }
 }
+
+@media (max-width: 767px) {
+  .process {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  .process-title {
+    margin-bottom: 22px;
+  }
+
+  .process-list {
+    gap: 12px;
+  }
+
+  .process-step,
+  .process-list .process-step:hover {
+    display: flex;
+    min-height: clamp(160px, 42vw, 180px);
+    height: clamp(160px, 42vw, 180px);
+    aspect-ratio: auto;
+    justify-content: center;
+    padding: 10px 12px 10px calc(38% + 12px);
+    transform: none;
+  }
+
+  .process-step::before,
+  .process-step::after {
+    right: auto;
+    width: 38%;
+  }
+
+  .process-step::before {
+    background-position: center;
+  }
+
+  .process-step::after {
+    background:
+      linear-gradient(180deg, rgba(2, 10, 20, 0.16), rgba(2, 10, 20, 0.5)),
+      linear-gradient(90deg, rgba(2, 10, 20, 0.34), rgba(2, 10, 20, 0.08));
+  }
+
+  .process-step span,
+  .process-step strong,
+  .process-step p {
+    text-align: left;
+  }
+
+  .process-step span {
+    margin-bottom: 2px;
+    font-size: 25px;
+    line-height: 1;
+  }
+
+  .process-step strong {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .process-step p {
+    max-width: none;
+    margin: 6px 0 0;
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+}
