@@ -11113,3 +11113,61 @@ body.report-modal-open {
     font-size: 17px;
   }
 }
+
+@media (max-width: 767px) {
+  .proof {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+
+  .proof .section-head {
+    margin-bottom: 24px;
+  }
+
+  .proof-grid {
+    gap: 12px;
+  }
+
+  .proof-card {
+    display: flex;
+    min-height: 160px;
+    padding: 14px 12px 14px calc(34% + 12px);
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .proof-card::before,
+  .proof-card::after {
+    right: auto;
+    width: 34%;
+  }
+
+  .proof-card::after {
+    background:
+      linear-gradient(180deg, rgba(2, 10, 20, 0.14), rgba(2, 10, 20, 0.54)),
+      linear-gradient(90deg, rgba(6, 23, 44, 0.46), rgba(6, 23, 44, 0.12));
+  }
+
+  .proof-grid span {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 34px;
+    height: 34px;
+    margin: 0;
+    border-radius: 7px;
+    font-size: 13px;
+  }
+
+  .proof-grid h3 {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.25;
+  }
+
+  .proof-grid p {
+    margin-top: 6px;
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+}
