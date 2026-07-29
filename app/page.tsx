@@ -600,12 +600,14 @@ const legacyHtml = String.raw`<header class="site-header">
             </article>
           </div>
 
-          <p class="data-report-summary-note">2024년 열차단필름 시공 이후 2025년 전기사용량이 크게 감소하였으며,<br />2년이 지난 2026년에도 절감 효과가 안정적으로 유지되고 있습니다.</p>
+          <div class="data-report-summary-note">
+            <p>2024년 열차단필름 시공 이후 2025년 전기사용량이 크게 감소하였으며,<br />2년이 지난 2026년에도 절감 효과가 안정적으로 유지되고 있습니다.</p>
+            <div class="data-report-actions">
+              <button class="data-report-source-button" type="button" data-report-open aria-haspopup="dialog" aria-controls="management-report-modal">실제 납부내역 보기</button>
+            </div>
+          </div>
 
           <div class="data-report-conversion-row">
-            <div class="data-report-actions">
-              <button class="data-report-source-button" type="button" data-report-open aria-haspopup="dialog" aria-controls="management-report-modal">실제 납부내역 확대보기</button>
-            </div>
             <aside class="section-cta-banner section-cta-banner-bright" aria-label="실제 절감 효과 상담 안내">
               <a class="section-cta-button" href="#quote">무료 상담 신청하기</a>
             </aside>
