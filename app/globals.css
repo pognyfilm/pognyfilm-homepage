@@ -10743,3 +10743,148 @@ body.report-modal-open {
     animation: none;
   }
 }
+/* In-content consultation banners */
+.data-report-conversion-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.data-report-conversion-row .data-report-actions {
+  align-items: center;
+  margin: 0;
+}
+
+.section-cta-banner {
+  width: 100%;
+  min-height: 138px;
+  padding: 18px clamp(22px, 3vw, 36px);
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(21, 94, 239, 0.16);
+  border-radius: 22px;
+  background: linear-gradient(120deg, #f5f9ff 0%, #eaf3ff 100%);
+  box-shadow: 0 14px 34px rgba(22, 74, 145, 0.08);
+}
+
+.section-cta-banner-soft {
+  background: linear-gradient(120deg, #f8fbff 0%, #edf5ff 100%);
+}
+
+.section-cta-banner-bright {
+  border-color: rgba(66, 133, 244, 0.2);
+  background: linear-gradient(120deg, #eef6ff 0%, #f9fcff 100%);
+}
+
+.section-cta-copy {
+  min-width: 0;
+}
+
+.section-cta-copy h3 {
+  margin: 0;
+  color: #0a2547;
+  font-size: clamp(21px, 1.8vw, 25px);
+  font-weight: 950;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.section-cta-copy p {
+  margin: 7px 0 0;
+  color: #52657d;
+  font-size: clamp(14px, 1.1vw, 15px);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.section-cta-button {
+  flex: 0 0 auto;
+  min-width: 184px;
+  padding: 14px 22px;
+  border-radius: 12px;
+  background: #155eef;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 12px 24px rgba(21, 94, 239, 0.22);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.section-cta-button:hover {
+  background: #0f4fd4;
+  box-shadow: 0 15px 28px rgba(21, 94, 239, 0.27);
+  transform: translateY(-2px);
+}
+
+.section-cta-button:focus-visible {
+  outline: 3px solid rgba(21, 94, 239, 0.28);
+  outline-offset: 3px;
+}
+
+.tser-guide .section-cta-banner,
+.shorts .section-cta-banner {
+  margin-top: 24px;
+}
+
+.review-chat > .section-cta-banner {
+  width: min(1180px, calc(100% - 48px));
+  margin: 26px auto 0;
+}
+
+#quote {
+  scroll-margin-top: 96px;
+}
+
+@media (max-width: 760px) {
+  .section-cta-banner {
+    min-height: 0;
+    padding: 16px;
+    display: grid;
+    gap: 12px;
+    border-radius: 18px;
+  }
+
+  .section-cta-copy h3 {
+    font-size: clamp(19px, 5.6vw, 22px);
+  }
+
+  .section-cta-copy p {
+    margin-top: 6px;
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+
+  .section-cta-button {
+    width: 100%;
+    min-width: 0;
+    padding: 12px 16px;
+  }
+
+  .data-report-conversion-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .review-chat > .section-cta-banner {
+    width: calc(100% - 32px);
+    margin-top: 22px;
+  }
+
+  #quote {
+    scroll-margin-top: 78px;
+  }
+}
+
+@media (max-width: 900px) {
+  .data-report-conversion-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
