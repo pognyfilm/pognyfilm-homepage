@@ -188,20 +188,16 @@ const legacyHtml = String.raw`<header class="site-header">
       <section class="section tser-guide" aria-labelledby="tser-guide-title">
         <div class="tser-guide-shell">
           <header class="tser-guide-head">
-            <div class="tser-kicker">
-              <span aria-hidden="true">!</span>
-              <p>잠깐!<br /><strong>혹시 알고 계셨나요?</strong></p>
-            </div>
-            <h2 id="tser-guide-title">미국에서는<br /><span>'열차단율'보다</span><br /><strong>TSER</strong>을 먼저 봅니다.</h2>
+            <h2 id="tser-guide-title">열차단필름의 고향 미국에서는<br /><span>'열차단율'보다</span><br /><strong>TSER</strong>을 먼저 봅니다.</h2>
           </header>
 
           <article class="tser-unified-card">
             <div class="tser-explainer">
               <p class="tser-question">“열차단율이 몇 %인가요?”</p>
-              <p>940nm 적외선 차단율만으로는 필름 성능 전체를 판단하기 어렵습니다.</p>
+              <p>단순히 940nm에서 측정한 적외선 차단율만으로는 필름 성능 전체를 판단하기 어렵습니다.</p>
             </div>
+            <span class="tser-transition-arrow" aria-hidden="true">→</span>
             <div class="tser-focus-card">
-              <div class="tser-sun" aria-hidden="true"><span>TSER</span></div>
               <div>
                 <h3>TSER</h3>
                 <strong>총태양에너지차단율</strong>
@@ -209,6 +205,12 @@ const legacyHtml = String.raw`<header class="site-header">
               </div>
             </div>
           </article>
+
+          <p class="tser-compare-intro">
+            대다수 업체가 단순한 열차단율만으로 성능을 설명하지만,
+            실제로 가장 중요한 수치는 겉으로 드러나지 않는
+            <strong>총태양에너지차단율(TSER)</strong>입니다.
+          </p>
 
           <div class="tser-compare-bar" aria-label="필름 성능 확인 기준 비교">
             <span class="is-wrong"><i aria-hidden="true">×</i> 열차단율만 확인</span>
