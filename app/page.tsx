@@ -153,32 +153,32 @@ const legacyHtml = String.raw`<header class="site-header">
               <tr>
                 <td data-label="포그니필름"><span class="reason-check">✓</span>NSN 스퍼터링 필름</td>
                 <th scope="row">제조 방식</th>
-                <td data-label="일반 저가형·염색 필름">단순 염색 또는 저가형 필름</td>
+                <td data-label="일반 저가형·염색 필름"><span class="reason-cross">✕</span>단순 염색 또는 저가형 필름</td>
               </tr>
               <tr>
                 <td data-label="포그니필름"><span class="reason-check">✓</span>열차단 99% / TSER 70% 이상</td>
                 <th scope="row">열차단 성능</th>
-                <td data-label="일반 저가형·염색 필름">초기만 차단, 시간이 지날수록 급감</td>
+                <td data-label="일반 저가형·염색 필름"><span class="reason-cross">✕</span>초기만 차단, 시간이 지날수록 급감</td>
               </tr>
               <tr>
                 <td data-label="포그니필름"><span class="reason-check">✓</span>기포·변색 발생률 낮음 / A/S 보장</td>
                 <th scope="row">내구성</th>
-                <td data-label="일반 저가형·염색 필름">1~2년 내 변색 및 기포 발생</td>
+                <td data-label="일반 저가형·염색 필름"><span class="reason-cross">✕</span>1~2년 내 변색 및 기포 발생</td>
               </tr>
               <tr>
                 <td data-label="포그니필름"><span class="reason-check">✓</span>나노 단위의 필름으로 시인성 극대화</td>
                 <th scope="row">시인성</th>
-                <td data-label="일반 저가형·염색 필름">입자가 커 시인성 불편</td>
+                <td data-label="일반 저가형·염색 필름"><span class="reason-cross">✕</span>입자가 커 시인성 불편</td>
               </tr>
               <tr>
                 <td data-label="포그니필름"><span class="reason-check">✓</span>100% 본사 직영 시공팀 책임 시공</td>
                 <th scope="row">시공팀</th>
-                <td data-label="일반 저가형·염색 필름">출처가 불분명한 외주·하청 인력</td>
+                <td data-label="일반 저가형·염색 필름"><span class="reason-cross">✕</span>출처가 불분명한 외주·하청 인력</td>
               </tr>
               <tr>
                 <td data-label="포그니필름"><span class="reason-check">✓</span>최대 10년 정품 품질보증서 발급</td>
                 <th scope="row">품질보증</th>
-                <td data-label="일반 저가형·염색 필름">정품 필름이 아니라 보증 불가</td>
+                <td data-label="일반 저가형·염색 필름"><span class="reason-cross">✕</span>정품 필름이 아니라 보증 불가</td>
               </tr>
             </tbody>
           </table>
