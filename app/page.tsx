@@ -881,20 +881,34 @@ const legacyHtml = String.raw`<header class="site-header">
 const impactSectionMarker = '<section class="section impact-lab data-report-lab" aria-labelledby="impact-lab-title">';
 const casesSectionMarker = '<section class="section cases" id="cases" aria-labelledby="cases-title">';
 const reasonsSectionMarker = '<section class="section reasons" aria-labelledby="reasons-title">';
+const tserSectionMarker = '<section class="section tser-guide" aria-labelledby="tser-guide-title">';
+const filmDemoSectionMarker = '<section class="section film-demo" aria-labelledby="film-demo-title">';
+const shortsSectionMarker = '<section class="section shorts" aria-labelledby="shorts-title">';
 const impactSectionStart = legacyHtml.indexOf(impactSectionMarker);
 const impactSectionEnd = legacyHtml.indexOf(casesSectionMarker);
 const impactSection = legacyHtml.slice(impactSectionStart, impactSectionEnd);
 const legacyHtmlWithoutImpact =
   legacyHtml.slice(0, impactSectionStart) + legacyHtml.slice(impactSectionEnd);
-const legacyHtmlReordered = legacyHtmlWithoutImpact.replace(
-  reasonsSectionMarker,
-  `${impactSection}${reasonsSectionMarker}`,
+const filmDemoSectionStart = legacyHtmlWithoutImpact.indexOf(filmDemoSectionMarker);
+const filmDemoSectionEnd = legacyHtmlWithoutImpact.indexOf(shortsSectionMarker);
+const filmDemoSection = legacyHtmlWithoutImpact.slice(filmDemoSectionStart, filmDemoSectionEnd);
+const legacyHtmlWithoutFilmDemo =
+  legacyHtmlWithoutImpact.slice(0, filmDemoSectionStart) +
+  legacyHtmlWithoutImpact.slice(filmDemoSectionEnd);
+const reasonsSectionStart = legacyHtmlWithoutFilmDemo.indexOf(reasonsSectionMarker);
+const reasonsSectionEnd = legacyHtmlWithoutFilmDemo.indexOf(tserSectionMarker);
+const reasonsSection = legacyHtmlWithoutFilmDemo.slice(reasonsSectionStart, reasonsSectionEnd);
+const legacyHtmlWithoutFeaturedSections =
+  legacyHtmlWithoutFilmDemo.slice(0, reasonsSectionStart) +
+  legacyHtmlWithoutFilmDemo.slice(reasonsSectionEnd);
+const legacyHtmlReordered = legacyHtmlWithoutFeaturedSections.replace(
+  tserSectionMarker,
+  `${reasonsSection}${filmDemoSection}${impactSection}${tserSectionMarker}`,
 );
 
-const filmFinderMarker = '<section class="section film-demo" aria-labelledby="film-demo-title">';
 const legacyHtmlWithFinderSlot = legacyHtmlReordered.replace(
-  filmFinderMarker,
-  `      <div id="film-finder-root"></div>\n      ${filmFinderMarker}`,
+  filmDemoSectionMarker,
+  `      <div id="film-finder-root"></div>\n      ${filmDemoSectionMarker}`,
 );
 const portfolioSectionStart = legacyHtmlWithFinderSlot.indexOf(casesSectionMarker);
 const introSectionMarker = '<section class="section intro" aria-labelledby="intro-title">';
