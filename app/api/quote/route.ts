@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { sendCustomerInquiryKakao } from "../../../lib/notifications/kakao";
 import {
   normalizeKoreanPhone,
   sendManagerInquirySms,
@@ -24,15 +25,30 @@ type QuoteRequest = {
   privacyConsent?: unknown;
 };
 
-const notificationEnvironmentVariables = [
-  "SOLAPI_API_KEY",
-  "SOLAPI_API_SECRET",
-  "SOLAPI_SENDER_NUMBER",
-  "INQUIRY_SMS_RECEIVER",
+const emailEnvironmentVariables = [
   "RESEND_API_KEY",
   "INQUIRY_EMAIL_RECEIVER",
   "INQUIRY_EMAIL_FROM",
 ] as const;
+
+const managerSmsEnvironmentVariables = [
+  "SOLAPI_API_KEY",
+  "SOLAPI_API_SECRET",
+  "SOLAPI_SENDER_NUMBER",
+  "INQUIRY_SMS_RECEIVER",
+] as const;
+
+const customerKakaoEnvironmentVariables = [
+  "SOLAPI_API_KEY",
+  "SOLAPI_API_SECRET",
+  "SOLAPI_SENDER_NUMBER",
+  "SOLAPI_KAKAO_PFID",
+  "SOLAPI_KAKAO_TEMPLATE_ID",
+] as const;
+
+const getMissingEnvironmentVariables = (
+  names: readonly string[],
+) => names.filter((name) => !process.env[name]?.trim());
 
 const normalizeText = (value: unknown, maxLength: number) =>
   (typeof value === "string" ? value : "").trim().slice(0, maxLength);
@@ -181,19 +197,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false }, { status: 503 });
     }
 
-    const missingEnvironmentVariables =
-      notificationEnvironmentVariables.filter((name) => !process.env[name]);
-    if (missingEnvironmentVariables.length) {
-      console.error("[quote] Inquiry saved, notification configuration is missing:", {
-        inquiryId: inquiry.id,
-        missingEnvironmentVariables,
-      });
-      return NextResponse.json(
-        { ok: true, inquiryId: inquiry.id, notificationSent: false },
-        { status: 200, headers: { "Cache-Control": "no-store" } },
-      );
-    }
-
     const receivedAt = formatKoreanTime();
     const smsText = `[포그니필름 신규 상담]
 
@@ -207,33 +210,59 @@ ${message || "미입력"}
 
 관리자 페이지에서 상세 내용을 확인하세요.`;
 
-    const smsConfig = {
-      apiKey: process.env.SOLAPI_API_KEY!,
-      apiSecret: process.env.SOLAPI_API_SECRET!,
-      senderNumber: process.env.SOLAPI_SENDER_NUMBER!,
-    };
-    const resend = new Resend(process.env.RESEND_API_KEY!);
+    const missingEmailEnvironmentVariables = getMissingEnvironmentVariables(
+      emailEnvironmentVariables,
+    );
+    let emailSent = false;
+    if (missingEmailEnvironmentVariables.length) {
+      console.error("[quote] Employee email configuration is missing:", {
+        inquiryId: inquiry.id,
+        missingEnvironmentVariables: missingEmailEnvironmentVariables,
+      });
+    } else {
+      try {
+        const resend = new Resend(process.env.RESEND_API_KEY!);
+        const emailResult = await resend.emails.send({
+          from: process.env.INQUIRY_EMAIL_FROM!,
+          to: [process.env.INQUIRY_EMAIL_RECEIVER!],
+          subject: `[포그니필름] ${name}님 신규 견적 문의`,
+          html: createEmailHtml({ name, phone, area, space, message, receivedAt }),
+        });
+        emailSent = !emailResult.error;
+        if (emailResult.error) {
+          console.error("[quote] Employee email delivery failed:", {
+            inquiryId: inquiry.id,
+            error: emailResult.error,
+          });
+        }
+      } catch (error) {
+        console.error("[quote] Employee email delivery failed:", {
+          inquiryId: inquiry.id,
+          error,
+        });
+      }
+    }
 
-    const [managerSmsResult, emailResult] = await Promise.allSettled([
-      sendManagerInquirySms({
-        config: smsConfig,
+    const missingManagerSmsEnvironmentVariables =
+      getMissingEnvironmentVariables(managerSmsEnvironmentVariables);
+    let managerSmsAccepted = false;
+    if (missingManagerSmsEnvironmentVariables.length) {
+      console.error("[quote] Manager SMS configuration is missing:", {
+        inquiryId: inquiry.id,
+        missingEnvironmentVariables: missingManagerSmsEnvironmentVariables,
+      });
+    } else {
+      const managerSmsResult = await sendManagerInquirySms({
+        config: {
+          apiKey: process.env.SOLAPI_API_KEY!,
+          apiSecret: process.env.SOLAPI_API_SECRET!,
+          senderNumber: process.env.SOLAPI_SENDER_NUMBER!,
+        },
         recipientNumber: process.env.INQUIRY_SMS_RECEIVER!,
         text: smsText,
-      }),
-      resend.emails.send({
-        from: process.env.INQUIRY_EMAIL_FROM!,
-        to: [process.env.INQUIRY_EMAIL_RECEIVER!],
-        subject: `[포그니필름] ${name}님 신규 견적 문의`,
-        html: createEmailHtml({ name, phone, area, space, message, receivedAt }),
-      }),
-    ]);
-
-    const managerSmsAccepted =
-      managerSmsResult.status === "fulfilled" &&
-      managerSmsResult.value.accepted;
-    const emailFailed =
-      emailResult.status === "rejected" ||
-      Boolean(emailResult.value.error);
+      });
+      managerSmsAccepted = managerSmsResult.accepted;
+    }
 
     if (managerSmsAccepted) {
       const { error: smsUpdateError } = await supabase
@@ -248,31 +277,38 @@ ${message || "미입력"}
       }
     }
 
-    if (!managerSmsAccepted || emailFailed) {
-      console.error("[quote] Delivery failed:", {
-        managerSms:
-          managerSmsResult.status === "rejected"
-            ? {
-                accepted: false,
-                failureStage: "unexpected_rejection",
-              }
-            : managerSmsResult.value,
-        email:
-          emailResult.status === "rejected"
-            ? { failed: true }
-            : { failed: Boolean(emailResult.value.error) },
+    const missingKakaoEnvironmentVariables = getMissingEnvironmentVariables(
+      customerKakaoEnvironmentVariables,
+    );
+    let customerKakaoAccepted = false;
+    if (missingKakaoEnvironmentVariables.length) {
+      console.error("[quote] Customer Kakao configuration is missing:", {
+        inquiryId: inquiry.id,
+        missingEnvironmentVariables: missingKakaoEnvironmentVariables,
       });
-      return NextResponse.json(
-        { ok: true, inquiryId: inquiry.id, notificationSent: false },
-        { status: 200, headers: { "Cache-Control": "no-store" } },
-      );
+    } else {
+      const customerKakaoResult = await sendCustomerInquiryKakao({
+        config: {
+          apiKey: process.env.SOLAPI_API_KEY!,
+          apiSecret: process.env.SOLAPI_API_SECRET!,
+          senderNumber: process.env.SOLAPI_SENDER_NUMBER!,
+          pfId: process.env.SOLAPI_KAKAO_PFID!,
+          templateId: process.env.SOLAPI_KAKAO_TEMPLATE_ID!,
+        },
+        recipientNumber: phone,
+        name,
+        area,
+        inquiryType: space,
+      });
+      customerKakaoAccepted = customerKakaoResult.accepted;
     }
 
     return NextResponse.json(
       {
         ok: true,
         inquiryId: inquiry.id,
-        notificationSent: true,
+        notificationSent: emailSent && managerSmsAccepted,
+        kakaoAccepted: customerKakaoAccepted,
       },
       {
         status: 200,
