@@ -15,8 +15,8 @@
   justify-content: space-between;
   height: 78px;
   padding: 0 max(24px, calc((100vw - 1180px) / 2));
-  border-bottom: 1px solid rgba(16, 36, 61, 0.1);
-  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid rgba(217, 180, 138, 0.18);
+  background: #282828;
   backdrop-filter: blur(14px);
 }
 
@@ -27,10 +27,15 @@
 }
 
 .homeLink {
-  color: #25405f;
+  color: #f5f1eb;
   font-size: 14px;
   font-weight: 800;
   text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.homeLink:hover {
+  color: #d9b48a;
 }
 
 .main {
