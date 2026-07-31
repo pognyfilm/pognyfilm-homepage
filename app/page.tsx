@@ -13,7 +13,7 @@ const legacyHtml = String.raw`<header class="site-header">
         <a href="#products">PG FILM Series</a>
         <a href="#cases">시공사례</a>
         <a href="#film-finder">AI 필름 추천</a>
-        <a href="#warranty">품질보증서 조회</a>
+        <a href="/warranty">품질보증서 조회</a>
       </nav>
       <a class="header-call" href="tel:18334236">전화상담 1833-4236</a>
     </header>
@@ -724,49 +724,6 @@ const legacyHtml = String.raw`<header class="site-header">
             거짓 없는 믿을 수 있는 좋은 품질의 필름으로 좋은 시공을 약속드립니다.
           </p>
           <strong class="intro-signature"><span class="intro-signature-brand">포그니필름</span><span class="intro-signature-name">이반장</span></strong>
-        </div>
-      </section>
-
-      <section class="section warranty" id="warranty" aria-labelledby="warranty-title">
-        <div class="warranty-hero">
-          <p class="eyebrow">Support</p>
-          <h2 id="warranty-title">품질보증서 조회</h2>
-          <p>
-            시공 완료 고객님은 성함과 연락처를 입력해 포그니필름 품질보증서를 확인하실 수 있습니다.<br />
-            등록된 정보와 일치할 경우 보증서 미리보기와 다운로드가 제공됩니다.
-          </p>
-        </div>
-        <div class="warranty-panel">
-          <div class="warranty-card-intro">
-            <span>품질보증서 조회</span>
-            <p>시공 당시 등록한 고객명과 연락처를 입력해주세요.</p>
-          </div>
-          <form class="warranty-form" data-warranty-form>
-            <label>
-              <span>고객명</span>
-              <input type="text" name="name" placeholder="고객명을 입력해주세요" autocomplete="name" required />
-            </label>
-            <label>
-              <span>연락처</span>
-              <input type="tel" name="phone" placeholder="휴대폰번호를 입력해주세요" autocomplete="tel" required />
-            </label>
-            <button type="submit">조회</button>
-          </form>
-          <p class="warranty-message" data-warranty-message aria-live="polite"></p>
-          <div class="warranty-result" data-warranty-result hidden>
-            <div class="warranty-result-head">
-              <div>
-                <span>Verified Warranty</span>
-                <h3 data-warranty-result-title>포그니필름 품질보증서</h3>
-                <p>정품 PG FILM Series 시공 건</p>
-              </div>
-              <a class="btn primary" data-warranty-download href="#" target="_blank" rel="noopener">보증서 원본 열기</a>
-            </div>
-            <div class="warranty-preview">
-              <p>보증서 원본은 새 창에서 더 크게 확인할 수 있습니다.</p>
-              <img data-warranty-frame alt="포그니필름 품질보증서 미리보기" />
-            </div>
-          </div>
         </div>
       </section>
 

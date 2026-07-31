@@ -727,26 +727,6 @@ export default function LegacyInteractions() {
       });
     }
 
-    const warrantyForm = document.querySelector<HTMLFormElement>("[data-warranty-form]");
-    const warrantyMessage = document.querySelector<HTMLElement>("[data-warranty-message]");
-    const warrantyResult = document.querySelector<HTMLElement>("[data-warranty-result]");
-    const warrantyFrame = document.querySelector<HTMLImageElement>("[data-warranty-frame]");
-    const warrantyDownload = document.querySelector<HTMLAnchorElement>("[data-warranty-download]");
-    const warrantyResultTitle = document.querySelector<HTMLElement>("[data-warranty-result-title]");
-
-    const warrantyRecords = [
-      {
-        name: "테스트고객",
-        phone: "01000000000",
-        title: "포그니필름 품질보증서 (K-SWISS)",
-        file: "/assets/pogny-warranty-k-swiss.pdf",
-        preview: "/assets/pogny-warranty-preview.png",
-      },
-    ];
-
-    const normalizeWarrantyName = (value: string) => value.trim().replace(/\s+/g, "");
-    const normalizeWarrantyPhone = (value: string) => value.replace(/[^0-9]/g, "");
-
     const quoteForm = document.querySelector<HTMLFormElement>("[data-quote-form]");
     const quoteMessage = document.querySelector<HTMLElement>("[data-quote-message]");
     const quotePrivacy = document.querySelector<HTMLInputElement>("[data-quote-privacy]");
@@ -883,40 +863,6 @@ export default function LegacyInteractions() {
           }
         });
       }
-    }
-
-    if (warrantyForm && warrantyMessage && warrantyResult && warrantyFrame && warrantyDownload) {
-      addListener(warrantyForm, "submit", (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(warrantyForm);
-        const name = normalizeWarrantyName(String(formData.get("name") || ""));
-        const phone = normalizeWarrantyPhone(String(formData.get("phone") || ""));
-        const record = warrantyRecords.find(
-          (item) => normalizeWarrantyName(item.name) === name && normalizeWarrantyPhone(item.phone) === phone,
-        );
-
-        if (!record) {
-          warrantyMessage.textContent =
-            "입력하신 정보와 일치하는 품질보증서를 찾을 수 없습니다. 성함과 연락처를 다시 확인해주세요.";
-          warrantyMessage.classList.remove("success");
-          warrantyResult.hidden = true;
-          warrantyFrame.removeAttribute("src");
-          warrantyDownload.href = "#";
-          return;
-        }
-
-        warrantyMessage.textContent = "정상적으로 등록된 품질보증서입니다.";
-        warrantyMessage.classList.add("success");
-        warrantyResult.hidden = false;
-        warrantyFrame.src = record.preview;
-        warrantyDownload.href = record.file;
-        warrantyDownload.setAttribute("download", `${record.title}.pdf`);
-
-        if (warrantyResultTitle) {
-          warrantyResultTitle.textContent = record.title;
-        }
-      });
     }
 
     return () => {
