@@ -2273,8 +2273,8 @@
   position: relative;
   z-index: 20;
   height: 76px;
-  border-bottom: 1px solid #e5eaf1;
-  background: rgba(255, 255, 255, 0.97);
+  border-bottom: 1px solid #3b3b3b;
+  background: #252525;
 }
 
 .headerInner {
@@ -2288,17 +2288,16 @@
 }
 
 .systemNav {
-  position: absolute;
-  left: 50%;
-  top: 0;
+  position: static;
   display: flex;
   align-items: center;
-  gap: 20px;
+  width: 100%;
   height: 100%;
-  transform: translateX(-50%);
 }
 
 .systemBrand {
+  position: absolute;
+  left: 0;
   display: flex;
   align-items: center;
   width: 154px;
@@ -2313,21 +2312,21 @@
 }
 
 .systemDivider {
-  width: 1px;
-  height: 22px;
-  background: #d8dee7;
+  display: none;
 }
 
 .systemCurrent {
-  position: relative;
+  position: absolute;
+  left: 50%;
   display: flex;
   align-items: center;
   align-self: stretch;
-  color: #122741;
-  font-size: 15px;
+  color: #fff;
+  font-size: 16px;
   font-weight: 700;
   white-space: nowrap;
   text-decoration: none;
+  transform: translateX(-50%);
 }
 
 .systemCurrent::after {
@@ -2344,36 +2343,39 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #10233e;
+  color: #fff;
   text-decoration: none;
 }
 
 .phoneIcon {
   display: grid;
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   place-items: center;
-  border: 1px solid #dce5f1;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  color: #146fe8;
-  font-size: 14px;
+  color: #72b3ff;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 16px;
 }
 
 .phoneCopy {
   display: flex;
+  flex: 0 0 auto;
   flex-direction: column;
   gap: 2px;
+  white-space: nowrap;
 }
 
 .phoneCopy small {
-  color: #758399;
-  font-size: 10px;
+  color: #bfc7d1;
+  font-size: 12px;
   font-weight: 600;
 }
 
 .phoneCopy strong {
-  color: #10233e;
-  font-size: 16px;
+  color: #fff;
+  font-size: 19px;
   line-height: 1;
   letter-spacing: -0.01em;
 }
@@ -3005,18 +3007,20 @@
   }
 
   .headerInner {
-    justify-content: space-between;
+    justify-content: flex-end;
     width: calc(100% - 28px);
   }
 
   .systemNav {
     position: static;
-    gap: 10px;
+    width: 100%;
     height: 100%;
     transform: none;
   }
 
   .systemBrand {
+    position: absolute;
+    left: 0;
     width: 116px;
     height: 34px;
   }
@@ -3026,7 +3030,11 @@
   }
 
   .systemCurrent {
+    position: absolute;
+    left: 50%;
+    height: 100%;
     font-size: 13px;
+    transform: translateX(-50%);
   }
 
   .systemCurrent::after {
@@ -3049,7 +3057,7 @@
   }
 
   .phoneCopy strong {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .lookupMain {
@@ -3257,7 +3265,7 @@
   }
 
   .systemNav {
-    gap: 7px;
+    width: 100%;
   }
 
   .systemBrand {
