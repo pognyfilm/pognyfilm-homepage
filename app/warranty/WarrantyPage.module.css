@@ -2272,43 +2272,43 @@
 .systemHeader {
   position: relative;
   z-index: 20;
-  height: 76px;
-  border-bottom: 1px solid #3b3b3b;
-  background: #252525;
+  height: 78px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0d223f;
+  box-shadow: 0 8px 24px rgba(4, 19, 38, 0.12);
 }
 
 .headerInner {
-  position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: flex-end;
-  width: min(1180px, calc(100% - 48px));
+  gap: 24px;
+  width: min(1220px, calc(100% - 64px));
   height: 100%;
   margin: 0 auto;
 }
 
 .systemNav {
-  position: static;
   display: flex;
   align-items: center;
-  width: 100%;
+  justify-content: center;
   height: 100%;
 }
 
 .systemBrand {
-  position: absolute;
-  left: 0;
   display: flex;
   align-items: center;
-  width: 154px;
-  height: 42px;
+  justify-self: start;
+  width: 170px;
+  min-height: 44px;
 }
 
 .systemBrand img {
   display: block;
   width: 100%;
-  height: 100%;
+  height: 36px;
   object-fit: contain;
+  object-position: left center;
 }
 
 .systemDivider {
@@ -2316,23 +2316,23 @@
 }
 
 .systemCurrent {
-  position: absolute;
-  left: 50%;
+  position: relative;
   display: flex;
   align-items: center;
-  align-self: stretch;
+  justify-content: center;
+  height: 100%;
   color: #fff;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
+  line-height: 1;
   white-space: nowrap;
   text-decoration: none;
-  transform: translateX(-50%);
 }
 
 .systemCurrent::after {
   position: absolute;
   right: 0;
-  bottom: -1px;
+  bottom: 0;
   left: 0;
   height: 2px;
   background: #146fe8;
@@ -2342,13 +2342,17 @@
 .systemPhone {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-self: end;
+  gap: 11px;
+  min-height: 44px;
   color: #fff;
   text-decoration: none;
+  transition: opacity 180ms ease;
 }
 
 .phoneIcon {
   display: grid;
+  flex: 0 0 38px;
   width: 38px;
   height: 38px;
   place-items: center;
@@ -2368,16 +2372,27 @@
 }
 
 .phoneCopy small {
-  color: #bfc7d1;
+  color: rgba(255, 255, 255, 0.76);
   font-size: 12px;
   font-weight: 600;
+  line-height: 1.1;
 }
 
 .phoneCopy strong {
   color: #fff;
-  font-size: 19px;
-  line-height: 1;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.05;
   letter-spacing: -0.01em;
+}
+
+.systemBrand:focus-visible,
+.systemCurrent:focus-visible,
+.systemPhone:focus-visible,
+.supportPhone:focus-visible,
+.supportKakao:focus-visible {
+  outline: 3px solid #79baff;
+  outline-offset: 3px;
 }
 
 .systemMain {
@@ -2895,10 +2910,12 @@
   gap: 40px;
   width: min(1120px, calc(100% - 48px));
   margin: 0 auto 46px;
-  padding: 34px 40px;
-  border-radius: 14px;
+  min-height: 120px;
+  padding: 32px 40px;
+  border-radius: 20px;
   color: #fff;
-  background: #102b4d;
+  background: linear-gradient(120deg, #0d223f 0%, #12345c 100%);
+  box-shadow: 0 18px 42px rgba(8, 30, 58, 0.16);
 }
 
 .supportBar h2,
@@ -2907,14 +2924,18 @@
 }
 
 .supportBar h2 {
-  font-size: 21px;
+  color: #fff;
+  font-size: 23px;
+  font-weight: 760;
+  line-height: 1.3;
   letter-spacing: -0.025em;
 }
 
 .supportBar p {
-  margin-top: 7px;
-  color: #c4d0de;
-  font-size: 14px;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+  line-height: 1.5;
 }
 
 .supportActions {
@@ -2926,19 +2947,28 @@
 .supportPhone {
   display: flex;
   align-items: center;
-  gap: 12px;
-  color: #fff;
+  justify-content: center;
+  gap: 9px;
+  min-width: 188px;
+  height: 54px;
+  padding: 0 22px;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 13px;
+  color: #0d223f;
+  background: #fff;
   text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
 }
 
 .supportPhone strong {
-  font-size: 20px;
+  font-size: 17px;
+  font-weight: 800;
   white-space: nowrap;
 }
 
 .supportPhone span {
-  color: #c4d0de;
-  font-size: 12px;
+  color: #176dcc;
+  font-size: 16px;
   white-space: nowrap;
 }
 
@@ -2946,19 +2976,29 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  padding: 0 17px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 9px;
+  min-width: 154px;
+  height: 54px;
+  padding: 0 22px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 13px;
   color: #fff;
-  font-size: 13px;
+  background: #176dcc;
+  font-size: 16px;
   font-weight: 700;
   text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
 }
 
 .supportKakao:hover,
 .supportPhone:hover {
-  opacity: 0.85;
+  filter: brightness(1.06);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(3, 17, 34, 0.2);
+}
+
+.supportKakao:active,
+.supportPhone:active {
+  transform: scale(0.98);
 }
 
 @keyframes warrantyFadeUp {
@@ -2979,7 +3019,8 @@
 
 @media (max-width: 960px) {
   .headerInner {
-    width: min(100% - 32px, 1180px);
+    gap: 18px;
+    width: min(100% - 44px, 1180px);
   }
 
   .serviceOverview {
@@ -3003,26 +3044,26 @@
 
 @media (max-width: 767px) {
   .systemHeader {
-    height: 66px;
+    height: 62px;
   }
 
   .headerInner {
-    justify-content: flex-end;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 8px;
     width: calc(100% - 28px);
   }
 
   .systemNav {
-    position: static;
-    width: 100%;
     height: 100%;
-    transform: none;
   }
 
   .systemBrand {
-    position: absolute;
-    left: 0;
-    width: 116px;
-    height: 34px;
+    width: 112px;
+    min-height: 44px;
+  }
+
+  .systemBrand img {
+    height: 32px;
   }
 
   .systemDivider {
@@ -3030,11 +3071,8 @@
   }
 
   .systemCurrent {
-    position: absolute;
-    left: 50%;
     height: 100%;
-    font-size: 13px;
-    transform: translateX(-50%);
+    font-size: 15px;
   }
 
   .systemCurrent::after {
@@ -3047,9 +3085,10 @@
   }
 
   .phoneIcon {
-    width: 26px;
-    height: 26px;
-    font-size: 11px;
+    flex-basis: 30px;
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
   }
 
   .phoneCopy small {
@@ -3057,7 +3096,7 @@
   }
 
   .phoneCopy strong {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .lookupMain {
@@ -3224,12 +3263,18 @@
     align-items: stretch;
     flex-direction: column;
     gap: 25px;
+    min-height: 0;
     margin-bottom: 28px;
-    padding: 28px 24px;
+    padding: 26px 22px;
+    border-radius: 18px;
   }
 
   .supportBar h2 {
-    font-size: 19px;
+    font-size: 20px;
+  }
+
+  .supportBar p {
+    font-size: 14px;
   }
 
   .supportActions {
@@ -3239,23 +3284,26 @@
 
   .supportPhone,
   .supportKakao {
-    min-height: 46px;
+    width: 100%;
+    min-width: 0;
+    height: 52px;
+    min-height: 52px;
     justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 9px;
+    padding: 0 14px;
+    border-radius: 12px;
   }
 
   .supportPhone {
-    flex-direction: column;
-    gap: 1px;
+    flex-direction: row;
+    gap: 8px;
   }
 
   .supportPhone strong {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .supportPhone span {
-    font-size: 10px;
+    font-size: 15px;
   }
 }
 
@@ -3269,16 +3317,20 @@
   }
 
   .systemBrand {
-    width: 96px;
+    width: 92px;
   }
 
   .systemCurrent,
   .phoneCopy strong {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .phoneIcon {
     display: none;
+  }
+
+  .supportActions {
+    grid-template-columns: 1fr;
   }
 
   .lookupMain {

@@ -44,16 +44,19 @@ export default function WarrantyPage() {
     <div className={styles.systemPage}>
       <header className={styles.systemHeader}>
         <div className={styles.headerInner}>
+          <a className={styles.systemBrand} href="/" aria-label="포그니필름 홈페이지">
+            <img src="/assets/pogny-logo.png" alt="포그니필름" />
+          </a>
           <nav className={styles.systemNav} aria-label="품질보증서 메뉴">
-            <a className={styles.systemBrand} href="/" aria-label="포그니필름 홈페이지">
-              <img src="/assets/pogny-logo.png" alt="포그니필름" />
-            </a>
-            <span className={styles.systemDivider} aria-hidden="true" />
             <a className={styles.systemCurrent} href="/warranty" aria-current="page">
               품질보증서
             </a>
           </nav>
-          <a className={styles.systemPhone} href="tel:18334236">
+          <a
+            className={styles.systemPhone}
+            href="tel:18334236"
+            aria-label="상담 및 조회 문의 1833-4236"
+          >
             <span className={styles.phoneIcon} aria-hidden="true">☎</span>
             <span className={styles.phoneCopy}>
               <small>상담 및 조회 문의</small>
@@ -136,15 +139,20 @@ export default function WarrantyPage() {
             <p>포그니필름 고객센터에서 확인을 도와드립니다.</p>
           </div>
           <div className={styles.supportActions}>
-            <a className={styles.supportPhone} href="tel:18334236">
+            <a
+              className={styles.supportPhone}
+              href="tel:18334236"
+              aria-label="전화 상담 1833-4236"
+            >
+              <span aria-hidden="true">☎</span>
               <strong>1833-4236</strong>
-              <span>전화 상담</span>
             </a>
             <a
               className={styles.supportKakao}
               href="https://pf.kakao.com/_aYxmxmG/chat"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="카카오톡으로 품질보증서 상담하기"
             >
               카카오톡 상담
             </a>
