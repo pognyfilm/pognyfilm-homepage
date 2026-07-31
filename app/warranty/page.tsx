@@ -144,7 +144,7 @@ export default function WarrantyPage() {
               href="tel:18334236"
               aria-label="전화 상담 1833-4236"
             >
-              <span aria-hidden="true">☎</span>
+              <span>상담 문의</span>
               <strong>1833-4236</strong>
             </a>
             <a

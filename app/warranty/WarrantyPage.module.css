@@ -2944,13 +2944,14 @@
   gap: 12px;
 }
 
-.supportPhone {
+.supportActions a.supportPhone {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 2px;
   min-width: 188px;
-  height: 54px;
+  height: 64px;
   padding: 0 22px;
   border: 1px solid rgba(255, 255, 255, 0.36);
   border-radius: 13px;
@@ -2960,31 +2961,34 @@
   transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
 }
 
-.supportPhone strong {
-  font-size: 17px;
+.supportActions .supportPhone strong {
+  font-size: 21px;
   font-weight: 800;
+  line-height: 1.05;
   white-space: nowrap;
 }
 
-.supportPhone span {
-  color: #176dcc;
-  font-size: 16px;
+.supportActions .supportPhone span {
+  color: #52677f;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.1;
   white-space: nowrap;
 }
 
-.supportKakao {
+.supportActions .supportKakao {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 154px;
-  height: 54px;
+  height: 64px;
   padding: 0 22px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 13px;
-  color: #fff;
-  background: #176dcc;
-  font-size: 16px;
-  font-weight: 700;
+  color: #191919;
+  background: #fee500;
+  font-size: 18px;
+  font-weight: 800;
   text-decoration: none;
   transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
 }
@@ -3279,28 +3283,32 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .supportPhone,
-  .supportKakao {
+  .supportActions a.supportPhone,
+  .supportActions .supportKakao {
     width: 100%;
     min-width: 0;
-    height: 52px;
-    min-height: 52px;
+    height: 58px;
+    min-height: 58px;
     justify-content: center;
     padding: 0 14px;
     border-radius: 12px;
   }
 
-  .supportPhone {
-    flex-direction: row;
-    gap: 8px;
+  .supportActions a.supportPhone {
+    flex-direction: column;
+    gap: 2px;
   }
 
-  .supportPhone strong {
-    font-size: 15px;
+  .supportActions .supportPhone strong {
+    font-size: 19px;
   }
 
-  .supportPhone span {
-    font-size: 15px;
+  .supportActions .supportPhone span {
+    font-size: 11px;
+  }
+
+  .supportActions .supportKakao {
+    font-size: 17px;
   }
 }
 
