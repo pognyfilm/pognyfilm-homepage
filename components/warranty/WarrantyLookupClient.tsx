@@ -15,6 +15,9 @@ type WarrantyResult = {
   documentUrl: string;
 };
 
+const genericNotFoundMessage =
+  "입력하신 정보와 일치하는 품질보증서를 찾을 수 없습니다. 고객명과 연락처를 다시 확인해주세요.";
+
 const formatDate = (value: string) =>
   new Intl.DateTimeFormat("ko-KR", {
     year: "numeric",
@@ -51,8 +54,10 @@ export default function WarrantyLookupClient() {
 
       if (!response.ok || !payload.ok || !payload.warranty) {
         setMessage(
-          payload.message ||
-            "등록된 품질보증서를 찾을 수 없습니다. 고객명과 연락처를 다시 확인해주세요.",
+          response.status === 400 || response.status === 404
+            ? genericNotFoundMessage
+            : payload.message ||
+                "현재 조회 서비스를 이용할 수 없습니다. 잠시 후 다시 시도해주세요.",
         );
         return;
       }
@@ -67,13 +72,13 @@ export default function WarrantyLookupClient() {
 
   const details = result
     ? [
-        ["보증서 번호", result.warrantyNumber],
+        ["품질보증서 번호", result.warrantyNumber],
         ["고객명", result.customerName],
         ["시공일", formatDate(result.installationDate)],
         ["시공 주소", result.installationAddress],
         ["시공 제품", result.productName],
         ["보증기간", result.warrantyPeriod],
-        ["시공 담당", result.installerName],
+        ["시공 담당자", result.installerName],
         ["보증 상태", result.status],
       ]
     : [];
@@ -82,11 +87,10 @@ export default function WarrantyLookupClient() {
     <>
       <section className={styles.lookupCard} aria-label="품질보증서 조회 입력">
         <div className={styles.lookupHead}>
-          <p>WARRANTY CHECK</p>
           <h2>품질보증서 조회</h2>
-          <span>
-            시공 당시 등록된 고객명과 연락처를 입력하시면<br />
-            발급된 품질보증서를 확인하실 수 있습니다.
+          <span className={styles.secureLookup}>
+            <span aria-hidden="true">▢</span>
+            안전한 암호화 조회
           </span>
         </div>
         <form className={styles.form} onSubmit={handleSubmit}>
@@ -118,12 +122,12 @@ export default function WarrantyLookupClient() {
             />
           </label>
           <button className={styles.submit} type="submit" disabled={isLoading}>
-            {isLoading ? "조회 중" : "품질보증서 조회하기"}
+            <span>{isLoading ? "조회 중입니다" : "보증서 조회"}</span>
+            {!isLoading ? <span aria-hidden="true">→</span> : null}
           </button>
         </form>
         <p className={styles.securityNote}>
-          <span aria-hidden="true">◆</span>
-          입력하신 정보는 품질보증서 조회 목적으로만 사용되며 안전하게 보호됩니다.
+          입력하신 정보는 품질보증서 조회에만 사용되며 별도로 저장되거나 공개되지 않습니다.
         </p>
         <p className={styles.message} role="status" aria-live="polite">
           {message}
@@ -134,8 +138,11 @@ export default function WarrantyLookupClient() {
         <section className={styles.result} aria-labelledby="warranty-result-title">
           <div className={styles.resultHead}>
             <div>
-              <span>VERIFIED WARRANTY</span>
-              <h2 id="warranty-result-title">품질보증서 조회 결과</h2>
+              <span className={styles.verifiedStatus}>
+                <span aria-hidden="true" />
+                인증된 품질보증서
+              </span>
+              <h2 id="warranty-result-title">보증 정보</h2>
             </div>
             <div className={styles.resultActions}>
               <a
@@ -144,7 +151,7 @@ export default function WarrantyLookupClient() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                품질보증서 미리보기
+                품질보증서 보기
               </a>
               <a
                 className={styles.download}
