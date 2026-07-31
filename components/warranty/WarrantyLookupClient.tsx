@@ -81,6 +81,13 @@ export default function WarrantyLookupClient() {
   return (
     <>
       <section className={styles.lookupCard} aria-label="품질보증서 조회 입력">
+        <div className={styles.lookupHead}>
+          <p>WARRANTY CHECK</p>
+          <h2>품질보증서 조회</h2>
+          <span>
+            고객명과 연락처를 입력하시면 품질보증서를 확인하실 수 있습니다.
+          </span>
+        </div>
         <form className={styles.form} onSubmit={handleSubmit}>
           <label className={styles.field}>
             <span>고객명</span>
@@ -110,9 +117,13 @@ export default function WarrantyLookupClient() {
             />
           </label>
           <button className={styles.submit} type="submit" disabled={isLoading}>
-            {isLoading ? "조회 중" : "조회"}
+            {isLoading ? "조회 중" : "조회하기"}
           </button>
         </form>
+        <p className={styles.securityNote}>
+          <span aria-hidden="true">◆</span>
+          입력하신 정보는 조회 목적 외에 사용되지 않으며 안전하게 보호됩니다.
+        </p>
         <p className={styles.message} role="status" aria-live="polite">
           {message}
         </p>
