@@ -860,7 +860,7 @@ const legacyHtmlWithoutFeaturedSections =
   legacyHtmlWithoutFilmDemo.slice(reasonsSectionEnd);
 const legacyHtmlReordered = legacyHtmlWithoutFeaturedSections.replace(
   tserSectionMarker,
-  `${reasonsSection}${filmDemoSection}${impactSection}${tserSectionMarker}`,
+  `${impactSection}${reasonsSection}${filmDemoSection}${tserSectionMarker}`,
 );
 
 const legacyHtmlWithFinderSlot = legacyHtmlReordered.replace(
