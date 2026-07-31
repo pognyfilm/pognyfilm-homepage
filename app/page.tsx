@@ -827,7 +827,7 @@ const legacyHtml = String.raw`<header class="site-header">
       </a>
     </nav>
 
-    <a class="mobile-quick-call" href="#quote" aria-label="빠른 견적 문의로 이동">
+    <a class="mobile-quick-call" href="tel:18334236" aria-label="대표번호 1833-4236로 전화하기">
       <span>
         <small>궁금한 점을 바로 상담해보세요</small>
         <strong>전화상담 1833-4236</strong>

@@ -7825,7 +7825,7 @@ h3 {
     z-index: 130;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     min-height: 62px;
     padding: 9px 10px 9px 16px;
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -7836,7 +7836,7 @@ h3 {
   }
 
   .mobile-quick-call > span {
-    display: grid;
+    display: none;
     gap: 2px;
     min-width: 0;
   }
