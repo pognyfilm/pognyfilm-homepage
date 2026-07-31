@@ -864,8 +864,8 @@ const legacyHtmlReordered = legacyHtmlWithoutFeaturedSections.replace(
 );
 
 const legacyHtmlWithFinderSlot = legacyHtmlReordered.replace(
-  filmDemoSectionMarker,
-  `      <div id="film-finder-root"></div>\n      ${filmDemoSectionMarker}`,
+  shortsSectionMarker,
+  `      <div id="film-finder-root"></div>\n      ${shortsSectionMarker}`,
 );
 const portfolioSectionStart = legacyHtmlWithFinderSlot.indexOf(casesSectionMarker);
 const introSectionMarker = '<section class="section intro" aria-labelledby="intro-title">';
