@@ -19,37 +19,37 @@ export const metadata: Metadata = {
 export default function WarrantyPage() {
   const trustItems = [
     { icon: "15Y", label: "최대 15년 품질보증" },
-    { icon: "10K", label: "10,000건 이상 시공 경험" },
-    { icon: "PG", label: "정품 필름 사용" },
+    { icon: "10K", label: "10,000건 이상의 시공 경험" },
+    { icon: "PG", label: "정품 PG FILM Series 사용" },
     { icon: "SEC", label: "고객 정보 안전 보호" },
   ];
   const values = [
     {
       icon: "01",
-      title: "정품 필름 사용 보증",
-      description: "PG FILM Series 정품 필름만을 사용하여 시공되었음을 보증합니다.",
+      title: "정품 시공의 확실한 증명",
+      description: "등록된 시공 정보와 제품 내역을 공식 품질보증서로 투명하게 확인할 수 있습니다.",
     },
     {
       icon: "02",
-      title: "전문 시공 품질 보증",
-      description: "전문 시공팀의 표준 시공으로 완성도 높은 품질을 보증합니다.",
+      title: "제품별 최대 15년 품질보증",
+      description: "적용 제품과 보증 기준에 따라 최대 15년까지 품질보증을 제공합니다.",
     },
     {
       icon: "03",
-      title: "최대 15년 품질보증",
-      description: "제품별 보증 기간 동안 안심하고 사용하실 수 있습니다.",
+      title: "본사 직영 전문 시공",
+      description: "외주·하청이 아닌 본사 직영 시공팀이 상담부터 시공, 사후관리까지 책임집니다.",
     },
     {
       icon: "04",
-      title: "공식 보증서 제공",
-      description: "공식 품질보증서로 시공 이력과 제품 정보를 신뢰할 수 있습니다.",
+      title: "언제든 다시 확인 가능",
+      description: "시공이 끝난 후에도 고객명과 연락처로 보증 정보를 안전하게 다시 확인할 수 있습니다.",
     },
   ];
   const steps = [
-    ["01", "고객명 입력", "시공 시 등록한 고객명을 정확히 입력합니다."],
-    ["02", "연락처 입력", "등록된 휴대전화 번호를 숫자로 입력합니다."],
-    ["03", "조회하기", "입력 정보와 등록된 보증 정보를 안전하게 확인합니다."],
-    ["04", "보증서 확인 및 PDF 저장", "보증 내용을 확인하고 필요할 때 PDF로 저장합니다."],
+    ["01", "고객 정보 입력", "시공 당시 등록한 고객명을 입력합니다."],
+    ["02", "연락처 입력", "시공 당시 등록한 연락처를 입력합니다."],
+    ["03", "보증서 조회", "등록 정보가 일치하면 보증서를 확인합니다."],
+    ["04", "미리보기 및 저장", "품질보증서를 확인하고 필요 시 PDF로 저장합니다."],
   ];
 
   return (
@@ -76,12 +76,15 @@ export default function WarrantyPage() {
           <div className={styles.heroGlow} aria-hidden="true" />
           <div className={styles.heroInner}>
             <div className={styles.heroCopy}>
+              <span className={styles.heroSupport}>SUPPORT</span>
               <p>PG FILM Series</p>
               <h1>품질보증서 조회</h1>
-              <span>
-                포그니필름은 정품 필름과 전문 시공으로
+              <span className={styles.heroDescription}>
+                포그니필름은 정품 PG FILM Series와
                 <br />
-                최대 15년 품질보증서를 발급해 드립니다.
+                본사 직영 전문 시공을 기반으로
+                <br />
+                제품별 최대 15년 품질보증을 제공합니다.
               </span>
               <div className={styles.heroTrust} aria-label="포그니필름 품질보증 신뢰 지표">
                 {trustItems.map((item) => (
@@ -120,8 +123,8 @@ export default function WarrantyPage() {
         <section className={styles.valueSection} aria-labelledby="warranty-value-title">
           <div className={styles.sectionHeading}>
             <p>POGNY WARRANTY</p>
-            <h2 id="warranty-value-title">PG FILM Series 품질보증서의 가치</h2>
-            <span>정품 자재와 전문 시공, 시공 이후의 책임까지 공식 보증서에 담았습니다.</span>
+            <h2 id="warranty-value-title">PG FILM Series 품질보증의 가치</h2>
+            <span>제품의 성능부터 시공 이후의 책임까지, 포그니필름의 기준을 확인하세요.</span>
           </div>
           <div className={styles.valueGrid}>
             {values.map((value) => (
@@ -156,9 +159,10 @@ export default function WarrantyPage() {
             <h2>안내사항</h2>
             <ul>
               <li>시공 시 등록된 고객명과 연락처를 정확히 입력해주세요.</li>
-              <li>조회되지 않을 경우 고객센터로 문의해주세요.</li>
-              <li>품질보증서는 제품별 기준에 따라 최대 15년 보증됩니다.</li>
-              <li>발급된 보증서 내용은 임의로 변경할 수 없습니다.</li>
+              <li>조회되지 않을 경우 입력 정보를 다시 확인해주세요.</li>
+              <li>계속 조회되지 않을 경우 고객센터로 문의해주세요.</li>
+              <li>보증기간과 보증 범위는 제품 및 시공 조건에 따라 다를 수 있습니다.</li>
+              <li>품질보증서 내용은 임의로 변경할 수 없습니다.</li>
             </ul>
           </article>
           <article className={styles.customerCard} aria-labelledby="warranty-support-title">
@@ -166,14 +170,17 @@ export default function WarrantyPage() {
             <h2 id="warranty-support-title">고객센터</h2>
             <a className={styles.customerPhone} href="tel:18334236">1833-4236</a>
             <span>평일 09:00 - 18:00<br />주말 및 공휴일 휴무</span>
-            <a
-              className={styles.kakaoButton}
-              href="https://pf.kakao.com/_aYxmxmG/chat"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              카카오톡 상담
-            </a>
+            <div className={styles.customerActions}>
+              <a className={styles.phoneButton} href="tel:18334236">전화 상담</a>
+              <a
+                className={styles.kakaoButton}
+                href="https://pf.kakao.com/_aYxmxmG/chat"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                카카오톡 상담
+              </a>
+            </div>
           </article>
         </section>
 
@@ -182,14 +189,14 @@ export default function WarrantyPage() {
             <p>POGNY FILM QUALITY PROMISE</p>
             <h2>최대 15년 품질보증<br />10,000건 이상의 시공 경험</h2>
             <span>
-              포그니필름은 자재 생산부터 시공까지 책임지는 전문 기업으로
-              고객님의 만족을 최우선으로 합니다.
+              포그니필름은 PG FILM Series의 제품 공급부터
+              본사 직영 시공과 사후관리까지 책임지는 윈도우필름 전문 브랜드입니다.
             </span>
           </div>
           <div className={styles.closingStats}>
-            <article><strong>15년</strong><span>최대 보증 기간</span></article>
-            <article><strong>10,000+</strong><span>시공 경험</span></article>
-            <article><strong>정품</strong><span>PG FILM Series</span></article>
+            <article><strong>15년</strong><span>최대 품질보증</span></article>
+            <article><strong>10,000+</strong><span>누적 시공 경험</span></article>
+            <article><strong>100%</strong><span>본사 직영 시공</span></article>
           </div>
         </section>
       </main>

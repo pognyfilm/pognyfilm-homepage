@@ -85,7 +85,8 @@ export default function WarrantyLookupClient() {
           <p>WARRANTY CHECK</p>
           <h2>품질보증서 조회</h2>
           <span>
-            고객명과 연락처를 입력하시면 품질보증서를 확인하실 수 있습니다.
+            시공 당시 등록된 고객명과 연락처를 입력하시면<br />
+            발급된 품질보증서를 확인하실 수 있습니다.
           </span>
         </div>
         <form className={styles.form} onSubmit={handleSubmit}>
@@ -117,12 +118,12 @@ export default function WarrantyLookupClient() {
             />
           </label>
           <button className={styles.submit} type="submit" disabled={isLoading}>
-            {isLoading ? "조회 중" : "조회하기"}
+            {isLoading ? "조회 중" : "품질보증서 조회하기"}
           </button>
         </form>
         <p className={styles.securityNote}>
           <span aria-hidden="true">◆</span>
-          입력하신 정보는 조회 목적 외에 사용되지 않으며 안전하게 보호됩니다.
+          입력하신 정보는 품질보증서 조회 목적으로만 사용되며 안전하게 보호됩니다.
         </p>
         <p className={styles.message} role="status" aria-live="polite">
           {message}
@@ -136,14 +137,24 @@ export default function WarrantyLookupClient() {
               <span>VERIFIED WARRANTY</span>
               <h2 id="warranty-result-title">품질보증서 조회 결과</h2>
             </div>
-            <a
-              className={styles.download}
-              href={`${result.documentUrl}&print=1`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              PDF 다운로드
-            </a>
+            <div className={styles.resultActions}>
+              <a
+                className={styles.previewButton}
+                href={result.documentUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                품질보증서 미리보기
+              </a>
+              <a
+                className={styles.download}
+                href={`${result.documentUrl}&print=1`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                PDF 저장
+              </a>
+            </div>
           </div>
           <dl className={styles.details}>
             {details.map(([label, value]) => (
