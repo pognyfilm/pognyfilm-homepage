@@ -76,7 +76,7 @@
 }
 
 .headerCall span {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 750;
   letter-spacing: 0.04em;
 }
@@ -135,7 +135,7 @@
 .introText {
   margin: 24px 0 0;
   color: #607189;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.8;
   word-break: keep-all;
 }
@@ -2422,7 +2422,7 @@
   border-radius: 999px;
   color: #38638e;
   background: #f7faff;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.14em;
 }
@@ -2448,7 +2448,7 @@
 .lookupIntro p {
   margin: 0;
   color: #68778b;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.7;
   letter-spacing: -0.02em;
 }
@@ -2479,7 +2479,7 @@
 .lookupHead h2 {
   margin: 0;
   color: #10233e;
-  font-size: 21px;
+  font-size: 23px;
   font-weight: 750;
   letter-spacing: -0.025em;
 }
@@ -2489,7 +2489,7 @@
   align-items: center;
   gap: 7px;
   color: #607188;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 650;
 }
 
@@ -2529,7 +2529,7 @@
 
 .field > span {
   color: #31445e;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -2543,7 +2543,7 @@
   color: #10233e;
   background: #fff;
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
   transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
@@ -2569,7 +2569,7 @@
   color: #fff;
   background: #102b4d;
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 750;
   cursor: pointer;
   transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
@@ -2594,7 +2594,7 @@
 .securityNote {
   margin: 18px 0 0;
   color: #7b899b;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.5;
   text-align: center;
 }
@@ -2603,7 +2603,7 @@
   min-height: 0;
   margin: 12px 0 0;
   color: #c84444;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 650;
   line-height: 1.55;
   text-align: center;
@@ -2637,7 +2637,7 @@
   align-items: center;
   gap: 8px;
   color: #16744b;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 750;
 }
 
@@ -2652,7 +2652,7 @@
 .resultHead h2 {
   margin: 7px 0 0;
   color: #10233e;
-  font-size: 25px;
+  font-size: 27px;
   letter-spacing: -0.025em;
 }
 
@@ -2669,7 +2669,7 @@
   min-height: 44px;
   padding: 0 18px;
   border-radius: 10px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 750;
   text-decoration: none;
 }
@@ -2710,13 +2710,13 @@
 
 .details dt {
   color: #77869a;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .details dd {
   overflow-wrap: anywhere;
   color: #10233e;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
 }
 
@@ -2748,7 +2748,7 @@
 .serviceCopy > span,
 .principlesHeader > span {
   color: #146fe8;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.14em;
 }
@@ -2757,7 +2757,7 @@
 .principlesHeader h2 {
   margin: 0 0 14px;
   color: #10233e;
-  font-size: 30px;
+  font-size: 32px;
   line-height: 1.3;
   letter-spacing: -0.035em;
 }
@@ -2765,7 +2765,7 @@
 .serviceCopy p {
   margin: 0;
   color: #65758a;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.75;
 }
 
@@ -2788,7 +2788,7 @@
 
 .serviceStats dt {
   color: #102b4d;
-  font-size: clamp(24px, 2.4vw, 34px);
+  font-size: clamp(26px, 2.4vw, 36px);
   font-weight: 780;
   line-height: 1.15;
   letter-spacing: -0.04em;
@@ -2798,7 +2798,7 @@
 .serviceStats dd {
   margin-top: 8px;
   color: #7a8798;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.4;
 }
 
@@ -2843,7 +2843,7 @@
   border-radius: 7px;
   color: #146fe8;
   background: #f3f8fe;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
   line-height: 1;
   content: counter(warranty-principle, decimal-leading-zero);
@@ -2856,7 +2856,7 @@
 
 .principlesList h3 {
   color: #18314f;
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 780;
   line-height: 1.4;
 }
@@ -2864,7 +2864,7 @@
 .principlesList p {
   margin-top: 10px;
   color: #6d7b8d;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.65;
 }
 
@@ -2895,7 +2895,7 @@
 .infoBox h2 {
   margin: 0 0 10px;
   color: #18314f;
-  font-size: 17px;
+  font-size: 19px;
   letter-spacing: -0.02em;
 }
 
@@ -2912,7 +2912,7 @@
   position: relative;
   padding-left: 12px;
   color: #68788c;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.55;
 }
 
@@ -2949,7 +2949,7 @@
 
 .supportBar h2 {
   color: #fff;
-  font-size: 23px;
+  font-size: 24px;
   font-weight: 760;
   line-height: 1.3;
   letter-spacing: -0.025em;
@@ -2958,7 +2958,7 @@
 .supportBar p {
   margin-top: 8px;
   color: rgba(255, 255, 255, 0.8);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.5;
 }
 
@@ -3099,7 +3099,7 @@
 
   .systemCurrent {
     height: 100%;
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .systemCurrent::after {
@@ -3143,7 +3143,7 @@
   }
 
   .lookupIntro p {
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.65;
   }
 
@@ -3157,11 +3157,11 @@
   }
 
   .lookupHead h2 {
-    font-size: 19px;
+    font-size: 21px;
   }
 
   .secureLookup {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .form {
@@ -3177,7 +3177,7 @@
   .securityNote {
     margin-top: 16px;
     padding: 0 3px;
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .result {
@@ -3228,11 +3228,11 @@
 
   .serviceCopy h2,
   .principlesHeader h2 {
-    font-size: 25px;
+    font-size: 27px;
   }
 
   .serviceCopy p {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .serviceStats > div {
@@ -3241,11 +3241,11 @@
   }
 
   .serviceStats dt {
-    font-size: clamp(18px, 5.5vw, 24px);
+    font-size: clamp(20px, 5.5vw, 26px);
   }
 
   .serviceStats dd {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .guidanceSection {
@@ -3268,12 +3268,12 @@
   }
 
   .principlesList h3 {
-    font-size: 18px;
+    font-size: 19px;
   }
 
   .principlesList p {
     margin-top: 9px;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.6;
   }
 
@@ -3303,11 +3303,11 @@
   }
 
   .supportBar h2 {
-    font-size: 20px;
+    font-size: 21px;
   }
 
   .supportBar p {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .supportActions {
@@ -3382,7 +3382,7 @@
 
   .secureLookup {
     gap: 5px;
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .serviceOverview,
@@ -3392,11 +3392,11 @@
   }
 
   .serviceStats dt {
-    font-size: 17px;
+    font-size: 19px;
   }
 
   .serviceStats dd {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .supportActions {
