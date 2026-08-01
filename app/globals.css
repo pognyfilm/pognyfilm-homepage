@@ -287,6 +287,37 @@ img {
   color: #d9b48a;
 }
 
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .site-header {
+    gap: 3px;
+  }
+
+  .logo,
+  .header-call {
+    flex-shrink: 0;
+  }
+
+  .nav {
+    gap: 48px;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 1200px) {
+  .nav {
+    gap: 52px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+  }
+}
+
 .header-call,
 .btn {
   display: inline-flex;
