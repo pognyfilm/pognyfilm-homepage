@@ -16,8 +16,6 @@ export type AnalyticsEventName =
 declare global {
   interface Window {
     dataLayer?: unknown[];
-    gtag?: (...args: unknown[]) => void;
-    updateAnalyticsConsent?: (granted: boolean) => void;
   }
 }
 
@@ -27,7 +25,9 @@ export const trackAnalyticsEvent = (
 ) => {
   if (typeof window === "undefined") return;
 
-  window.gtag?.("event", eventName, {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: eventName,
     page_location: window.location.href,
     page_title: document.title,
     ...parameters,

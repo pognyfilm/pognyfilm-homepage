@@ -746,11 +746,7 @@ export default function LegacyInteractions() {
 
       if (!link) return;
 
-      if (link.href.startsWith("tel:")) {
-        trackAnalyticsEvent("phone_click", { link_url: link.href });
-      } else if (link.matches(".quick-kakao")) {
-        trackAnalyticsEvent("kakao_click", { link_url: link.href });
-      } else if (link.matches(".quick-youtube")) {
+      if (link.matches(".quick-youtube")) {
         trackAnalyticsEvent("youtube_click", { link_url: link.href });
       } else if (link.matches(".quick-blog, [data-case-blog]")) {
         trackAnalyticsEvent("blog_click", { link_url: link.href });
