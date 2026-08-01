@@ -1965,3 +1965,132 @@
     break-inside: avoid;
   }
 }
+
+/* Admin readability: screen typography only (keeps warranty PDF print sizing intact). */
+@media screen {
+  .admin-root {
+    font-size: 16px;
+  }
+
+  .admin-sidebar-brand span,
+  .admin-login-brand span {
+    font-size: 16px;
+  }
+
+  .admin-sidebar-brand strong,
+  .admin-login-brand strong,
+  .admin-sidebar-footer span,
+  .admin-disabled-menu em,
+  .admin-status-badge,
+  .admin-form-section-head .admin-form-step,
+  .admin-feature-badge,
+  .admin-image-order {
+    font-size: 12px;
+  }
+
+  .admin-sidebar nav > *,
+  .admin-mobile-menu nav > * {
+    font-size: 15px;
+  }
+
+  .admin-sidebar nav > * > span,
+  .admin-mobile-menu nav > * > span,
+  .admin-new-badge {
+    font-size: 11px;
+  }
+
+  .admin-sidebar-footer p,
+  .admin-header > div > div span,
+  .admin-header button,
+  .admin-status-chip,
+  .admin-metric-card p,
+  .admin-card-title span,
+  .admin-empty-content p,
+  .admin-form-section-head span,
+  .admin-form-grid small,
+  .admin-upload-field small,
+  .admin-feature-toggle small,
+  .admin-table-subline,
+  .admin-recent-portfolio span,
+  .admin-inquiry-drawer header p,
+  .admin-inquiry-detail dt,
+  .admin-inquiry-controls label > span,
+  .admin-inquiry-save-status,
+  .admin-inquiry-delete-zone p {
+    font-size: 13px;
+  }
+
+  .admin-kicker,
+  .admin-page-heading p,
+  .admin-quick-actions > div p,
+  .admin-header strong,
+  .admin-notification,
+  .admin-metric-card > span,
+  .admin-empty-content strong,
+  .admin-status-filters button,
+  .admin-data-error,
+  .admin-save-progress,
+  .admin-list-empty p,
+  .admin-row-actions a,
+  .admin-row-actions button,
+  .admin-image-actions button,
+  .admin-image-replace,
+  .admin-portfolio-summary span,
+  .admin-portfolio-summary > p,
+  .admin-warranty-toolbar > p,
+  .admin-form-error {
+    font-size: 14px;
+  }
+
+  .admin-metric-card strong {
+    font-size: 38px;
+  }
+
+  .admin-card-title h2 {
+    font-size: 19px;
+  }
+
+  .admin-quick-actions h2 {
+    font-size: 20px;
+  }
+
+  .admin-primary-link,
+  .admin-quick-link,
+  .admin-quick-actions button,
+  .admin-recent-portfolio a,
+  .admin-card-title a,
+  .admin-form-grid label > span,
+  .admin-upload-field > span,
+  .admin-inquiry-table td,
+  .admin-portfolio-table td,
+  .admin-inquiry-state p,
+  .admin-inquiry-delete-zone strong {
+    font-size: 15px;
+  }
+
+  .admin-inquiry-table th,
+  .admin-portfolio-table th,
+  .admin-inquiry-table td::before {
+    font-size: 13px;
+  }
+
+  .admin-form-grid input,
+  .admin-form-grid select,
+  .admin-form-grid textarea,
+  .admin-image-editor input,
+  .admin-image-editor select,
+  .admin-inquiry-controls select,
+  .admin-inquiry-controls textarea,
+  .admin-login-form input,
+  .admin-login-form button {
+    font-size: 16px;
+  }
+
+  .admin-form-section-head h2 {
+    font-size: 21px;
+  }
+
+  .admin-inquiry-detail dd {
+    font-size: 16px;
+  }
+}
