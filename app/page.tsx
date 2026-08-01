@@ -16,6 +16,10 @@ const legacyHtml = String.raw`<header class="site-header">
         <a href="/warranty">품질보증서 조회</a>
       </nav>
       <a class="header-call" href="tel:18334236">전화상담 1833-4236</a>
+      <nav class="mobile-header-nav" aria-label="모바일 바로가기 메뉴">
+        <a href="#film-finder">AI 필름 추천</a>
+        <a href="/warranty">품질보증서 조회</a>
+      </nav>
     </header>
 
     <main id="home">
