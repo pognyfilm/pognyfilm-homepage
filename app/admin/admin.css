@@ -1969,12 +1969,12 @@
 /* Admin readability: screen typography only (keeps warranty PDF print sizing intact). */
 @media screen {
   .admin-root {
-    font-size: 16px;
+    font-size: 17px;
   }
 
   .admin-sidebar-brand span,
   .admin-login-brand span {
-    font-size: 16px;
+    font-size: 18px;
   }
 
   .admin-sidebar-brand strong,
@@ -1985,18 +1985,18 @@
   .admin-form-section-head .admin-form-step,
   .admin-feature-badge,
   .admin-image-order {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .admin-sidebar nav > *,
   .admin-mobile-menu nav > * {
-    font-size: 15px;
+    font-size: 17px;
   }
 
   .admin-sidebar nav > * > span,
   .admin-mobile-menu nav > * > span,
   .admin-new-badge {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .admin-sidebar-footer p,
@@ -2017,7 +2017,7 @@
   .admin-inquiry-controls label > span,
   .admin-inquiry-save-status,
   .admin-inquiry-delete-zone p {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .admin-kicker,
@@ -2039,19 +2039,19 @@
   .admin-portfolio-summary > p,
   .admin-warranty-toolbar > p,
   .admin-form-error {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .admin-metric-card strong {
-    font-size: 38px;
+    font-size: 40px;
   }
 
   .admin-card-title h2 {
-    font-size: 19px;
+    font-size: 21px;
   }
 
   .admin-quick-actions h2 {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .admin-primary-link,
@@ -2065,13 +2065,13 @@
   .admin-portfolio-table td,
   .admin-inquiry-state p,
   .admin-inquiry-delete-zone strong {
-    font-size: 15px;
+    font-size: 17px;
   }
 
   .admin-inquiry-table th,
   .admin-portfolio-table th,
   .admin-inquiry-table td::before {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .admin-form-grid input,
@@ -2083,14 +2083,14 @@
   .admin-inquiry-controls textarea,
   .admin-login-form input,
   .admin-login-form button {
-    font-size: 16px;
+    font-size: 17px;
   }
 
   .admin-form-section-head h2 {
-    font-size: 21px;
+    font-size: 23px;
   }
 
   .admin-inquiry-detail dd {
-    font-size: 16px;
+    font-size: 17px;
   }
 }
