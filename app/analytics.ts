@@ -1,5 +1,6 @@
 export type AnalyticsEventName =
   | "quote_button_click"
+  | "quote_submit"
   | "generate_lead"
   | "phone_click"
   | "kakao_click"
@@ -36,4 +37,13 @@ export const trackAnalyticsEvent = (
   if (window.location.hostname === "localhost") {
     console.info(`[analytics:test] event ${eventName}`);
   }
+};
+
+export const pushQuoteSubmitEvent = () => {
+  if (typeof window === "undefined") return;
+
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: "quote_submit",
+  });
 };

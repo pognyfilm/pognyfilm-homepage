@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { trackAnalyticsEvent } from "./analytics";
+import { pushQuoteSubmitEvent, trackAnalyticsEvent } from "./analytics";
 
 const formatNumber = (value: number) => new Intl.NumberFormat("ko-KR").format(value);
 
@@ -756,6 +756,8 @@ export default function LegacyInteractions() {
     if (quoteForm && quoteMessage && quoteSubmitButton) {
       const defaultSubmitLabel = quoteSubmitButton.textContent || "무료 견적 요청하기";
       let isSubmitting = false;
+      let submissionSequence = 0;
+      let lastTrackedSubmission = 0;
 
       const setQuoteMessage = (message: string, isSuccess = false) => {
         quoteMessage.textContent = message;
@@ -791,6 +793,7 @@ export default function LegacyInteractions() {
 
         setQuoteMessage("");
         setSubmitting(true);
+        const submissionId = ++submissionSequence;
 
         try {
           const response = await fetch("/api/quote", {
@@ -828,6 +831,10 @@ export default function LegacyInteractions() {
             "문의가 정상적으로 접수되었습니다.\n담당자가 확인 후 빠르게 연락드리겠습니다.\n급한 상담은 1833-4236으로 연락주시면\n더 빠르게 상담받으실 수 있습니다.",
             true,
           );
+          if (lastTrackedSubmission !== submissionId) {
+            pushQuoteSubmitEvent();
+            lastTrackedSubmission = submissionId;
+          }
           trackAnalyticsEvent("generate_lead", {
             form_name: "free_quote",
             lead_source: "website",
