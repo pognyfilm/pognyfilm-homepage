@@ -3,7 +3,7 @@ import Script from "next/script";
 import GoogleTagManagerEvents from "../components/GoogleTagManagerEvents";
 import "./globals.css";
 
-const GTM_CONTAINER_ID = "GTM-5JPGKN7K";
+const GTM_CONTAINER_ID = "GTM-WQ6VN9VQ";
 const CLARITY_PROJECT_ID = "xsrswb4u08";
 const siteTitle = "단열필름 전문 브랜드 | 포그니필름";
 const siteDescription =
