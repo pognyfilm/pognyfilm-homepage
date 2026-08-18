@@ -4,7 +4,7 @@ import AdminMetricCard from "../../../components/admin/AdminMetricCard";
 import { getPortfolioDashboardData } from "../../../lib/portfolio/queries";
 import { getInquiryDashboardData } from "../../../lib/inquiries/queries";
 import { inquiryStatusLabels } from "../../../lib/inquiries/types";
-import { getGa4Overview } from "../../../lib/analytics/ga4";
+import { getGa4Acquisition, getGa4Overview } from "../../../lib/analytics/ga4";
 import { getGoogleAdsTodayReport } from "../../../lib/analytics/google-ads";
 
 const todayInKorea = () => new Intl.DateTimeFormat("en-CA", {
@@ -12,12 +12,17 @@ const todayInKorea = () => new Intl.DateTimeFormat("en-CA", {
 }).format(new Date());
 
 export default async function AdminDashboardPage() {
-  const [portfolio, inquiries, visitors, ads] = await Promise.all([
+  const [portfolio, inquiries, visitors, acquisition, ads] = await Promise.all([
     getPortfolioDashboardData(),
     getInquiryDashboardData(),
     (async () => {
       const today = todayInKorea();
       try { return { data: await getGa4Overview({ startDate: today, endDate: today }), error: null }; }
+      catch (error) { return { data: null, error: error instanceof Error ? error.message : "연결 확인 필요" }; }
+    })(),
+    (async () => {
+      const today = todayInKorea();
+      try { return { data: await getGa4Acquisition({ startDate: today, endDate: today }), error: null }; }
       catch (error) { return { data: null, error: error instanceof Error ? error.message : "연결 확인 필요" }; }
     })(),
     (async () => {
@@ -50,6 +55,25 @@ export default async function AdminDashboardPage() {
         {metrics.map((metric) => (
           <AdminMetricCard key={metric.label} {...metric} />
         ))}
+      </section>
+
+      <section className="admin-acquisition-summary" aria-labelledby="today-acquisition-title">
+        <div>
+          <h2 id="today-acquisition-title">오늘 유입경로</h2>
+          <span>GA4 · 세션 기준</span>
+        </div>
+        {acquisition.data ? (
+          <ul>
+            {acquisition.data.channels.map((channel) => (
+              <li key={channel.channel}>
+                <span>{channel.channel}</span>
+                <strong>{channel.sessions}</strong>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p role="status">{acquisition.error || "GA4 유입 데이터를 확인할 수 없습니다."}</p>
+        )}
       </section>
 
       <section className="admin-portfolio-summary" aria-label="포트폴리오 현황">

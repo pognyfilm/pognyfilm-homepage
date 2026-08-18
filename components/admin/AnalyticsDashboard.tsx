@@ -9,7 +9,15 @@ type Overview = {
   changes: { users: number | null; sessions: number | null; newUsers: number | null; leads: number | null };
   leadEventNames: string[];
 };
-type Traffic = { trend: Row[]; channels: Row[]; sources: Row[]; pages: Row[]; devices: Row[]; regions: Row[] };
+type AcquisitionChannel = {
+  channel: string;
+  users: number;
+  sessions: number;
+  sessionShare: number;
+  details: Array<{ source: string; medium: string; sessions: number; users: number }>;
+};
+type Acquisition = { basis: "session"; totalUsers: number; totalSessions: number; channels: AcquisitionChannel[] };
+type Traffic = { trend: Row[]; channels: Row[]; sources: Row[]; pages: Row[]; devices: Row[]; regions: Row[]; acquisition: Acquisition };
 type Conversions = { conversions: number; events: Array<{ eventName: string; eventCount: number }> };
 type AdsCampaign = { id: string; name: string; status: string; channelType: string; cost: number; impressions: number; clicks: number; ctr: number; averageCpc: number; conversions: number };
 type Ads = {
@@ -51,6 +59,38 @@ function DataTable({ title, columns, rows }: { title: string; columns: Array<{ l
           <tbody>{rows.map((row, index) => <tr key={`${Object.values(row.dimensions).join("-")}-${index}`}>{columns.map((column) => <td key={column.label}>{column.value(row)}</td>)}</tr>)}</tbody></table>
         </div>
       ) : <div className="admin-analytics-empty">선택한 기간에 표시할 데이터가 없습니다.</div>}
+    </section>
+  );
+}
+
+function AcquisitionTable({ data }: { data: Acquisition }) {
+  return (
+    <section className="admin-analytics-table-card admin-acquisition-table">
+      <div className="admin-analytics-section-head">
+        <div><h2>유입경로 분석</h2><p>GA4 세션 유입 기준 · 비중은 전체 세션 {number(data.totalSessions)}회를 기준으로 계산합니다.</p></div>
+        <span>{data.channels.length}개 채널</span>
+      </div>
+      <div className="admin-analytics-table-wrap">
+        <table>
+          <thead><tr><th>채널</th><th>사용자</th><th>세션</th><th>세션 비중</th><th>source / medium</th></tr></thead>
+          <tbody>
+            {data.channels.map((channel) => (
+              <tr key={channel.channel}>
+                <td>{channel.channel}</td>
+                <td>{number(channel.users)}</td>
+                <td>{number(channel.sessions)}</td>
+                <td>{percent(channel.sessionShare)}</td>
+                <td className="admin-acquisition-details">
+                  {channel.details.length
+                    ? channel.details.map((detail) => `${detail.source} / ${detail.medium} · ${number(detail.sessions)}`).join(" · ")
+                    : "해당 기간 유입 없음"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="admin-acquisition-note">사용자는 채널별 고유 집계이며 여러 채널을 이용한 방문자는 채널 간 중복될 수 있습니다. Google Ads 비용·클릭과 GA4 세션은 서로 다른 지표입니다.</p>
     </section>
   );
 }
@@ -154,6 +194,7 @@ export default function AnalyticsDashboard() {
           </> : ["광고비", "광고 노출", "광고 클릭", "CTR", "평균 CPC", "광고 전환"].map((label) => <article className="is-pending" key={label}><span>{label}</span><strong>—</strong><p>{adsError || "Google Ads 조회 중"} <em>Google Ads</em></p></article>)}
         </section>
         <TrendChart rows={traffic.trend} />
+        <AcquisitionTable data={traffic.acquisition} />
         <div className="admin-analytics-grid">
           <DataTable title="유입 채널" rows={traffic.channels} columns={[{ label: "채널", value: (r) => r.dimensions.sessionDefaultChannelGroup || "기타" }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "세션", value: (r) => number(r.metrics.sessions || 0) }, { label: "참여 세션", value: (r) => number(r.metrics.engagedSessions || 0) }, { label: "문의 전환", value: (r) => number(r.conversions) }, { label: "전환율", value: (r) => percent(r.conversionRate) }]} />
           <DataTable title="기기" rows={traffic.devices} columns={[{ label: "기기", value: (r) => r.dimensions.deviceCategory }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "세션", value: (r) => number(r.metrics.sessions || 0) }, { label: "문의 전환", value: (r) => number(r.conversions) }, { label: "전환율", value: (r) => percent(r.conversionRate) }]} />

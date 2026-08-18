@@ -146,6 +146,56 @@ const metric = (row: GaRow | undefined, index: number) => Number(row?.metricValu
 const dimension = (row: GaRow, index: number) => row.dimensionValues?.[index]?.value || "";
 const eventFilter = (names: string[]) => names.length ? ({ filter: { fieldName: "eventName", inListFilter: { values: names } } }) : null;
 
+type DimensionFilter = Record<string, unknown>;
+export type AcquisitionChannelName =
+  | "Google Ads"
+  | "NAVER 광고"
+  | "NAVER 자연검색"
+  | "NAVER"
+  | "Google 검색"
+  | "YouTube"
+  | "Direct"
+  | "기타";
+
+export type Ga4AcquisitionChannel = {
+  channel: AcquisitionChannelName;
+  users: number;
+  sessions: number;
+  sessionShare: number;
+  details: Array<{ source: string; medium: string; sessions: number; users: number }>;
+};
+
+const exactDimension = (fieldName: string, value: string): DimensionFilter => ({
+  filter: { fieldName, stringFilter: { matchType: "EXACT", value, caseSensitive: false } },
+});
+const containsDimension = (fieldName: string, value: string): DimensionFilter => ({
+  filter: { fieldName, stringFilter: { matchType: "CONTAINS", value, caseSensitive: false } },
+});
+const allOf = (...expressions: DimensionFilter[]): DimensionFilter => ({ andGroup: { expressions } });
+const anyOf = (...expressions: DimensionFilter[]): DimensionFilter => ({ orGroup: { expressions } });
+
+const acquisitionDefinitions: Array<{ channel: AcquisitionChannelName; filter: DimensionFilter }> = [
+  { channel: "Google Ads", filter: allOf(exactDimension("sessionSource", "google"), exactDimension("sessionMedium", "cpc")) },
+  {
+    channel: "NAVER 광고",
+    filter: allOf(
+      anyOf(exactDimension("sessionSource", "ad.search.naver.com"), exactDimension("sessionSource", "m.ad.search.naver.com")),
+      exactDimension("sessionMedium", "referral"),
+    ),
+  },
+  { channel: "NAVER 자연검색", filter: allOf(exactDimension("sessionSource", "naver"), exactDimension("sessionMedium", "organic")) },
+  { channel: "NAVER", filter: allOf(exactDimension("sessionSource", "m.search.naver.com"), exactDimension("sessionMedium", "referral")) },
+  { channel: "Google 검색", filter: allOf(exactDimension("sessionSource", "google"), exactDimension("sessionMedium", "organic")) },
+  { channel: "YouTube", filter: containsDimension("sessionSource", "youtube") },
+  { channel: "Direct", filter: allOf(exactDimension("sessionSource", "(direct)"), exactDimension("sessionMedium", "(none)")) },
+];
+
+const knownAcquisitionFilter = anyOf(...acquisitionDefinitions.map((definition) => definition.filter));
+const allAcquisitionDefinitions = [
+  ...acquisitionDefinitions,
+  { channel: "기타" as const, filter: { notExpression: knownAcquisitionFilter } },
+];
+
 async function totals(range: DateRange) {
   const leadNames = parseLeadEventNames();
   const [summary, leads] = await Promise.all([
@@ -221,6 +271,54 @@ async function leadRows(range: DateRange, dimensions: string[]) {
   return (report.rows || []).map((row) => ({ key: dimensions.map((_, index) => dimension(row, index)).join("||"), leads: metric(row, 0) }));
 }
 
+export async function getGa4Acquisition(range: DateRange) {
+  return cached(`acquisition:${range.startDate}:${range.endDate}`, range, async () => {
+    const [summary, detailRows, ...channelReports] = await Promise.all([
+      runReport({ dateRanges: [range], metrics: [{ name: "activeUsers" }, { name: "sessions" }] }),
+      rows(range, { dimensions: ["sessionSource", "sessionMedium"], metrics: ["sessions", "activeUsers"], limit: 250 }),
+      ...allAcquisitionDefinitions.map((definition) => runReport({
+        dateRanges: [range],
+        metrics: [{ name: "activeUsers" }, { name: "sessions" }],
+        dimensionFilter: definition.filter,
+      })),
+    ]);
+    const totalUsers = metric(summary.rows?.[0], 0);
+    const totalSessions = metric(summary.rows?.[0], 1);
+    const classify = (source: string, medium: string): AcquisitionChannelName => {
+      const normalizedSource = source.toLowerCase();
+      const normalizedMedium = medium.toLowerCase();
+      if (normalizedSource === "google" && normalizedMedium === "cpc") return "Google Ads";
+      if (["ad.search.naver.com", "m.ad.search.naver.com"].includes(normalizedSource) && normalizedMedium === "referral") return "NAVER 광고";
+      if (normalizedSource === "naver" && normalizedMedium === "organic") return "NAVER 자연검색";
+      if (normalizedSource === "m.search.naver.com" && normalizedMedium === "referral") return "NAVER";
+      if (normalizedSource === "google" && normalizedMedium === "organic") return "Google 검색";
+      if (normalizedSource.includes("youtube")) return "YouTube";
+      if (normalizedSource === "(direct)" && normalizedMedium === "(none)") return "Direct";
+      return "기타";
+    };
+    const channels: Ga4AcquisitionChannel[] = allAcquisitionDefinitions.map((definition, index) => {
+      const report = channelReports[index];
+      const sessions = metric(report?.rows?.[0], 1);
+      return {
+        channel: definition.channel,
+        users: metric(report?.rows?.[0], 0),
+        sessions,
+        sessionShare: totalSessions ? (sessions / totalSessions) * 100 : 0,
+        details: detailRows
+          .filter((item) => classify(item.dimensions.sessionSource || "", item.dimensions.sessionMedium || "") === definition.channel)
+          .map((item) => ({
+            source: item.dimensions.sessionSource || "(not set)",
+            medium: item.dimensions.sessionMedium || "(not set)",
+            sessions: item.metrics.sessions || 0,
+            users: item.metrics.activeUsers || 0,
+          }))
+          .sort((a, b) => b.sessions - a.sessions),
+      };
+    });
+    return { source: "GA4" as const, basis: "session" as const, range, totalUsers, totalSessions, channels };
+  });
+}
+
 export async function getGa4Traffic(range: DateRange) {
   return cached(`traffic:${range.startDate}:${range.endDate}`, range, async () => {
     const specs = {
@@ -244,7 +342,7 @@ export async function getGa4Traffic(range: DateRange) {
         return { ...item, conversions, conversionRate: sessions ? (conversions / sessions) * 100 : 0 };
       });
     };
-    return { source: "GA4" as const, range, trend: merge(trend, trendLeads), channels: merge(channels, channelLeads), sources: merge(sources, sourceLeads), pages: merge(pages, pageLeads), devices: merge(devices, deviceLeads), regions: merge(regions, regionLeads) };
+    return { source: "GA4" as const, range, trend: merge(trend, trendLeads), channels: merge(channels, channelLeads), sources: merge(sources, sourceLeads), pages: merge(pages, pageLeads), devices: merge(devices, deviceLeads), regions: merge(regions, regionLeads), acquisition: await getGa4Acquisition(range) };
   });
 }
 

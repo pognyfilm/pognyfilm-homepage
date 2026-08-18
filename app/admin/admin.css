@@ -2300,3 +2300,32 @@
   .admin-line-chart svg { height: 210px; }
   .admin-analytics-roadmap > div { grid-template-columns: 1fr; }
 }
+
+.admin-acquisition-summary {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  margin-top: 14px;
+  padding: 16px 20px;
+  border: 1px solid #dce5ef;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.admin-acquisition-summary > div { min-width: 142px; }
+.admin-acquisition-summary h2 { margin: 0; color: #102b4d; font-size: 16px; }
+.admin-acquisition-summary > div span { display: block; margin-top: 4px; color: #75859a; font-size: 12px; }
+.admin-acquisition-summary ul { display: flex; flex: 1; flex-wrap: wrap; gap: 8px 18px; margin: 0; padding: 0; list-style: none; }
+.admin-acquisition-summary li { display: flex; gap: 7px; align-items: baseline; color: #66778a; font-size: 13px; font-weight: 700; }
+.admin-acquisition-summary li strong { color: #1769d8; font-size: 16px; }
+.admin-acquisition-summary > p { margin: 0; color: #9a5d25; font-size: 13px; }
+
+.admin-analytics-section-head > div > p { margin: 5px 0 0; color: #75859a; font-size: 12px; }
+.admin-acquisition-table td.admin-acquisition-details { max-width: 520px; color: #66778a; font-size: 12px; line-height: 1.6; text-align: left; white-space: normal; }
+.admin-acquisition-note { margin: 0; padding: 13px 18px; border-top: 1px solid #edf1f5; color: #75859a; font-size: 12px; line-height: 1.6; }
+
+@media (max-width: 767px) {
+  .admin-acquisition-summary { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .admin-acquisition-summary ul { width: 100%; }
+  .admin-acquisition-table td.admin-acquisition-details { min-width: 260px; }
+}
