@@ -16,7 +16,7 @@ type AcquisitionChannel = {
   sessionShare: number;
   details: Array<{ source: string; medium: string; sessions: number; users: number }>;
 };
-type Acquisition = { basis: "session"; totalUsers: number; totalSessions: number; channels: AcquisitionChannel[] };
+type Acquisition = { basis: "session"; totalUsers: number; totalSessions: number; attributedSessions: number; channels: AcquisitionChannel[] };
 type Traffic = { trend: Row[]; channels: Row[]; sources: Row[]; pages: Row[]; devices: Row[]; regions: Row[]; acquisition: Acquisition };
 type Conversions = { conversions: number; events: Array<{ eventName: string; eventCount: number }> };
 type AdsCampaign = { id: string; name: string; status: string; channelType: string; cost: number; impressions: number; clicks: number; ctr: number; averageCpc: number; conversions: number };
@@ -67,7 +67,7 @@ function AcquisitionTable({ data }: { data: Acquisition }) {
   return (
     <section className="admin-analytics-table-card admin-acquisition-table">
       <div className="admin-analytics-section-head">
-        <div><h2>유입경로 분석</h2><p>GA4 세션 유입 기준 · 비중은 전체 세션 {number(data.totalSessions)}회를 기준으로 계산합니다.</p></div>
+        <div><h2>유입경로 분석</h2><p>GA4 세션 유입 기준 · 전체 {number(data.totalSessions)}회 · 채널 집계 {number(data.attributedSessions)}회</p></div>
         <span>{data.channels.length}개 채널</span>
       </div>
       <div className="admin-analytics-table-wrap">
@@ -90,7 +90,7 @@ function AcquisitionTable({ data }: { data: Acquisition }) {
           </tbody>
         </table>
       </div>
-      <p className="admin-acquisition-note">사용자는 채널별 고유 집계이며 여러 채널을 이용한 방문자는 채널 간 중복될 수 있습니다. Google Ads 비용·클릭과 GA4 세션은 서로 다른 지표입니다.</p>
+      <p className="admin-acquisition-note">세션 비중은 source / medium 채널 집계 합계를 기준으로 계산합니다. GA4 모델링 및 식별 불가 데이터로 전체 세션과 채널 합계가 다를 수 있습니다. 사용자는 채널 간 중복될 수 있으며, Google Ads 비용·클릭과 GA4 세션은 서로 다른 지표입니다.</p>
     </section>
   );
 }

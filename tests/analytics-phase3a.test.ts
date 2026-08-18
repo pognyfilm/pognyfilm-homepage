@@ -44,6 +44,7 @@ async function run() {
   const acquisition = await ga4.getGa4Acquisition({ startDate: "2026-08-12", endDate: "2026-08-18" });
   assert.equal(acquisition.totalUsers, 204);
   assert.equal(acquisition.totalSessions, 252);
+  assert.equal(acquisition.attributedSessions, 252);
   assert.equal(acquisition.channels.length, 8);
   assert.deepEqual(acquisition.channels[0], {
     channel: "Google Ads",

@@ -296,14 +296,18 @@ export async function getGa4Acquisition(range: DateRange) {
       if (normalizedSource === "(direct)" && normalizedMedium === "(none)") return "Direct";
       return "기타";
     };
-    const channels: Ga4AcquisitionChannel[] = allAcquisitionDefinitions.map((definition, index) => {
-      const report = channelReports[index];
-      const sessions = metric(report?.rows?.[0], 1);
+    const channelMetrics = allAcquisitionDefinitions.map((definition, index) => ({
+      definition,
+      users: metric(channelReports[index]?.rows?.[0], 0),
+      sessions: metric(channelReports[index]?.rows?.[0], 1),
+    }));
+    const attributedSessions = channelMetrics.reduce((sum, item) => sum + item.sessions, 0);
+    const channels: Ga4AcquisitionChannel[] = channelMetrics.map(({ definition, users, sessions }) => {
       return {
         channel: definition.channel,
-        users: metric(report?.rows?.[0], 0),
+        users,
         sessions,
-        sessionShare: totalSessions ? (sessions / totalSessions) * 100 : 0,
+        sessionShare: attributedSessions ? (sessions / attributedSessions) * 100 : 0,
         details: detailRows
           .filter((item) => classify(item.dimensions.sessionSource || "", item.dimensions.sessionMedium || "") === definition.channel)
           .map((item) => ({
@@ -315,7 +319,7 @@ export async function getGa4Acquisition(range: DateRange) {
           .sort((a, b) => b.sessions - a.sessions),
       };
     });
-    return { source: "GA4" as const, basis: "session" as const, range, totalUsers, totalSessions, channels };
+    return { source: "GA4" as const, basis: "session" as const, range, totalUsers, totalSessions, attributedSessions, channels };
   });
 }
 
