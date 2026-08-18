@@ -5,13 +5,14 @@ import { getPortfolioDashboardData } from "../../../lib/portfolio/queries";
 import { getInquiryDashboardData } from "../../../lib/inquiries/queries";
 import { inquiryStatusLabels } from "../../../lib/inquiries/types";
 import { getGa4Overview } from "../../../lib/analytics/ga4";
+import { getGoogleAdsTodayReport } from "../../../lib/analytics/google-ads";
 
 const todayInKorea = () => new Intl.DateTimeFormat("en-CA", {
   timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit",
 }).format(new Date());
 
 export default async function AdminDashboardPage() {
-  const [portfolio, inquiries, visitors] = await Promise.all([
+  const [portfolio, inquiries, visitors, ads] = await Promise.all([
     getPortfolioDashboardData(),
     getInquiryDashboardData(),
     (async () => {
@@ -19,12 +20,21 @@ export default async function AdminDashboardPage() {
       try { return { data: await getGa4Overview({ startDate: today, endDate: today }), error: null }; }
       catch (error) { return { data: null, error: error instanceof Error ? error.message : "연결 확인 필요" }; }
     })(),
+    (async () => {
+      try { return { data: await getGoogleAdsTodayReport(), error: null }; }
+      catch (error) { return { data: null, error: error instanceof Error ? error.message : "연결 확인 필요" }; }
+    })(),
   ]);
   const metrics = [
     { label: "오늘 방문자", status: visitors.error || "GA4 · activeUsers", value: visitors.data?.current.users, href: "/admin/analytics" },
     { label: "오늘 문의", status: inquiries.error ? "연결 확인 필요" : "오늘 접수", value: inquiries.todayCount },
     { label: "미확인 문의", status: inquiries.error ? "연결 확인 필요" : "처리 대기", value: inquiries.newCount },
-    { label: "오늘 광고비", status: "Google Ads · Phase 2", href: "/admin/analytics" },
+    {
+      label: "오늘 광고비",
+      status: ads.error || "Google Ads · 실제 비용",
+      value: ads.data ? new Intl.NumberFormat("ko-KR", { style: "currency", currency: "KRW", maximumFractionDigits: 0 }).format(ads.data.summary.cost) : undefined,
+      href: "/admin/analytics",
+    },
   ];
   return (
     <>

@@ -11,6 +11,14 @@ type Overview = {
 };
 type Traffic = { trend: Row[]; channels: Row[]; sources: Row[]; pages: Row[]; devices: Row[]; regions: Row[] };
 type Conversions = { conversions: number; events: Array<{ eventName: string; eventCount: number }> };
+type AdsCampaign = { id: string; name: string; status: string; channelType: string; cost: number; impressions: number; clicks: number; ctr: number; averageCpc: number; conversions: number };
+type Ads = {
+  source: "Google Ads";
+  currencyCode: "KRW";
+  timeZone: string;
+  summary: { cost: number; impressions: number; clicks: number; ctr: number; averageCpc: number; conversions: number };
+  campaigns: AdsCampaign[];
+};
 type ApiResult<T> = { ok: true; data: T } | { ok: false; code: string; message: string };
 type Preset = "today" | "yesterday" | "7d" | "30d" | "custom";
 
@@ -29,6 +37,8 @@ const rangeFor = (preset: Preset) => {
 };
 const number = (value: number) => new Intl.NumberFormat("ko-KR").format(Math.round(value));
 const percent = (value: number) => `${value.toFixed(1)}%`;
+const ratioPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
+const currency = (value: number) => new Intl.NumberFormat("ko-KR", { style: "currency", currency: "KRW", maximumFractionDigits: 0 }).format(value);
 const changeText = (value: number | null) => value === null ? "비교 불가" : `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
 
 function DataTable({ title, columns, rows }: { title: string; columns: Array<{ label: string; value: (row: Row) => string }>; rows: Row[] }) {
@@ -70,6 +80,19 @@ function ConversionTable({ data }: { data: Conversions }) {
   );
 }
 
+function AdsCampaignTable({ data }: { data: Ads }) {
+  return (
+    <section className="admin-analytics-table-card">
+      <div className="admin-analytics-section-head"><h2>캠페인별 Google Ads 실적</h2><span>{data.campaigns.length}개 캠페인 · {data.timeZone}</span></div>
+      {data.campaigns.length ? <div className="admin-analytics-table-wrap">
+        <table><thead><tr><th>캠페인</th><th>상태</th><th>비용</th><th>노출</th><th>클릭</th><th>CTR</th><th>평균 CPC</th><th>전환</th></tr></thead>
+          <tbody>{data.campaigns.map((campaign) => <tr key={campaign.id}><td>{campaign.name}<br /><small>{campaign.channelType}</small></td><td>{campaign.status}</td><td>{currency(campaign.cost)}</td><td>{number(campaign.impressions)}</td><td>{number(campaign.clicks)}</td><td>{ratioPercent(campaign.ctr)}</td><td>{currency(campaign.averageCpc)}</td><td>{number(campaign.conversions)}</td></tr>)}</tbody>
+        </table>
+      </div> : <div className="admin-analytics-empty">선택한 기간에 표시할 Google Ads 캠페인 데이터가 없습니다.</div>}
+    </section>
+  );
+}
+
 export default function AnalyticsDashboard() {
   const initial = rangeFor("7d");
   const [preset, setPreset] = useState<Preset>("7d");
@@ -77,25 +100,30 @@ export default function AnalyticsDashboard() {
   const [overview, setOverview] = useState<Overview | null>(null);
   const [traffic, setTraffic] = useState<Traffic | null>(null);
   const [conversions, setConversions] = useState<Conversions | null>(null);
+  const [ads, setAds] = useState<Ads | null>(null);
+  const [adsError, setAdsError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
     let active = true;
-    setLoading(true); setError(null);
+    setLoading(true); setError(null); setAdsError(null);
     const query = new URLSearchParams(range).toString();
     Promise.all([
       fetch(`/api/admin/analytics/overview?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Overview>>),
       fetch(`/api/admin/analytics/traffic?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Traffic>>),
       fetch(`/api/admin/analytics/conversions?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Conversions>>),
-    ]).then(([overviewResult, trafficResult, conversionsResult]) => {
+      fetch(`/api/admin/analytics/ads?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Ads>>),
+    ]).then(([overviewResult, trafficResult, conversionsResult, adsResult]) => {
       if (!active) return;
       if (!overviewResult.ok) throw new Error(overviewResult.message);
       if (!trafficResult.ok) throw new Error(trafficResult.message);
       if (!conversionsResult.ok) throw new Error(conversionsResult.message);
       setOverview(overviewResult.data); setTraffic(trafficResult.data); setConversions(conversionsResult.data);
-    }).catch((reason) => { if (active && reason?.name !== "AbortError") { setOverview(null); setTraffic(null); setConversions(null); setError(reason instanceof Error ? reason.message : "분석 데이터를 불러오지 못했습니다."); } }).finally(() => { if (active) setLoading(false); });
+      if (adsResult.ok) setAds(adsResult.data);
+      else { setAds(null); setAdsError(adsResult.message); }
+    }).catch((reason) => { if (active && reason?.name !== "AbortError") { setOverview(null); setTraffic(null); setConversions(null); setAds(null); setError(reason instanceof Error ? reason.message : "분석 데이터를 불러오지 못했습니다."); } }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; controller.abort(); };
   }, [range]);
 
@@ -116,7 +144,14 @@ export default function AnalyticsDashboard() {
       {!loading && !error && overview && traffic && conversions && <>
         <section className="admin-analytics-kpis" aria-label="방문 핵심 지표">
           {kpis.map(([label, value, change]) => <article key={label}><span>{label}</span><strong>{number(value)}</strong><p className={change !== null && change > 0 ? "is-up" : change !== null && change < 0 ? "is-down" : ""}>{changeText(change)} <em>GA4</em></p></article>)}
-          {["광고비", "광고 클릭", "광고 전환", "전환당 비용"].map((label) => <article className="is-pending" key={label}><span>{label}</span><strong>—</strong><p>Phase 2 <em>Google Ads</em></p></article>)}
+          {ads ? <>
+            <article><span>광고비</span><strong>{currency(ads.summary.cost)}</strong><p>{ads.currencyCode} <em>Google Ads</em></p></article>
+            <article><span>광고 노출</span><strong>{number(ads.summary.impressions)}</strong><p>impressions <em>Google Ads</em></p></article>
+            <article><span>광고 클릭</span><strong>{number(ads.summary.clicks)}</strong><p>clicks <em>Google Ads</em></p></article>
+            <article><span>CTR</span><strong>{ratioPercent(ads.summary.ctr)}</strong><p>click-through rate <em>Google Ads</em></p></article>
+            <article><span>평균 CPC</span><strong>{currency(ads.summary.averageCpc)}</strong><p>average CPC <em>Google Ads</em></p></article>
+            <article><span>광고 전환</span><strong>{number(ads.summary.conversions)}</strong><p>conversions <em>Google Ads</em></p></article>
+          </> : ["광고비", "광고 노출", "광고 클릭", "CTR", "평균 CPC", "광고 전환"].map((label) => <article className="is-pending" key={label}><span>{label}</span><strong>—</strong><p>{adsError || "Google Ads 조회 중"} <em>Google Ads</em></p></article>)}
         </section>
         <TrendChart rows={traffic.trend} />
         <div className="admin-analytics-grid">
@@ -127,8 +162,10 @@ export default function AnalyticsDashboard() {
         <DataTable title="인기 페이지" rows={traffic.pages} columns={[{ label: "페이지", value: (r) => `${r.dimensions.pageTitle || "제목 없음"} · ${r.dimensions.pagePath}` }, { label: "조회수", value: (r) => number(r.metrics.screenPageViews || 0) }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "평균 참여시간", value: (r) => `${Math.round(r.metrics.averageSessionDuration || 0)}초` }, { label: "문의 전환", value: (r) => number(r.conversions) }]} />
         <DataTable title="지역" rows={traffic.regions} columns={[{ label: "지역", value: (r) => [r.dimensions.region, r.dimensions.city].filter(Boolean).join(" · ") || "알 수 없음" }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "세션", value: (r) => number(r.metrics.sessions || 0) }, { label: "문의 전환", value: (r) => number(r.conversions) }]} />
         <ConversionTable data={conversions} />
+        {adsError && <section className="admin-analytics-connection" role="status"><strong>Google Ads 데이터를 불러오지 못했습니다.</strong><p>{adsError}</p></section>}
+        {ads && <AdsCampaignTable data={ads} />}
       </>}
-      <section className="admin-analytics-roadmap" id="analytics-setup"><h2>연결 및 다음 단계</h2><div><article><span>Phase 1</span><strong>GA4 방문 분석</strong><p>서비스 계정 읽기 권한으로 실제 방문 데이터를 조회합니다.</p></article><article><span>Phase 2</span><strong>Google Ads 읽기 전용 분석</strong><p>광고비·캠페인·키워드 실적 연결 예정입니다.</p></article><article><span>Phase 3</span><strong>문의 기여 분석</strong><p>UTM·GCLID 구조와 CSV·고급 필터를 별도 migration 제안 후 연결합니다.</p></article></div></section>
+      <section className="admin-analytics-roadmap" id="analytics-setup"><h2>연결 및 다음 단계</h2><div><article><span>Phase 1</span><strong>GA4 방문 분석</strong><p>서비스 계정 읽기 권한으로 실제 방문 데이터를 조회합니다.</p></article><article><span>Phase 2</span><strong>Google Ads 읽기 전용 분석</strong><p>광고계정 시간대 기준으로 비용·노출·클릭·전환과 캠페인 실적을 조회합니다.</p></article><article><span>Phase 3</span><strong>문의 기여 분석</strong><p>UTM·GCLID 구조와 CSV·고급 필터를 별도 migration 제안 후 연결합니다.</p></article></div></section>
     </div>
   );
 }
