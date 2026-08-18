@@ -1,0 +1,134 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+
+type Row = { dimensions: Record<string, string>; metrics: Record<string, number>; conversions: number; conversionRate: number };
+type Overview = {
+  source: "GA4";
+  current: { users: number; sessions: number; newUsers: number; leads: number };
+  changes: { users: number | null; sessions: number | null; newUsers: number | null; leads: number | null };
+  leadEventNames: string[];
+};
+type Traffic = { trend: Row[]; channels: Row[]; sources: Row[]; pages: Row[]; devices: Row[]; regions: Row[] };
+type Conversions = { conversions: number; events: Array<{ eventName: string; eventCount: number }> };
+type ApiResult<T> = { ok: true; data: T } | { ok: false; code: string; message: string };
+type Preset = "today" | "yesterday" | "7d" | "30d" | "custom";
+
+const iso = (date: Date) => date.toISOString().slice(0, 10);
+const kstToday = () => {
+  const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+  return new Date(`${parts}T00:00:00Z`);
+};
+const rangeFor = (preset: Preset) => {
+  const end = kstToday();
+  if (preset === "yesterday") end.setUTCDate(end.getUTCDate() - 1);
+  const start = new Date(end);
+  if (preset === "7d") start.setUTCDate(start.getUTCDate() - 6);
+  if (preset === "30d") start.setUTCDate(start.getUTCDate() - 29);
+  return { startDate: iso(start), endDate: iso(end) };
+};
+const number = (value: number) => new Intl.NumberFormat("ko-KR").format(Math.round(value));
+const percent = (value: number) => `${value.toFixed(1)}%`;
+const changeText = (value: number | null) => value === null ? "비교 불가" : `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
+
+function DataTable({ title, columns, rows }: { title: string; columns: Array<{ label: string; value: (row: Row) => string }>; rows: Row[] }) {
+  return (
+    <section className="admin-analytics-table-card">
+      <div className="admin-analytics-section-head"><h2>{title}</h2><span>{rows.length}개 항목</span></div>
+      {rows.length ? (
+        <div className="admin-analytics-table-wrap">
+          <table><thead><tr>{columns.map((column) => <th key={column.label}>{column.label}</th>)}</tr></thead>
+          <tbody>{rows.map((row, index) => <tr key={`${Object.values(row.dimensions).join("-")}-${index}`}>{columns.map((column) => <td key={column.label}>{column.value(row)}</td>)}</tr>)}</tbody></table>
+        </div>
+      ) : <div className="admin-analytics-empty">선택한 기간에 표시할 데이터가 없습니다.</div>}
+    </section>
+  );
+}
+
+function TrendChart({ rows }: { rows: Row[] }) {
+  const sorted = [...rows].sort((a, b) => (a.dimensions.date || "").localeCompare(b.dimensions.date || ""));
+  const max = Math.max(1, ...sorted.flatMap((row) => [row.metrics.activeUsers || 0, row.metrics.sessions || 0, row.conversions || 0]));
+  const points = (getter: (row: Row) => number) => sorted.map((row, index) => `${sorted.length === 1 ? 50 : (index / (sorted.length - 1)) * 100},${92 - (getter(row) / max) * 82}`).join(" ");
+  return (
+    <section className="admin-analytics-chart-card">
+      <div className="admin-analytics-section-head"><h2>방문 추이</h2><div className="admin-chart-legend"><span className="is-users">사용자</span><span className="is-sessions">세션</span><span className="is-leads">문의 전환</span></div></div>
+      {sorted.length ? <div className="admin-line-chart"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="일자별 방문 추이"><polyline className="is-users" points={points((row) => row.metrics.activeUsers || 0)} /><polyline className="is-sessions" points={points((row) => row.metrics.sessions || 0)} /><polyline className="is-leads" points={points((row) => row.conversions || 0)} /></svg><div className="admin-chart-axis"><span>{sorted[0]?.dimensions.date}</span><span>{sorted.at(-1)?.dimensions.date}</span></div></div> : <div className="admin-analytics-empty">선택한 기간에 표시할 데이터가 없습니다.</div>}
+    </section>
+  );
+}
+
+function ConversionTable({ data }: { data: Conversions }) {
+  return (
+    <section className="admin-analytics-table-card">
+      <div className="admin-analytics-section-head"><h2>리드 이벤트</h2><span>합계 {number(data.conversions)}건</span></div>
+      <div className="admin-analytics-table-wrap">
+        <table><thead><tr><th>이벤트</th><th>집계</th></tr></thead>
+          <tbody>{data.events.map((event) => <tr key={event.eventName}><td>{event.eventName}</td><td>{number(event.eventCount)}</td></tr>)}</tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+export default function AnalyticsDashboard() {
+  const initial = rangeFor("7d");
+  const [preset, setPreset] = useState<Preset>("7d");
+  const [range, setRange] = useState(initial);
+  const [overview, setOverview] = useState<Overview | null>(null);
+  const [traffic, setTraffic] = useState<Traffic | null>(null);
+  const [conversions, setConversions] = useState<Conversions | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let active = true;
+    setLoading(true); setError(null);
+    const query = new URLSearchParams(range).toString();
+    Promise.all([
+      fetch(`/api/admin/analytics/overview?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Overview>>),
+      fetch(`/api/admin/analytics/traffic?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Traffic>>),
+      fetch(`/api/admin/analytics/conversions?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Conversions>>),
+    ]).then(([overviewResult, trafficResult, conversionsResult]) => {
+      if (!active) return;
+      if (!overviewResult.ok) throw new Error(overviewResult.message);
+      if (!trafficResult.ok) throw new Error(trafficResult.message);
+      if (!conversionsResult.ok) throw new Error(conversionsResult.message);
+      setOverview(overviewResult.data); setTraffic(trafficResult.data); setConversions(conversionsResult.data);
+    }).catch((reason) => { if (active && reason?.name !== "AbortError") { setOverview(null); setTraffic(null); setConversions(null); setError(reason instanceof Error ? reason.message : "분석 데이터를 불러오지 못했습니다."); } }).finally(() => { if (active) setLoading(false); });
+    return () => { active = false; controller.abort(); };
+  }, [range]);
+
+  const kpis = useMemo(() => overview ? [
+    ["사용자", overview.current.users, overview.changes.users], ["세션", overview.current.sessions, overview.changes.sessions], ["신규 사용자", overview.current.newUsers, overview.changes.newUsers], ["문의 전환", overview.current.leads, overview.changes.leads],
+  ] as const : [], [overview]);
+
+  const choosePreset = (value: Preset) => { setPreset(value); if (value !== "custom") setRange(rangeFor(value)); };
+  return (
+    <div className="admin-analytics-page">
+      <div className="admin-analytics-controls" aria-label="분석 기간 선택">
+        {(["today", "yesterday", "7d", "30d", "custom"] as Preset[]).map((value) => <button className={preset === value ? "is-active" : ""} type="button" onClick={() => choosePreset(value)} key={value}>{({ today: "오늘", yesterday: "어제", "7d": "최근 7일", "30d": "최근 30일", custom: "직접 설정" })[value]}</button>)}
+        {preset === "custom" && <div className="admin-date-inputs"><input aria-label="시작일" type="date" value={range.startDate} onChange={(event) => setRange((current) => ({ ...current, startDate: event.target.value }))} /><span>–</span><input aria-label="종료일" type="date" value={range.endDate} onChange={(event) => setRange((current) => ({ ...current, endDate: event.target.value }))} /></div>}
+      </div>
+
+      {loading && <div className="admin-analytics-loading" role="status">GA4 데이터를 불러오는 중입니다.</div>}
+      {error && <section className="admin-analytics-connection" role="status"><strong>Google Analytics 연결이 필요합니다.</strong><p>{error}</p><a href="#analytics-setup">설정 방법 확인</a></section>}
+      {!loading && !error && overview && traffic && conversions && <>
+        <section className="admin-analytics-kpis" aria-label="방문 핵심 지표">
+          {kpis.map(([label, value, change]) => <article key={label}><span>{label}</span><strong>{number(value)}</strong><p className={change !== null && change > 0 ? "is-up" : change !== null && change < 0 ? "is-down" : ""}>{changeText(change)} <em>GA4</em></p></article>)}
+          {["광고비", "광고 클릭", "광고 전환", "전환당 비용"].map((label) => <article className="is-pending" key={label}><span>{label}</span><strong>—</strong><p>Phase 2 <em>Google Ads</em></p></article>)}
+        </section>
+        <TrendChart rows={traffic.trend} />
+        <div className="admin-analytics-grid">
+          <DataTable title="유입 채널" rows={traffic.channels} columns={[{ label: "채널", value: (r) => r.dimensions.sessionDefaultChannelGroup || "기타" }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "세션", value: (r) => number(r.metrics.sessions || 0) }, { label: "참여 세션", value: (r) => number(r.metrics.engagedSessions || 0) }, { label: "문의 전환", value: (r) => number(r.conversions) }, { label: "전환율", value: (r) => percent(r.conversionRate) }]} />
+          <DataTable title="기기" rows={traffic.devices} columns={[{ label: "기기", value: (r) => r.dimensions.deviceCategory }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "세션", value: (r) => number(r.metrics.sessions || 0) }, { label: "문의 전환", value: (r) => number(r.conversions) }, { label: "전환율", value: (r) => percent(r.conversionRate) }]} />
+        </div>
+        <DataTable title="유입 소스 / 매체" rows={traffic.sources} columns={[{ label: "소스 / 매체", value: (r) => `${r.dimensions.sessionSource || "direct"} / ${r.dimensions.sessionMedium || "none"}` }, { label: "세션", value: (r) => number(r.metrics.sessions || 0) }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "문의 전환", value: (r) => number(r.conversions) }, { label: "전환율", value: (r) => percent(r.conversionRate) }]} />
+        <DataTable title="인기 페이지" rows={traffic.pages} columns={[{ label: "페이지", value: (r) => `${r.dimensions.pageTitle || "제목 없음"} · ${r.dimensions.pagePath}` }, { label: "조회수", value: (r) => number(r.metrics.screenPageViews || 0) }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "평균 참여시간", value: (r) => `${Math.round(r.metrics.averageSessionDuration || 0)}초` }, { label: "문의 전환", value: (r) => number(r.conversions) }]} />
+        <DataTable title="지역" rows={traffic.regions} columns={[{ label: "지역", value: (r) => [r.dimensions.region, r.dimensions.city].filter(Boolean).join(" · ") || "알 수 없음" }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "세션", value: (r) => number(r.metrics.sessions || 0) }, { label: "문의 전환", value: (r) => number(r.conversions) }]} />
+        <ConversionTable data={conversions} />
+      </>}
+      <section className="admin-analytics-roadmap" id="analytics-setup"><h2>연결 및 다음 단계</h2><div><article><span>Phase 1</span><strong>GA4 방문 분석</strong><p>서비스 계정 읽기 권한으로 실제 방문 데이터를 조회합니다.</p></article><article><span>Phase 2</span><strong>Google Ads 읽기 전용 분석</strong><p>광고비·캠페인·키워드 실적 연결 예정입니다.</p></article><article><span>Phase 3</span><strong>문의 기여 분석</strong><p>UTM·GCLID 구조와 CSV·고급 필터를 별도 migration 제안 후 연결합니다.</p></article></div></section>
+    </div>
+  );
+}

@@ -7,7 +7,7 @@ const menus = [
   { label: "포트폴리오 관리", href: "/admin/portfolio", enabled: true },
   { label: "품질보증서", href: "/admin/warranty", enabled: true },
   { label: "문의관리", href: "/admin/inquiries", enabled: true, badge: true },
-  { label: "광고·방문 분석", enabled: false },
+  { label: "광고·방문 분석", href: "/admin/analytics", enabled: true },
 ];
 
 function SidebarContents({ newInquiryCount }: { newInquiryCount: number }) {
@@ -62,8 +62,8 @@ function SidebarContents({ newInquiryCount }: { newInquiryCount: number }) {
         )}
       </nav>
       <div className="admin-sidebar-footer">
-        <span>PHASE 2-1</span>
-        <p>포트폴리오 콘텐츠 관리</p>
+        <span>DATA INSIGHT</span>
+        <p>운영·방문 데이터 분석</p>
       </div>
     </>
   );

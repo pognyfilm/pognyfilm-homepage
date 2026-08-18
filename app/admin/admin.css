@@ -2115,3 +2115,188 @@
     padding: 16px 0;
   }
 }
+
+.admin-metric-link {
+  color: inherit;
+  text-decoration: none;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.admin-metric-link:hover {
+  transform: translateY(-2px);
+  border-color: #aac8ee;
+  box-shadow: 0 14px 30px rgba(20, 78, 146, 0.1);
+}
+
+.admin-analytics-page {
+  display: grid;
+  gap: 22px;
+}
+
+.admin-analytics-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: -18px;
+  padding: 14px;
+  border: 1px solid #dce5ef;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.admin-analytics-controls button {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid #d8e2ed;
+  border-radius: 9px;
+  color: #486077;
+  background: #fff;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.admin-analytics-controls button.is-active {
+  border-color: #1769d8;
+  color: #fff;
+  background: #1769d8;
+}
+
+.admin-date-inputs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.admin-date-inputs input {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #d8e2ed;
+  border-radius: 9px;
+  color: #17324f;
+  background: #fff;
+}
+
+.admin-analytics-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-analytics-kpis article,
+.admin-analytics-chart-card,
+.admin-analytics-table-card,
+.admin-analytics-roadmap {
+  border: 1px solid #dce5ef;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 45, 80, 0.045);
+}
+
+.admin-analytics-kpis article {
+  min-height: 142px;
+  padding: 20px;
+}
+
+.admin-analytics-kpis article > span {
+  color: #5f7085;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.admin-analytics-kpis article > strong {
+  display: block;
+  margin-top: 15px;
+  color: #102b4d;
+  font-size: 31px;
+  letter-spacing: -0.04em;
+}
+
+.admin-analytics-kpis article > p {
+  margin: 11px 0 0;
+  color: #718096;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-analytics-kpis article > p.is-up { color: #087a4d; }
+.admin-analytics-kpis article > p.is-down { color: #c24949; }
+.admin-analytics-kpis article > p em { float: right; color: #1769d8; font-style: normal; }
+.admin-analytics-kpis article.is-pending { background: #f8fafc; }
+
+.admin-analytics-loading,
+.admin-analytics-connection {
+  min-height: 210px;
+  display: grid;
+  place-content: center;
+  padding: 30px;
+  border: 1px solid #dce5ef;
+  border-radius: 16px;
+  text-align: center;
+  background: #fff;
+}
+
+.admin-analytics-connection strong { color: #102b4d; font-size: 22px; }
+.admin-analytics-connection p { margin: 10px 0 18px; color: #66778a; }
+.admin-analytics-connection a { color: #1769d8; font-weight: 800; }
+
+.admin-analytics-section-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 20px 22px;
+  border-bottom: 1px solid #e7edf4;
+}
+
+.admin-analytics-section-head h2 { margin: 0; font-size: 20px; }
+.admin-analytics-section-head > span { color: #7b899b; font-size: 13px; }
+.admin-chart-legend { display: flex; gap: 14px; font-size: 12px; font-weight: 750; }
+.admin-chart-legend span::before { display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: 50%; content: ""; }
+.admin-chart-legend .is-users::before { background: #1769d8; }
+.admin-chart-legend .is-sessions::before { background: #43a4d8; }
+.admin-chart-legend .is-leads::before { background: #e9a72d; }
+
+.admin-line-chart { padding: 24px 24px 16px; }
+.admin-line-chart svg { display: block; width: 100%; height: 250px; overflow: visible; border-bottom: 1px solid #dfe7f0; background: repeating-linear-gradient(to bottom, transparent 0, transparent 49px, #edf2f7 50px); }
+.admin-line-chart polyline { fill: none; vector-effect: non-scaling-stroke; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.admin-line-chart polyline.is-users { stroke: #1769d8; }
+.admin-line-chart polyline.is-sessions { stroke: #43a4d8; }
+.admin-line-chart polyline.is-leads { stroke: #e9a72d; }
+.admin-chart-axis { display: flex; justify-content: space-between; padding-top: 9px; color: #8190a2; font-size: 12px; }
+
+.admin-analytics-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.6fr); gap: 22px; }
+.admin-analytics-table-wrap { max-width: 100%; overflow: auto; }
+.admin-analytics-table-card table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+.admin-analytics-table-card th,
+.admin-analytics-table-card td { padding: 14px 16px; border-bottom: 1px solid #edf1f5; text-align: right; font-size: 14px; }
+.admin-analytics-table-card th { position: sticky; top: 0; z-index: 1; color: #5f7085; background: #f8fafc; font-size: 13px; }
+.admin-analytics-table-card th:first-child,
+.admin-analytics-table-card td:first-child { min-width: 180px; text-align: left; color: #18314f; font-weight: 700; white-space: normal; }
+.admin-analytics-empty { padding: 56px 20px; color: #7a899c; text-align: center; }
+
+.admin-analytics-roadmap { padding: 24px; }
+.admin-analytics-roadmap h2 { margin: 0 0 18px; font-size: 20px; }
+.admin-analytics-roadmap > div { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.admin-analytics-roadmap article { padding: 18px; border: 1px solid #e0e8f1; border-radius: 12px; background: #f9fbfd; }
+.admin-analytics-roadmap span { color: #1769d8; font-size: 12px; font-weight: 900; letter-spacing: .08em; }
+.admin-analytics-roadmap strong { display: block; margin-top: 8px; color: #102b4d; font-size: 16px; }
+.admin-analytics-roadmap p { margin: 8px 0 0; color: #6c7d90; font-size: 13px; line-height: 1.6; }
+
+@media (max-width: 1279px) {
+  .admin-analytics-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-analytics-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 767px) {
+  .admin-analytics-controls { margin-top: -8px; }
+  .admin-date-inputs { width: 100%; margin-left: 0; }
+  .admin-date-inputs input { min-width: 0; flex: 1; }
+  .admin-analytics-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-analytics-kpis article { min-height: 128px; padding: 16px; }
+  .admin-analytics-kpis article > strong { font-size: 26px; }
+  .admin-analytics-section-head { align-items: flex-start; flex-direction: column; }
+  .admin-line-chart svg { height: 210px; }
+  .admin-analytics-roadmap > div { grid-template-columns: 1fr; }
+}

@@ -4,17 +4,27 @@ import AdminMetricCard from "../../../components/admin/AdminMetricCard";
 import { getPortfolioDashboardData } from "../../../lib/portfolio/queries";
 import { getInquiryDashboardData } from "../../../lib/inquiries/queries";
 import { inquiryStatusLabels } from "../../../lib/inquiries/types";
+import { getGa4Overview } from "../../../lib/analytics/ga4";
+
+const todayInKorea = () => new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit",
+}).format(new Date());
 
 export default async function AdminDashboardPage() {
-  const [portfolio, inquiries] = await Promise.all([
+  const [portfolio, inquiries, visitors] = await Promise.all([
     getPortfolioDashboardData(),
     getInquiryDashboardData(),
+    (async () => {
+      const today = todayInKorea();
+      try { return { data: await getGa4Overview({ startDate: today, endDate: today }), error: null }; }
+      catch (error) { return { data: null, error: error instanceof Error ? error.message : "연결 확인 필요" }; }
+    })(),
   ]);
   const metrics = [
-    { label: "오늘 방문자", status: "데이터 연결 전" },
+    { label: "오늘 방문자", status: visitors.error || "GA4 · activeUsers", value: visitors.data?.current.users, href: "/admin/analytics" },
     { label: "오늘 문의", status: inquiries.error ? "연결 확인 필요" : "오늘 접수", value: inquiries.todayCount },
     { label: "미확인 문의", status: inquiries.error ? "연결 확인 필요" : "처리 대기", value: inquiries.newCount },
-    { label: "오늘 광고비", status: "데이터 연결 전" },
+    { label: "오늘 광고비", status: "Google Ads · Phase 2", href: "/admin/analytics" },
   ];
   return (
     <>
