@@ -2,12 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { getAdminProfile } from "../../../../lib/auth/get-admin-profile";
-import {
-  inquiryManagers,
-  inquiryStatuses,
-  type InquiryManager,
-  type InquiryStatus,
-} from "../../../../lib/inquiries/types";
 import { createClient } from "../../../../lib/supabase/server";
 
 const UUID_PATTERN =
@@ -32,25 +26,11 @@ async function updateInquiry(id: string, values: Record<string, unknown>) {
   return { success: true, updatedAt: new Date().toISOString() };
 }
 
-export async function updateInquiryStatus(id: string, status: InquiryStatus) {
-  if (!inquiryStatuses.includes(status)) {
-    return { success: false, error: "올바르지 않은 상태입니다." };
+export async function markInquiryRead(id: string) {
+  if (!UUID_PATTERN.test(id)) {
+    return { success: false, error: "문의 ID가 올바르지 않습니다." };
   }
-  return updateInquiry(id, { status });
-}
-
-export async function updateInquiryManager(
-  id: string,
-  manager: InquiryManager | null,
-) {
-  if (manager !== null && !inquiryManagers.includes(manager)) {
-    return { success: false, error: "올바르지 않은 담당자입니다." };
-  }
-  return updateInquiry(id, { manager });
-}
-
-export async function updateInquiryMemo(id: string, memo: string) {
-  return updateInquiry(id, { memo });
+  return updateInquiry(id, { status: "closed" });
 }
 
 export async function deleteInquiryAction(id: string) {

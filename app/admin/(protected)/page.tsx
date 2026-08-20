@@ -3,13 +3,16 @@ import AdminEmptyState from "../../../components/admin/AdminEmptyState";
 import AdminMetricCard from "../../../components/admin/AdminMetricCard";
 import { getPortfolioDashboardData } from "../../../lib/portfolio/queries";
 import { getInquiryDashboardData } from "../../../lib/inquiries/queries";
-import { inquiryStatusLabels } from "../../../lib/inquiries/types";
 import { getGa4Acquisition, getGa4Overview } from "../../../lib/analytics/ga4";
 import { getGoogleAdsTodayReport } from "../../../lib/analytics/google-ads";
 
 const todayInKorea = () => new Intl.DateTimeFormat("en-CA", {
   timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit",
 }).format(new Date());
+
+const isTodayInKorea = (value: string) => todayInKorea() === new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit",
+}).format(new Date(value));
 
 export default async function AdminDashboardPage() {
   const [portfolio, inquiries, visitors, acquisition, ads] = await Promise.all([
@@ -92,10 +95,9 @@ export default async function AdminDashboardPage() {
                 <li key={item.id}>
                   <Link href="/admin/inquiries">{item.customer_name} · {item.region || "지역 미입력"}</Link>
                   <span className="admin-dashboard-inquiry-status">
-                    {item.status === "new" && <em className="admin-new-badge">NEW</em>}
-                    <em className={`admin-status-badge is-${item.status}`}>
-                      {inquiryStatusLabels[item.status]}
-                    </em>
+                    {item.status === "new" && isTodayInKorea(item.created_at) && (
+                      <em className="admin-new-badge">NEW</em>
+                    )}
                   </span>
                 </li>
               ))}

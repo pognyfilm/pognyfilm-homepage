@@ -50,7 +50,9 @@ export async function getInquiryDashboardData() {
     supabase
       .from("inquiries")
       .select("*", { count: "exact", head: true })
-      .eq("status", "new"),
+      .eq("status", "new")
+      .gte("created_at", start)
+      .lt("created_at", end),
     supabase
       .from("inquiries")
       .select("*")
