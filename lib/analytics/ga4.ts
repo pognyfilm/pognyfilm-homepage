@@ -178,13 +178,22 @@ const acquisitionDefinitions: Array<{ channel: AcquisitionChannelName; filter: D
   { channel: "Google Ads", filter: allOf(exactDimension("sessionSource", "google"), exactDimension("sessionMedium", "cpc")) },
   {
     channel: "NAVER 광고",
-    filter: allOf(
-      anyOf(exactDimension("sessionSource", "ad.search.naver.com"), exactDimension("sessionSource", "m.ad.search.naver.com")),
-      exactDimension("sessionMedium", "referral"),
+    filter: anyOf(
+      allOf(exactDimension("sessionSource", "naver"), exactDimension("sessionMedium", "cpc")),
+      allOf(
+        anyOf(exactDimension("sessionSource", "ad.search.naver.com"), exactDimension("sessionSource", "m.ad.search.naver.com")),
+        exactDimension("sessionMedium", "referral"),
+      ),
     ),
   },
   { channel: "NAVER 자연검색", filter: allOf(exactDimension("sessionSource", "naver"), exactDimension("sessionMedium", "organic")) },
-  { channel: "NAVER", filter: allOf(exactDimension("sessionSource", "m.search.naver.com"), exactDimension("sessionMedium", "referral")) },
+  {
+    channel: "NAVER",
+    filter: allOf(
+      anyOf(exactDimension("sessionSource", "m.search.naver.com"), exactDimension("sessionSource", "search.naver.com")),
+      exactDimension("sessionMedium", "referral"),
+    ),
+  },
   { channel: "Google 검색", filter: allOf(exactDimension("sessionSource", "google"), exactDimension("sessionMedium", "organic")) },
   { channel: "YouTube", filter: containsDimension("sessionSource", "youtube") },
   { channel: "Direct", filter: allOf(exactDimension("sessionSource", "(direct)"), exactDimension("sessionMedium", "(none)")) },
@@ -288,9 +297,10 @@ export async function getGa4Acquisition(range: DateRange) {
       const normalizedSource = source.toLowerCase();
       const normalizedMedium = medium.toLowerCase();
       if (normalizedSource === "google" && normalizedMedium === "cpc") return "Google Ads";
+      if (normalizedSource === "naver" && normalizedMedium === "cpc") return "NAVER 광고";
       if (["ad.search.naver.com", "m.ad.search.naver.com"].includes(normalizedSource) && normalizedMedium === "referral") return "NAVER 광고";
       if (normalizedSource === "naver" && normalizedMedium === "organic") return "NAVER 자연검색";
-      if (normalizedSource === "m.search.naver.com" && normalizedMedium === "referral") return "NAVER";
+      if (["m.search.naver.com", "search.naver.com"].includes(normalizedSource) && normalizedMedium === "referral") return "NAVER";
       if (normalizedSource === "google" && normalizedMedium === "organic") return "Google 검색";
       if (normalizedSource.includes("youtube")) return "YouTube";
       if (normalizedSource === "(direct)" && normalizedMedium === "(none)") return "Direct";

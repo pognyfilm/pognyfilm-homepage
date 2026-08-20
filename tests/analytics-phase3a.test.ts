@@ -30,6 +30,7 @@ async function run() {
     if (body.dimensions?.length) {
       return new Response(JSON.stringify({ rows: [
         { dimensionValues: [{ value: "google" }, { value: "cpc" }], metricValues: [{ value: "6" }, { value: "3" }] },
+        { dimensionValues: [{ value: "naver" }, { value: "cpc" }], metricValues: [{ value: "2" }, { value: "2" }] },
         { dimensionValues: [{ value: "naver" }, { value: "organic" }], metricValues: [{ value: "20" }, { value: "10" }] },
         { dimensionValues: [{ value: "(not set)" }, { value: "(not set)" }], metricValues: [{ value: "21" }, { value: "15" }] },
       ] }), { status: 200 });
@@ -53,6 +54,9 @@ async function run() {
     sessionShare: (6 / 252) * 100,
     details: [{ source: "google", medium: "cpc", sessions: 6, users: 3 }],
   });
+  assert.deepEqual(acquisition.channels.find((item) => item.channel === "NAVER 광고")?.details, [
+    { source: "naver", medium: "cpc", sessions: 2, users: 2 },
+  ]);
   assert.equal(acquisition.channels.find((item) => item.channel === "NAVER 자연검색")?.sessions, 20);
   assert.equal(acquisition.channels.find((item) => item.channel === "기타")?.details[0]?.source, "(not set)");
   assert.ok(Math.abs(acquisition.channels.reduce((sum, item) => sum + item.sessionShare, 0) - 100) < 0.0001);
