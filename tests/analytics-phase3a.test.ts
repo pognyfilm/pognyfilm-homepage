@@ -16,8 +16,8 @@ async function run() {
 
   const ga4 = await import("../lib/analytics/ga4");
   ga4.resetGa4StateForTests();
-  const channelMetrics = [[3, 6], [2, 3], [10, 20], [29, 34], [2, 2], [2, 2], [14, 15], [142, 170]];
-  let filteredReportIndex = 0;
+  let acquisitionReportCalls = 0;
+  let leadReportCalls = 0;
 
   globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
     if (String(input).includes("oauth2.googleapis.com")) {
@@ -28,6 +28,14 @@ async function run() {
       dimensionFilter?: unknown;
     };
     if (body.dimensions?.length) {
+      if (body.dimensionFilter) {
+        leadReportCalls += 1;
+        return new Response(JSON.stringify({ rows: [
+          { dimensionValues: [{ value: "google" }, { value: "cpc" }], metricValues: [{ value: "1" }] },
+          { dimensionValues: [{ value: "naver" }, { value: "cpc" }], metricValues: [{ value: "2" }] },
+        ] }), { status: 200 });
+      }
+      acquisitionReportCalls += 1;
       return new Response(JSON.stringify({ rows: [
         { dimensionValues: [{ value: "google" }, { value: "cpc" }], metricValues: [{ value: "6" }, { value: "3" }] },
         { dimensionValues: [{ value: "naver" }, { value: "cpc" }], metricValues: [{ value: "2" }, { value: "2" }] },
@@ -35,27 +43,27 @@ async function run() {
         { dimensionValues: [{ value: "(not set)" }, { value: "(not set)" }], metricValues: [{ value: "21" }, { value: "15" }] },
       ] }), { status: 200 });
     }
-    if (body.dimensionFilter) {
-      const [users, sessions] = channelMetrics[filteredReportIndex++] || [0, 0];
-      return new Response(JSON.stringify({ rows: [{ metricValues: [{ value: String(users) }, { value: String(sessions) }] }] }), { status: 200 });
-    }
     return new Response(JSON.stringify({ rows: [{ metricValues: [{ value: "204" }, { value: "252" }] }] }), { status: 200 });
   }) as typeof fetch;
 
   const acquisition = await ga4.getGa4Acquisition({ startDate: "2026-08-12", endDate: "2026-08-18" });
   assert.equal(acquisition.totalUsers, 204);
   assert.equal(acquisition.totalSessions, 252);
-  assert.equal(acquisition.attributedSessions, 252);
+  assert.equal(acquisition.attributedSessions, 49);
+  assert.equal(acquisitionReportCalls, 1);
+  assert.equal(leadReportCalls, 1);
   assert.equal(acquisition.channels.length, 8);
   assert.deepEqual(acquisition.channels[0], {
     channel: "Google Ads",
     users: 3,
     sessions: 6,
-    sessionShare: (6 / 252) * 100,
-    details: [{ source: "google", medium: "cpc", sessions: 6, users: 3 }],
+    leads: 1,
+    conversionRate: (1 / 6) * 100,
+    sessionShare: (6 / 49) * 100,
+    details: [{ source: "google", medium: "cpc", sessions: 6, users: 3, leads: 1 }],
   });
   assert.deepEqual(acquisition.channels.find((item) => item.channel === "NAVER 광고")?.details, [
-    { source: "naver", medium: "cpc", sessions: 2, users: 2 },
+    { source: "naver", medium: "cpc", sessions: 2, users: 2, leads: 2 },
   ]);
   assert.equal(acquisition.channels.find((item) => item.channel === "NAVER 자연검색")?.sessions, 20);
   assert.equal(acquisition.channels.find((item) => item.channel === "기타")?.details[0]?.source, "(not set)");

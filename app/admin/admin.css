@@ -2187,6 +2187,7 @@
 .admin-analytics-kpis article,
 .admin-analytics-chart-card,
 .admin-analytics-table-card,
+.admin-paid-performance,
 .admin-analytics-roadmap {
   border: 1px solid #dce5ef;
   border-radius: 16px;
@@ -2324,8 +2325,43 @@
 .admin-acquisition-table td.admin-acquisition-details { max-width: 520px; color: #66778a; font-size: 12px; line-height: 1.6; text-align: left; white-space: normal; }
 .admin-acquisition-note { margin: 0; padding: 13px 18px; border-top: 1px solid #edf1f5; color: #75859a; font-size: 12px; line-height: 1.6; }
 
+.admin-paid-performance {
+  overflow: hidden;
+}
+
+.admin-paid-performance-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px 22px;
+}
+
+.admin-paid-performance-grid article {
+  padding: 19px;
+  border: 1px solid #dce7f3;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #f8fbff, #fff);
+}
+
+.admin-paid-performance-grid article > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.admin-paid-performance-grid h3 { margin: 0; color: #102b4d; font-size: 19px; }
+.admin-paid-performance-grid article > div span { color: #718197; font-size: 12px; }
+.admin-paid-performance-grid dl { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 18px 0 0; }
+.admin-paid-performance-grid dl div { min-width: 0; padding-left: 11px; border-left: 2px solid #dce8f6; }
+.admin-paid-performance-grid dt { color: #718197; font-size: 12px; font-weight: 750; }
+.admin-paid-performance-grid dd { overflow-wrap: anywhere; margin: 7px 0 0; color: #1769d8; font-size: 18px; font-weight: 850; letter-spacing: -.025em; }
+.admin-paid-performance > p { margin: 0; padding: 0 22px 17px; color: #75859a; font-size: 12px; line-height: 1.6; }
+
 @media (max-width: 767px) {
   .admin-acquisition-summary { align-items: flex-start; flex-direction: column; gap: 12px; }
   .admin-acquisition-summary ul { width: 100%; }
   .admin-acquisition-table td.admin-acquisition-details { min-width: 260px; }
+  .admin-paid-performance-grid { grid-template-columns: 1fr; padding: 15px; }
+  .admin-paid-performance-grid dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

@@ -13,8 +13,10 @@ type AcquisitionChannel = {
   channel: string;
   users: number;
   sessions: number;
+  leads: number;
+  conversionRate: number | null;
   sessionShare: number;
-  details: Array<{ source: string; medium: string; sessions: number; users: number }>;
+  details: Array<{ source: string; medium: string; sessions: number; users: number; leads: number }>;
 };
 type Acquisition = { basis: "session"; totalUsers: number; totalSessions: number; attributedSessions: number; channels: AcquisitionChannel[] };
 type Traffic = { trend: Row[]; channels: Row[]; sources: Row[]; pages: Row[]; devices: Row[]; regions: Row[]; acquisition: Acquisition };
@@ -72,7 +74,7 @@ function AcquisitionTable({ data }: { data: Acquisition }) {
       </div>
       <div className="admin-analytics-table-wrap">
         <table>
-          <thead><tr><th>채널</th><th>사용자</th><th>세션</th><th>세션 비중</th><th>source / medium</th></tr></thead>
+          <thead><tr><th>채널</th><th>사용자</th><th>세션</th><th>세션 비중</th><th>문의</th><th>전환율</th><th>source / medium</th></tr></thead>
           <tbody>
             {data.channels.map((channel) => (
               <tr key={channel.channel}>
@@ -80,9 +82,11 @@ function AcquisitionTable({ data }: { data: Acquisition }) {
                 <td>{number(channel.users)}</td>
                 <td>{number(channel.sessions)}</td>
                 <td>{percent(channel.sessionShare)}</td>
+                <td>{number(channel.leads)}</td>
+                <td>{channel.conversionRate === null ? "—" : percent(channel.conversionRate)}</td>
                 <td className="admin-acquisition-details">
                   {channel.details.length
-                    ? channel.details.map((detail) => `${detail.source} / ${detail.medium} · ${number(detail.sessions)}`).join(" · ")
+                    ? channel.details.map((detail) => `${detail.source} / ${detail.medium} · ${number(detail.sessions)}세션 · 문의 ${number(detail.leads)}`).join(" · ")
                     : "해당 기간 유입 없음"}
                 </td>
               </tr>
@@ -90,7 +94,41 @@ function AcquisitionTable({ data }: { data: Acquisition }) {
           </tbody>
         </table>
       </div>
-      <p className="admin-acquisition-note">세션 비중은 source / medium 채널 집계 합계를 기준으로 계산합니다. GA4 모델링 및 식별 불가 데이터로 전체 세션과 채널 합계가 다를 수 있습니다. 사용자는 채널 간 중복될 수 있으며, Google Ads 비용·클릭과 GA4 세션은 서로 다른 지표입니다.</p>
+      <p className="admin-acquisition-note">세션 비중은 한 번의 source / medium 보고서에서 분류한 세션 합계를 기준으로 계산합니다. GA4의 당일 처리 중 데이터 및 식별 불가 트래픽으로 전체 세션과 채널 분류 합계가 일시적으로 다를 수 있습니다. 사용자는 여러 유입을 이용한 경우 채널 간 중복될 수 있으며, (not set)과 (data not available)은 기타 상세에서 확인할 수 있습니다.</p>
+      <p className="admin-acquisition-note">문의 전환은 GA4 generate_lead 기준입니다. 수집 시작 이전 기간이 포함되면 실제보다 낮게 보일 수 있으며, 운영 문의 원본 건수는 Supabase 기준입니다.</p>
+    </section>
+  );
+}
+
+function PaidChannelPerformance({ acquisition, ads, adsError }: { acquisition: Acquisition; ads: Ads | null; adsError: string | null }) {
+  const google = acquisition.channels.find((item) => item.channel === "Google Ads");
+  const naver = acquisition.channels.find((item) => item.channel === "NAVER 광고");
+  const googleCpl = ads && google?.leads ? ads.summary.cost / google.leads : null;
+  const cards = [
+    { channel: "Google Ads", data: google, cost: ads ? currency(ads.summary.cost) : "—", cpl: googleCpl === null ? "—" : currency(googleCpl), costStatus: adsError || "Google Ads API" },
+    { channel: "NAVER 광고", data: naver, cost: "연동 준비 중", cpl: "—", costStatus: "NAVER 광고 API 미연동" },
+  ];
+  return (
+    <section className="admin-paid-performance" aria-labelledby="paid-performance-title">
+      <div className="admin-analytics-section-head">
+        <div><h2 id="paid-performance-title">유료 채널 성과</h2><p>세션 → 문의 → 전환율</p></div>
+        <span>문의 · GA4 generate_lead</span>
+      </div>
+      <div className="admin-paid-performance-grid">
+        {cards.map((card) => (
+          <article key={card.channel}>
+            <div><h3>{card.channel}</h3><span>{card.costStatus}</span></div>
+            <dl>
+              <div><dt>광고비</dt><dd>{card.cost}</dd></div>
+              <div><dt>세션</dt><dd>{number(card.data?.sessions || 0)}</dd></div>
+              <div><dt>문의</dt><dd>{number(card.data?.leads || 0)}</dd></div>
+              <div><dt>전환율</dt><dd>{card.data?.conversionRate == null ? "—" : percent(card.data.conversionRate)}</dd></div>
+              <div><dt>CPL</dt><dd>{card.cpl}</dd></div>
+            </dl>
+          </article>
+        ))}
+      </div>
+      <p>광고비는 Google Ads API, 문의는 GA4 generate_lead 기준입니다. Google Ads 자체 전환수와 합산하지 않습니다.</p>
     </section>
   );
 }
@@ -194,6 +232,7 @@ export default function AnalyticsDashboard() {
           </> : ["광고비", "광고 노출", "광고 클릭", "CTR", "평균 CPC", "광고 전환"].map((label) => <article className="is-pending" key={label}><span>{label}</span><strong>—</strong><p>{adsError || "Google Ads 조회 중"} <em>Google Ads</em></p></article>)}
         </section>
         <TrendChart rows={traffic.trend} />
+        <PaidChannelPerformance acquisition={traffic.acquisition} ads={ads} adsError={adsError} />
         <AcquisitionTable data={traffic.acquisition} />
         <div className="admin-analytics-grid">
           <DataTable title="유입 채널" rows={traffic.channels} columns={[{ label: "채널", value: (r) => r.dimensions.sessionDefaultChannelGroup || "기타" }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "세션", value: (r) => number(r.metrics.sessions || 0) }, { label: "참여 세션", value: (r) => number(r.metrics.engagedSessions || 0) }, { label: "문의 전환", value: (r) => number(r.conversions) }, { label: "전환율", value: (r) => percent(r.conversionRate) }]} />
@@ -206,7 +245,7 @@ export default function AnalyticsDashboard() {
         {adsError && <section className="admin-analytics-connection" role="status"><strong>Google Ads 데이터를 불러오지 못했습니다.</strong><p>{adsError}</p></section>}
         {ads && <AdsCampaignTable data={ads} />}
       </>}
-      <section className="admin-analytics-roadmap" id="analytics-setup"><h2>연결 및 다음 단계</h2><div><article><span>Phase 1</span><strong>GA4 방문 분석</strong><p>서비스 계정 읽기 권한으로 실제 방문 데이터를 조회합니다.</p></article><article><span>Phase 2</span><strong>Google Ads 읽기 전용 분석</strong><p>광고계정 시간대 기준으로 비용·노출·클릭·전환과 캠페인 실적을 조회합니다.</p></article><article><span>Phase 3</span><strong>문의 기여 분석</strong><p>UTM·GCLID 구조와 CSV·고급 필터를 별도 migration 제안 후 연결합니다.</p></article></div></section>
+      <section className="admin-analytics-roadmap" id="analytics-setup"><h2>연결 및 다음 단계</h2><div><article><span>Phase 1</span><strong>GA4 방문 분석</strong><p>서비스 계정 읽기 권한으로 실제 방문 데이터를 조회합니다.</p></article><article><span>Phase 2</span><strong>Google Ads 읽기 전용 분석</strong><p>광고계정 시간대 기준으로 비용·노출·클릭·전환과 캠페인 실적을 조회합니다.</p></article><article><span>Phase 3</span><strong>문의 기여 분석</strong><p>유입 채널별 세션·generate_lead·전환율과 Google Ads CPL을 분석합니다.</p></article></div></section>
     </div>
   );
 }

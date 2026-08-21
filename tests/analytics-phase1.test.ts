@@ -50,14 +50,12 @@ async function run() {
     assert.equal(body.dimensions?.[0]?.name, "eventName");
     return new Response(JSON.stringify({ rows: [
       { dimensionValues: [{ value: "generate_lead" }], metricValues: [{ value: "4" }] },
-      { dimensionValues: [{ value: "quote_submit" }], metricValues: [{ value: "2" }] },
     ] }), { status: 200 });
   }) as typeof fetch;
   const conversions = await ga4.getGa4Conversions({ startDate: "2026-07-01", endDate: "2026-07-07" });
-  assert.equal(conversions.conversions, 6);
+  assert.equal(conversions.conversions, 4);
   assert.deepEqual(conversions.events, [
     { eventName: "generate_lead", eventCount: 4 },
-    { eventName: "quote_submit", eventCount: 2 },
   ]);
 
   ga4.resetGa4StateForTests();

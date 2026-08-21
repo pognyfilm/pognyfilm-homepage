@@ -1,6 +1,6 @@
 import { createSign } from "node:crypto";
 import type { DateRange } from "./utils";
-import { parseLeadEventNames, percentageChange, previousDateRange, rangeCacheTtl } from "./utils";
+import { percentageChange, previousDateRange, rangeCacheTtl } from "./utils";
 
 type GaRow = { dimensionValues?: Array<{ value?: string }>; metricValues?: Array<{ value?: string }> };
 type GaResponse = { rows?: GaRow[] };
@@ -145,8 +145,8 @@ async function cached<T>(key: string, range: DateRange, loader: () => Promise<T>
 const metric = (row: GaRow | undefined, index: number) => Number(row?.metricValues?.[index]?.value || 0);
 const dimension = (row: GaRow, index: number) => row.dimensionValues?.[index]?.value || "";
 const eventFilter = (names: string[]) => names.length ? ({ filter: { fieldName: "eventName", inListFilter: { values: names } } }) : null;
+const ADMIN_LEAD_EVENT = "generate_lead";
 
-type DimensionFilter = Record<string, unknown>;
 export type AcquisitionChannelName =
   | "Google Ads"
   | "NAVER 광고"
@@ -161,55 +161,34 @@ export type Ga4AcquisitionChannel = {
   channel: AcquisitionChannelName;
   users: number;
   sessions: number;
+  leads: number;
+  conversionRate: number | null;
   sessionShare: number;
-  details: Array<{ source: string; medium: string; sessions: number; users: number }>;
+  details: Array<{ source: string; medium: string; sessions: number; users: number; leads: number }>;
 };
 
-const exactDimension = (fieldName: string, value: string): DimensionFilter => ({
-  filter: { fieldName, stringFilter: { matchType: "EXACT", value, caseSensitive: false } },
-});
-const containsDimension = (fieldName: string, value: string): DimensionFilter => ({
-  filter: { fieldName, stringFilter: { matchType: "CONTAINS", value, caseSensitive: false } },
-});
-const allOf = (...expressions: DimensionFilter[]): DimensionFilter => ({ andGroup: { expressions } });
-const anyOf = (...expressions: DimensionFilter[]): DimensionFilter => ({ orGroup: { expressions } });
-
-const acquisitionDefinitions: Array<{ channel: AcquisitionChannelName; filter: DimensionFilter }> = [
-  { channel: "Google Ads", filter: allOf(exactDimension("sessionSource", "google"), exactDimension("sessionMedium", "cpc")) },
-  {
-    channel: "NAVER 광고",
-    filter: anyOf(
-      allOf(exactDimension("sessionSource", "naver"), exactDimension("sessionMedium", "cpc")),
-      allOf(
-        anyOf(exactDimension("sessionSource", "ad.search.naver.com"), exactDimension("sessionSource", "m.ad.search.naver.com")),
-        exactDimension("sessionMedium", "referral"),
-      ),
-    ),
-  },
-  { channel: "NAVER 자연검색", filter: allOf(exactDimension("sessionSource", "naver"), exactDimension("sessionMedium", "organic")) },
-  {
-    channel: "NAVER",
-    filter: allOf(
-      anyOf(exactDimension("sessionSource", "m.search.naver.com"), exactDimension("sessionSource", "search.naver.com")),
-      exactDimension("sessionMedium", "referral"),
-    ),
-  },
-  { channel: "Google 검색", filter: allOf(exactDimension("sessionSource", "google"), exactDimension("sessionMedium", "organic")) },
-  { channel: "YouTube", filter: containsDimension("sessionSource", "youtube") },
-  { channel: "Direct", filter: allOf(exactDimension("sessionSource", "(direct)"), exactDimension("sessionMedium", "(none)")) },
+const acquisitionChannels: AcquisitionChannelName[] = [
+  "Google Ads", "NAVER 광고", "NAVER 자연검색", "NAVER", "Google 검색", "YouTube", "Direct", "기타",
 ];
 
-const knownAcquisitionFilter = anyOf(...acquisitionDefinitions.map((definition) => definition.filter));
-const allAcquisitionDefinitions = [
-  ...acquisitionDefinitions,
-  { channel: "기타" as const, filter: { notExpression: knownAcquisitionFilter } },
-];
+export function classifyAcquisitionChannel(source: string, medium: string): AcquisitionChannelName {
+  const normalizedSource = source.toLowerCase();
+  const normalizedMedium = medium.toLowerCase();
+  if (normalizedSource === "google" && normalizedMedium === "cpc") return "Google Ads";
+  if (normalizedSource === "naver" && normalizedMedium === "cpc") return "NAVER 광고";
+  if (["ad.search.naver.com", "m.ad.search.naver.com"].includes(normalizedSource) && normalizedMedium === "referral") return "NAVER 광고";
+  if (normalizedSource === "naver" && normalizedMedium === "organic") return "NAVER 자연검색";
+  if (["m.search.naver.com", "search.naver.com"].includes(normalizedSource) && normalizedMedium === "referral") return "NAVER";
+  if (normalizedSource === "google" && normalizedMedium === "organic") return "Google 검색";
+  if (normalizedSource.includes("youtube")) return "YouTube";
+  if (normalizedSource === "(direct)" && normalizedMedium === "(none)") return "Direct";
+  return "기타";
+}
 
 async function totals(range: DateRange) {
-  const leadNames = parseLeadEventNames();
   const [summary, leads] = await Promise.all([
     runReport({ dateRanges: [range], metrics: [{ name: "activeUsers" }, { name: "sessions" }, { name: "newUsers" }] }),
-    leadNames.length ? runReport({ dateRanges: [range], metrics: [{ name: "eventCount" }], dimensionFilter: eventFilter(leadNames) }) : Promise.resolve({ rows: [] }),
+    runReport({ dateRanges: [range], metrics: [{ name: "eventCount" }], dimensionFilter: eventFilter([ADMIN_LEAD_EVENT]) }),
   ]);
   return { users: metric(summary.rows?.[0], 0), sessions: metric(summary.rows?.[0], 1), newUsers: metric(summary.rows?.[0], 2), leads: metric(leads.rows?.[0], 0) };
 }
@@ -229,26 +208,22 @@ export async function getGa4Overview(range: DateRange) {
         newUsers: percentageChange(current.newUsers, previous.newUsers),
         leads: percentageChange(current.leads, previous.leads),
       },
-      leadEventNames: parseLeadEventNames(),
+      leadEventNames: [ADMIN_LEAD_EVENT],
     };
   });
 }
 
 export async function getGa4Conversions(range: DateRange) {
   return cached(`conversions:${range.startDate}:${range.endDate}`, range, async () => {
-    const names = parseLeadEventNames();
-    if (!names.length) {
-      return { source: "GA4" as const, range, conversions: 0, events: [] };
-    }
     const report = await runReport({
       dateRanges: [range],
       dimensions: [{ name: "eventName" }],
       metrics: [{ name: "eventCount" }],
-      dimensionFilter: eventFilter(names),
-      limit: names.length,
+      dimensionFilter: eventFilter([ADMIN_LEAD_EVENT]),
+      limit: 1,
     });
     const counts = new Map((report.rows || []).map((row) => [dimension(row, 0), metric(row, 0)]));
-    const events = names.map((eventName) => ({ eventName, eventCount: counts.get(eventName) || 0 }));
+    const events = [{ eventName: ADMIN_LEAD_EVENT, eventCount: counts.get(ADMIN_LEAD_EVENT) || 0 }];
     return { source: "GA4" as const, range, conversions: events.reduce((sum, event) => sum + event.eventCount, 0), events };
   });
 }
@@ -268,13 +243,11 @@ async function rows(range: DateRange, spec: ReportSpec) {
 }
 
 async function leadRows(range: DateRange, dimensions: string[]) {
-  const names = parseLeadEventNames();
-  if (!names.length) return [];
   const report = await runReport({
     dateRanges: [range],
     dimensions: dimensions.map((name) => ({ name })),
     metrics: [{ name: "eventCount" }],
-    dimensionFilter: eventFilter(names),
+    dimensionFilter: eventFilter([ADMIN_LEAD_EVENT]),
     limit: 250,
   });
   return (report.rows || []).map((row) => ({ key: dimensions.map((_, index) => dimension(row, index)).join("||"), leads: metric(row, 0) }));
@@ -282,51 +255,57 @@ async function leadRows(range: DateRange, dimensions: string[]) {
 
 export async function getGa4Acquisition(range: DateRange) {
   return cached(`acquisition:${range.startDate}:${range.endDate}`, range, async () => {
-    const [summary, detailRows, ...channelReports] = await Promise.all([
+    const [summary, detailRows, acquisitionLeadRows] = await Promise.all([
       runReport({ dateRanges: [range], metrics: [{ name: "activeUsers" }, { name: "sessions" }] }),
       rows(range, { dimensions: ["sessionSource", "sessionMedium"], metrics: ["sessions", "activeUsers"], limit: 250 }),
-      ...allAcquisitionDefinitions.map((definition) => runReport({
+      runReport({
         dateRanges: [range],
-        metrics: [{ name: "activeUsers" }, { name: "sessions" }],
-        dimensionFilter: definition.filter,
-      })),
+        dimensions: [{ name: "sessionSource" }, { name: "sessionMedium" }],
+        metrics: [{ name: "eventCount" }],
+        dimensionFilter: eventFilter([ADMIN_LEAD_EVENT]),
+        limit: 250,
+      }),
     ]);
     const totalUsers = metric(summary.rows?.[0], 0);
     const totalSessions = metric(summary.rows?.[0], 1);
-    const classify = (source: string, medium: string): AcquisitionChannelName => {
-      const normalizedSource = source.toLowerCase();
-      const normalizedMedium = medium.toLowerCase();
-      if (normalizedSource === "google" && normalizedMedium === "cpc") return "Google Ads";
-      if (normalizedSource === "naver" && normalizedMedium === "cpc") return "NAVER 광고";
-      if (["ad.search.naver.com", "m.ad.search.naver.com"].includes(normalizedSource) && normalizedMedium === "referral") return "NAVER 광고";
-      if (normalizedSource === "naver" && normalizedMedium === "organic") return "NAVER 자연검색";
-      if (["m.search.naver.com", "search.naver.com"].includes(normalizedSource) && normalizedMedium === "referral") return "NAVER";
-      if (normalizedSource === "google" && normalizedMedium === "organic") return "Google 검색";
-      if (normalizedSource.includes("youtube")) return "YouTube";
-      if (normalizedSource === "(direct)" && normalizedMedium === "(none)") return "Direct";
-      return "기타";
-    };
-    const channelMetrics = allAcquisitionDefinitions.map((definition, index) => ({
-      definition,
-      users: metric(channelReports[index]?.rows?.[0], 0),
-      sessions: metric(channelReports[index]?.rows?.[0], 1),
+    const leadMap = new Map((acquisitionLeadRows.rows || []).map((row) => [
+      `${dimension(row, 0)}||${dimension(row, 1)}`,
+      metric(row, 0),
+    ]));
+    const detailMap = new Map(detailRows.map((item) => {
+      const source = item.dimensions.sessionSource || "(not set)";
+      const medium = item.dimensions.sessionMedium || "(not set)";
+      return [`${source}||${medium}`, {
+        source,
+        medium,
+        sessions: item.metrics.sessions || 0,
+        users: item.metrics.activeUsers || 0,
+        leads: leadMap.get(`${source}||${medium}`) || 0,
+      }];
     }));
-    const attributedSessions = channelMetrics.reduce((sum, item) => sum + item.sessions, 0);
-    const channels: Ga4AcquisitionChannel[] = channelMetrics.map(({ definition, users, sessions }) => {
+    for (const row of acquisitionLeadRows.rows || []) {
+      const source = dimension(row, 0) || "(not set)";
+      const medium = dimension(row, 1) || "(not set)";
+      const key = `${source}||${medium}`;
+      if (!detailMap.has(key)) detailMap.set(key, { source, medium, sessions: 0, users: 0, leads: metric(row, 0) });
+    }
+    const allDetails = [...detailMap.values()];
+    const attributedSessions = detailRows.reduce((sum, item) => sum + (item.metrics.sessions || 0), 0);
+    const channels: Ga4AcquisitionChannel[] = acquisitionChannels.map((channel) => {
+      const details = allDetails
+        .filter((item) => classifyAcquisitionChannel(item.source, item.medium) === channel)
+        .sort((a, b) => b.sessions - a.sessions || b.leads - a.leads);
+      const users = details.reduce((sum, item) => sum + item.users, 0);
+      const sessions = details.reduce((sum, item) => sum + item.sessions, 0);
+      const leads = details.reduce((sum, item) => sum + item.leads, 0);
       return {
-        channel: definition.channel,
+        channel,
         users,
         sessions,
+        leads,
+        conversionRate: sessions ? (leads / sessions) * 100 : null,
         sessionShare: attributedSessions ? (sessions / attributedSessions) * 100 : 0,
-        details: detailRows
-          .filter((item) => classify(item.dimensions.sessionSource || "", item.dimensions.sessionMedium || "") === definition.channel)
-          .map((item) => ({
-            source: item.dimensions.sessionSource || "(not set)",
-            medium: item.dimensions.sessionMedium || "(not set)",
-            sessions: item.metrics.sessions || 0,
-            users: item.metrics.activeUsers || 0,
-          }))
-          .sort((a, b) => b.sessions - a.sessions),
+        details,
       };
     });
     return { source: "GA4" as const, basis: "session" as const, range, totalUsers, totalSessions, attributedSessions, channels };
