@@ -20,7 +20,6 @@ type AcquisitionChannel = {
 };
 type Acquisition = { basis: "session"; totalUsers: number; totalSessions: number; attributedSessions: number; channels: AcquisitionChannel[] };
 type Traffic = { trend: Row[]; channels: Row[]; sources: Row[]; pages: Row[]; devices: Row[]; regions: Row[]; acquisition: Acquisition };
-type Conversions = { conversions: number; events: Array<{ eventName: string; eventCount: number }> };
 type AdsCampaign = { id: string; name: string; status: string; channelType: string; cost: number; impressions: number; clicks: number; ctr: number; averageCpc: number; conversions: number };
 type Ads = {
   source: "Google Ads";
@@ -145,19 +144,6 @@ function TrendChart({ rows }: { rows: Row[] }) {
   );
 }
 
-function ConversionTable({ data }: { data: Conversions }) {
-  return (
-    <section className="admin-analytics-table-card">
-      <div className="admin-analytics-section-head"><h2>리드 이벤트</h2><span>합계 {number(data.conversions)}건</span></div>
-      <div className="admin-analytics-table-wrap">
-        <table><thead><tr><th>이벤트</th><th>집계</th></tr></thead>
-          <tbody>{data.events.map((event) => <tr key={event.eventName}><td>{event.eventName}</td><td>{number(event.eventCount)}</td></tr>)}</tbody>
-        </table>
-      </div>
-    </section>
-  );
-}
-
 function AdsCampaignTable({ data }: { data: Ads }) {
   return (
     <section className="admin-analytics-table-card">
@@ -177,7 +163,6 @@ export default function AnalyticsDashboard() {
   const [range, setRange] = useState(initial);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [traffic, setTraffic] = useState<Traffic | null>(null);
-  const [conversions, setConversions] = useState<Conversions | null>(null);
   const [ads, setAds] = useState<Ads | null>(null);
   const [adsError, setAdsError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -191,17 +176,15 @@ export default function AnalyticsDashboard() {
     Promise.all([
       fetch(`/api/admin/analytics/overview?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Overview>>),
       fetch(`/api/admin/analytics/traffic?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Traffic>>),
-      fetch(`/api/admin/analytics/conversions?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Conversions>>),
       fetch(`/api/admin/analytics/ads?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Ads>>),
-    ]).then(([overviewResult, trafficResult, conversionsResult, adsResult]) => {
+    ]).then(([overviewResult, trafficResult, adsResult]) => {
       if (!active) return;
       if (!overviewResult.ok) throw new Error(overviewResult.message);
       if (!trafficResult.ok) throw new Error(trafficResult.message);
-      if (!conversionsResult.ok) throw new Error(conversionsResult.message);
-      setOverview(overviewResult.data); setTraffic(trafficResult.data); setConversions(conversionsResult.data);
+      setOverview(overviewResult.data); setTraffic(trafficResult.data);
       if (adsResult.ok) setAds(adsResult.data);
       else { setAds(null); setAdsError(adsResult.message); }
-    }).catch((reason) => { if (active && reason?.name !== "AbortError") { setOverview(null); setTraffic(null); setConversions(null); setAds(null); setError(reason instanceof Error ? reason.message : "분석 데이터를 불러오지 못했습니다."); } }).finally(() => { if (active) setLoading(false); });
+    }).catch((reason) => { if (active && reason?.name !== "AbortError") { setOverview(null); setTraffic(null); setAds(null); setError(reason instanceof Error ? reason.message : "분석 데이터를 불러오지 못했습니다."); } }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; controller.abort(); };
   }, [range]);
 
@@ -219,7 +202,7 @@ export default function AnalyticsDashboard() {
 
       {loading && <div className="admin-analytics-loading" role="status">GA4 데이터를 불러오는 중입니다.</div>}
       {error && <section className="admin-analytics-connection" role="status"><strong>Google Analytics 연결이 필요합니다.</strong><p>{error}</p><a href="#analytics-setup">설정 방법 확인</a></section>}
-      {!loading && !error && overview && traffic && conversions && <>
+      {!loading && !error && overview && traffic && <>
         <section className="admin-analytics-kpis" aria-label="방문 핵심 지표">
           {kpis.map(([label, value, change]) => <article key={label}><span>{label}</span><strong>{number(value)}</strong><p className={change !== null && change > 0 ? "is-up" : change !== null && change < 0 ? "is-down" : ""}>{changeText(change)} <em>GA4</em></p></article>)}
           {ads ? <>
@@ -239,9 +222,6 @@ export default function AnalyticsDashboard() {
           <DataTable title="기기" rows={traffic.devices} columns={[{ label: "기기", value: (r) => r.dimensions.deviceCategory }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "세션", value: (r) => number(r.metrics.sessions || 0) }, { label: "문의 전환", value: (r) => number(r.conversions) }, { label: "전환율", value: (r) => percent(r.conversionRate) }]} />
         </div>
         <DataTable title="유입 소스 / 매체" rows={traffic.sources} columns={[{ label: "소스 / 매체", value: (r) => `${r.dimensions.sessionSource || "direct"} / ${r.dimensions.sessionMedium || "none"}` }, { label: "세션", value: (r) => number(r.metrics.sessions || 0) }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "문의 전환", value: (r) => number(r.conversions) }, { label: "전환율", value: (r) => percent(r.conversionRate) }]} />
-        <DataTable title="인기 페이지" rows={traffic.pages} columns={[{ label: "페이지", value: (r) => `${r.dimensions.pageTitle || "제목 없음"} · ${r.dimensions.pagePath}` }, { label: "조회수", value: (r) => number(r.metrics.screenPageViews || 0) }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "평균 참여시간", value: (r) => `${Math.round(r.metrics.averageSessionDuration || 0)}초` }, { label: "문의 전환", value: (r) => number(r.conversions) }]} />
-        <DataTable title="지역" rows={traffic.regions} columns={[{ label: "지역", value: (r) => [r.dimensions.region, r.dimensions.city].filter(Boolean).join(" · ") || "알 수 없음" }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "세션", value: (r) => number(r.metrics.sessions || 0) }, { label: "문의 전환", value: (r) => number(r.conversions) }]} />
-        <ConversionTable data={conversions} />
         {adsError && <section className="admin-analytics-connection" role="status"><strong>Google Ads 데이터를 불러오지 못했습니다.</strong><p>{adsError}</p></section>}
         {ads && <AdsCampaignTable data={ads} />}
       </>}
