@@ -2133,6 +2133,10 @@
   gap: 22px;
 }
 
+.admin-analytics-page > * {
+  min-width: 0;
+}
+
 .admin-analytics-controls {
   display: flex;
   flex-wrap: wrap;
