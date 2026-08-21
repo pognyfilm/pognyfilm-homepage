@@ -2131,6 +2131,7 @@
 .admin-analytics-page {
   display: grid;
   gap: 22px;
+  overflow-x: hidden;
 }
 
 .admin-analytics-page > * {
