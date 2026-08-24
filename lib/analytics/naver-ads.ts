@@ -24,12 +24,20 @@ type NaverStat = {
   salesAmt?: number | string;
 };
 
+type NaverStatsResponse = NaverStat[] | {
+  data: NaverStat[];
+  summary?: unknown;
+  compTm?: unknown;
+  cycleBaseTm?: unknown;
+};
+
 export type NaverAdsReport = {
   source: "NAVER Ads";
   range: DateRange;
   currencyCode: "KRW";
   timeZone: "Asia/Seoul";
   syncedAt: string;
+  dataStatus: "available" | "empty";
   summary: {
     cost: number;
     impressions: number;
@@ -88,8 +96,12 @@ async function request<T>(uri: string, searchParams?: URLSearchParams): Promise<
       code,
       transactionId: response.headers.get("x-transaction-id") || undefined,
     });
-    const status = response.status === 401 || response.status === 403 ? 502 : 503;
-    throw new AnalyticsError(`NAVER_ADS_API_${code}`, `NAVER 광고 API 조회에 실패했습니다. (${code})`, status);
+    const isAuthenticationError = response.status === 401 || response.status === 403;
+    const status = isAuthenticationError ? 502 : 503;
+    const message = isAuthenticationError
+      ? "NAVER 광고 API 연결을 확인해주세요."
+      : `NAVER 광고 API 조회에 실패했습니다. (${code})`;
+    throw new AnalyticsError(`NAVER_ADS_API_${code}`, message, status);
   }
   return data as T;
 }
@@ -104,6 +116,18 @@ const chunks = <T,>(items: T[], size: number) => {
   for (let index = 0; index < items.length; index += size) result.push(items.slice(index, index + size));
   return result;
 };
+
+export function parseNaverStatsResponse(response: unknown): NaverStat[] {
+  const rows = Array.isArray(response)
+    ? response
+    : response && typeof response === "object" && "data" in response && Array.isArray(response.data)
+      ? response.data
+      : null;
+  if (!rows || !rows.every((row) => row !== null && typeof row === "object" && !Array.isArray(row))) {
+    throw new AnalyticsError("NAVER_ADS_INVALID_STATS_RESPONSE", "NAVER 광고 데이터 형식을 확인해주세요.");
+  }
+  return rows as NaverStat[];
+}
 
 async function loadReport(range: DateRange): Promise<NaverAdsReport> {
   const campaigns = await request<NaverCampaign[]>("/ncc/campaigns");
@@ -123,10 +147,10 @@ async function loadReport(range: DateRange): Promise<NaverAdsReport> {
     for (const id of ids) params.append("ids", id);
     params.set("fields", JSON.stringify(STATS_FIELDS));
     params.set("timeRange", JSON.stringify({ since: range.startDate, until: range.endDate }));
-    return request<NaverStat[]>("/stats", params);
+    return request<NaverStatsResponse>("/stats", params);
   });
   const statGroups = await Promise.all(statRequests);
-  const stats = statGroups.flatMap((group) => Array.isArray(group) ? group : []);
+  const stats = statGroups.flatMap(parseNaverStatsResponse);
   const impressions = stats.reduce((sum, item) => sum + numeric(item.impCnt), 0);
   const clicks = stats.reduce((sum, item) => sum + numeric(item.clkCnt), 0);
   const cost = stats.reduce((sum, item) => sum + numeric(item.salesAmt), 0);
@@ -137,6 +161,7 @@ async function loadReport(range: DateRange): Promise<NaverAdsReport> {
     currencyCode: "KRW",
     timeZone: "Asia/Seoul",
     syncedAt: new Date().toISOString(),
+    dataStatus: stats.length ? "available" : "empty",
     summary: {
       cost,
       impressions,

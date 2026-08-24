@@ -36,7 +36,7 @@ async function run() {
     assert.deepEqual(JSON.parse(url.searchParams.get("timeRange") || "{}"), { since: "2026-08-18", until: "2026-08-24" });
     statsCalls += 1;
     return new Response(JSON.stringify(statsCalls === 1
-      ? [{ impCnt: 1000, clkCnt: 10, salesAmt: 12000 }, { impCnt: "500", clkCnt: "5", salesAmt: "6000" }]
+      ? { summary: {}, data: [{ impCnt: 1000, clkCnt: 10, salesAmt: 12000 }, { impCnt: "500", clkCnt: "5", salesAmt: "6000" }], compTm: "", cycleBaseTm: "" }
       : [{ impCnt: 200, clkCnt: 2, salesAmt: 3000 }]), { status: 200 });
   }) as typeof fetch;
 
@@ -44,6 +44,7 @@ async function run() {
   assert.equal(statsCalls, 2);
   assert.equal(report.currencyCode, "KRW");
   assert.equal(report.timeZone, "Asia/Seoul");
+  assert.equal(report.dataStatus, "available");
   assert.deepEqual(report.summary, {
     cost: 21000,
     impressions: 1700,
@@ -52,6 +53,13 @@ async function run() {
     averageCpc: 21000 / 17,
   });
 
+  assert.deepEqual(naverAds.parseNaverStatsResponse({ summary: {}, data: [] }), []);
+  assert.deepEqual(naverAds.parseNaverStatsResponse([{ impCnt: 0, clkCnt: 0, salesAmt: 0 }]), [{ impCnt: 0, clkCnt: 0, salesAmt: 0 }]);
+  assert.throws(
+    () => naverAds.parseNaverStatsResponse({ summary: {} }),
+    (error: unknown) => error instanceof Error && "code" in error && error.code === "NAVER_ADS_INVALID_STATS_RESPONSE",
+  );
+
   naverAds.resetNaverAdsStateForTests();
   process.env.NAVER_ADS_CUSTOMER_ID = "Customer ID: 123-456-7";
   globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
@@ -59,7 +67,37 @@ async function run() {
     const url = new URL(String(input));
     return new Response(JSON.stringify(url.pathname === "/ncc/campaigns" ? [] : []), { status: 200 });
   }) as typeof fetch;
-  await naverAds.getNaverAdsReport({ startDate: "2026-08-24", endDate: "2026-08-24" });
+  const emptyReport = await naverAds.getNaverAdsReport({ startDate: "2026-08-24", endDate: "2026-08-24" });
+  assert.equal(emptyReport.dataStatus, "empty");
+
+  naverAds.resetNaverAdsStateForTests();
+  globalThis.fetch = (async (input: string | URL | Request) => {
+    const url = new URL(String(input));
+    return new Response(JSON.stringify(url.pathname === "/ncc/campaigns"
+      ? [{ nccCampaignId: "cmp-zero", campaignTp: "WEB_SITE" }]
+      : { summary: {}, data: [{ impCnt: 0, clkCnt: 0, salesAmt: 0 }] }), { status: 200 });
+  }) as typeof fetch;
+  const zeroReport = await naverAds.getNaverAdsReport({ startDate: "2026-08-23", endDate: "2026-08-23" });
+  assert.equal(zeroReport.dataStatus, "available");
+  assert.deepEqual(zeroReport.summary, { cost: 0, impressions: 0, clicks: 0, ctr: 0, averageCpc: 0 });
+  assert.ok(Number.isFinite(zeroReport.summary.ctr));
+  assert.ok(Number.isFinite(zeroReport.summary.averageCpc));
+
+  naverAds.resetNaverAdsStateForTests();
+  globalThis.fetch = (async (input: string | URL | Request) => {
+    const url = new URL(String(input));
+    return new Response(JSON.stringify(url.pathname === "/ncc/campaigns"
+      ? [{ nccCampaignId: "cmp-invalid", campaignTp: "WEB_SITE" }]
+      : { summary: {} }), { status: 200 });
+  }) as typeof fetch;
+  await assert.rejects(
+    () => naverAds.getNaverAdsReport({ startDate: "2026-08-22", endDate: "2026-08-22" }),
+    (error: unknown) => error instanceof Error && "code" in error && error.code === "NAVER_ADS_INVALID_STATS_RESPONSE",
+  );
+
+  const cpl = (cost: number, leads: number) => leads ? cost / leads : null;
+  assert.equal(cpl(711673, 0), null);
+  assert.equal(cpl(711673, 2), 355836.5);
 
   naverAds.resetNaverAdsStateForTests();
   globalThis.fetch = (async () => new Response(JSON.stringify({ code: 1004, message: "authentication failed" }), { status: 403 })) as typeof fetch;

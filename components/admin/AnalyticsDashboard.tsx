@@ -33,6 +33,7 @@ type NaverAds = {
   currencyCode: "KRW";
   timeZone: "Asia/Seoul";
   syncedAt: string;
+  dataStatus: "available" | "empty";
   summary: { cost: number; impressions: number; clicks: number; ctr: number; averageCpc: number };
 };
 type ApiResult<T> = { ok: true; data: T } | { ok: false; code: string; message: string };
@@ -143,7 +144,7 @@ function PaidChannelPerformance({ acquisition, ads, adsError, naverAds, naverAds
           </dl>
         </article>
         <article>
-          <div><h3>NAVER 광고</h3><span>{naverAdsError || "NAVER 검색광고 API"}</span></div>
+          <div><h3>NAVER 광고</h3><span>{naverAdsError || (naverAds?.dataStatus === "empty" ? "선택 기간 데이터 없음" : "NAVER 검색광고 API")}</span></div>
           <dl>
             <div><dt>광고비</dt><dd>{naverAds ? currency(naverAds.summary.cost) : "—"}</dd></div>
             <div><dt>노출</dt><dd>{naverAds ? number(naverAds.summary.impressions) : "—"}</dd></div>
@@ -158,7 +159,7 @@ function PaidChannelPerformance({ acquisition, ads, adsError, naverAds, naverAds
           <p className="admin-paid-sync">{naverAds ? `최근 동기화 ${syncedTime(naverAds.syncedAt)}` : "동기화되지 않음"} · 네이버 광고 통계는 반영이 지연될 수 있습니다.</p>
         </article>
       </div>
-      <p>광고비·노출·클릭은 각 광고 API, 세션·문의는 GA4 generate_lead 기준입니다. 광고 클릭과 GA4 세션은 집계 기준이 달라 일치하지 않을 수 있습니다.</p>
+      <p>Google Ads 지표는 Google Ads API, NAVER 광고비·노출·클릭은 NAVER Search Ads API, 세션·문의는 GA4 generate_lead 기준입니다. 광고 클릭과 GA4 세션은 집계 기준이 달라 일치하지 않을 수 있습니다.</p>
     </section>
   );
 }
