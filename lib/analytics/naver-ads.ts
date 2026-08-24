@@ -43,16 +43,11 @@ const cache = new Map<string, { expires: number; value: NaverAdsReport }>();
 
 function config(): NaverAdsConfig {
   const rawCustomerId = process.env.NAVER_ADS_CUSTOMER_ID?.trim();
-  const customerId = rawCustomerId
-    ?.replace(/^(["'])(.*)\1$/, "$2")
-    .replace(/[\s-]/g, "");
+  const customerId = rawCustomerId?.replace(/\D/g, "");
   const accessLicense = process.env.NAVER_ADS_ACCESS_LICENSE?.trim();
   const secretKey = process.env.NAVER_ADS_SECRET_KEY?.trim();
   if (!customerId || !accessLicense || !secretKey) {
     throw new AnalyticsError("NAVER_ADS_NOT_CONFIGURED", "NAVER 광고 연결 설정을 확인해주세요.");
-  }
-  if (!/^\d+$/.test(customerId)) {
-    throw new AnalyticsError("NAVER_ADS_INVALID_CUSTOMER_ID", "NAVER 광고 고객 ID 형식을 확인해주세요.");
   }
   return { customerId, accessLicense, secretKey };
 }

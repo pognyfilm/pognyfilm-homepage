@@ -53,7 +53,7 @@ async function run() {
   });
 
   naverAds.resetNaverAdsStateForTests();
-  process.env.NAVER_ADS_CUSTOMER_ID = "123-456-7";
+  process.env.NAVER_ADS_CUSTOMER_ID = "Customer ID: 123-456-7";
   globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
     assert.equal(new Headers(init?.headers).get("x-customer"), "1234567");
     const url = new URL(String(input));
