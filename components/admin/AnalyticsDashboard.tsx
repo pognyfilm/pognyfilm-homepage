@@ -28,6 +28,13 @@ type Ads = {
   summary: { cost: number; impressions: number; clicks: number; ctr: number; averageCpc: number; conversions: number };
   campaigns: AdsCampaign[];
 };
+type NaverAds = {
+  source: "NAVER Ads";
+  currencyCode: "KRW";
+  timeZone: "Asia/Seoul";
+  syncedAt: string;
+  summary: { cost: number; impressions: number; clicks: number; ctr: number; averageCpc: number };
+};
 type ApiResult<T> = { ok: true; data: T } | { ok: false; code: string; message: string };
 type Preset = "today" | "yesterday" | "7d" | "30d" | "custom";
 
@@ -99,14 +106,21 @@ function AcquisitionTable({ data }: { data: Acquisition }) {
   );
 }
 
-function PaidChannelPerformance({ acquisition, ads, adsError }: { acquisition: Acquisition; ads: Ads | null; adsError: string | null }) {
+const syncedTime = (value: string) => new Intl.DateTimeFormat("ko-KR", {
+  timeZone: "Asia/Seoul", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false,
+}).format(new Date(value));
+
+function PaidChannelPerformance({ acquisition, ads, adsError, naverAds, naverAdsError }: {
+  acquisition: Acquisition;
+  ads: Ads | null;
+  adsError: string | null;
+  naverAds: NaverAds | null;
+  naverAdsError: string | null;
+}) {
   const google = acquisition.channels.find((item) => item.channel === "Google Ads");
   const naver = acquisition.channels.find((item) => item.channel === "NAVER 광고");
   const googleCpl = ads && google?.leads ? ads.summary.cost / google.leads : null;
-  const cards = [
-    { channel: "Google Ads", data: google, cost: ads ? currency(ads.summary.cost) : "—", cpl: googleCpl === null ? "—" : currency(googleCpl), costStatus: adsError || "Google Ads API" },
-    { channel: "NAVER 광고", data: naver, cost: "연동 준비 중", cpl: "—", costStatus: "NAVER 광고 API 미연동" },
-  ];
+  const naverCpl = naverAds && naver?.leads ? naverAds.summary.cost / naver.leads : null;
   return (
     <section className="admin-paid-performance" aria-labelledby="paid-performance-title">
       <div className="admin-analytics-section-head">
@@ -114,20 +128,37 @@ function PaidChannelPerformance({ acquisition, ads, adsError }: { acquisition: A
         <span>문의 · GA4 generate_lead</span>
       </div>
       <div className="admin-paid-performance-grid">
-        {cards.map((card) => (
-          <article key={card.channel}>
-            <div><h3>{card.channel}</h3><span>{card.costStatus}</span></div>
-            <dl>
-              <div><dt>광고비</dt><dd>{card.cost}</dd></div>
-              <div><dt>세션</dt><dd>{number(card.data?.sessions || 0)}</dd></div>
-              <div><dt>문의</dt><dd>{number(card.data?.leads || 0)}</dd></div>
-              <div><dt>전환율</dt><dd>{card.data?.conversionRate == null ? "—" : percent(card.data.conversionRate)}</dd></div>
-              <div><dt>CPL</dt><dd>{card.cpl}</dd></div>
-            </dl>
-          </article>
-        ))}
+        <article>
+          <div><h3>Google Ads</h3><span>{adsError || "Google Ads API"}</span></div>
+          <dl>
+            <div><dt>광고비</dt><dd>{ads ? currency(ads.summary.cost) : "—"}</dd></div>
+            <div><dt>노출</dt><dd>{ads ? number(ads.summary.impressions) : "—"}</dd></div>
+            <div><dt>클릭</dt><dd>{ads ? number(ads.summary.clicks) : "—"}</dd></div>
+            <div><dt>CTR</dt><dd>{ads ? ratioPercent(ads.summary.ctr) : "—"}</dd></div>
+            <div><dt>평균 CPC</dt><dd>{ads ? currency(ads.summary.averageCpc) : "—"}</dd></div>
+            <div><dt>세션</dt><dd>{number(google?.sessions || 0)}</dd></div>
+            <div><dt>문의</dt><dd>{number(google?.leads || 0)}</dd></div>
+            <div><dt>전환율</dt><dd>{google?.conversionRate == null ? "—" : percent(google.conversionRate)}</dd></div>
+            <div><dt>CPL</dt><dd>{googleCpl === null ? "—" : currency(googleCpl)}</dd></div>
+          </dl>
+        </article>
+        <article>
+          <div><h3>NAVER 광고</h3><span>{naverAdsError || "NAVER 검색광고 API"}</span></div>
+          <dl>
+            <div><dt>광고비</dt><dd>{naverAds ? currency(naverAds.summary.cost) : "—"}</dd></div>
+            <div><dt>노출</dt><dd>{naverAds ? number(naverAds.summary.impressions) : "—"}</dd></div>
+            <div><dt>클릭</dt><dd>{naverAds ? number(naverAds.summary.clicks) : "—"}</dd></div>
+            <div><dt>CTR</dt><dd>{naverAds ? ratioPercent(naverAds.summary.ctr) : "—"}</dd></div>
+            <div><dt>평균 CPC</dt><dd>{naverAds ? currency(naverAds.summary.averageCpc) : "—"}</dd></div>
+            <div><dt>세션</dt><dd>{number(naver?.sessions || 0)}</dd></div>
+            <div><dt>문의</dt><dd>{number(naver?.leads || 0)}</dd></div>
+            <div><dt>전환율</dt><dd>{naver?.conversionRate == null ? "—" : percent(naver.conversionRate)}</dd></div>
+            <div><dt>CPL</dt><dd>{naverCpl === null ? "—" : currency(naverCpl)}</dd></div>
+          </dl>
+          <p className="admin-paid-sync">{naverAds ? `최근 동기화 ${syncedTime(naverAds.syncedAt)}` : "동기화되지 않음"} · 네이버 광고 통계는 반영이 지연될 수 있습니다.</p>
+        </article>
       </div>
-      <p>광고비는 Google Ads API, 문의는 GA4 generate_lead 기준입니다. Google Ads 자체 전환수와 합산하지 않습니다.</p>
+      <p>광고비·노출·클릭은 각 광고 API, 세션·문의는 GA4 generate_lead 기준입니다. 광고 클릭과 GA4 세션은 집계 기준이 달라 일치하지 않을 수 있습니다.</p>
     </section>
   );
 }
@@ -165,26 +196,31 @@ export default function AnalyticsDashboard() {
   const [traffic, setTraffic] = useState<Traffic | null>(null);
   const [ads, setAds] = useState<Ads | null>(null);
   const [adsError, setAdsError] = useState<string | null>(null);
+  const [naverAds, setNaverAds] = useState<NaverAds | null>(null);
+  const [naverAdsError, setNaverAdsError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
     let active = true;
-    setLoading(true); setError(null); setAdsError(null);
+    setLoading(true); setError(null); setAdsError(null); setNaverAdsError(null);
     const query = new URLSearchParams(range).toString();
     Promise.all([
       fetch(`/api/admin/analytics/overview?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Overview>>),
       fetch(`/api/admin/analytics/traffic?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Traffic>>),
       fetch(`/api/admin/analytics/ads?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<Ads>>),
-    ]).then(([overviewResult, trafficResult, adsResult]) => {
+      fetch(`/api/admin/analytics/naver-ads?${query}`, { signal: controller.signal }).then((response) => response.json() as Promise<ApiResult<NaverAds>>),
+    ]).then(([overviewResult, trafficResult, adsResult, naverAdsResult]) => {
       if (!active) return;
       if (!overviewResult.ok) throw new Error(overviewResult.message);
       if (!trafficResult.ok) throw new Error(trafficResult.message);
       setOverview(overviewResult.data); setTraffic(trafficResult.data);
       if (adsResult.ok) setAds(adsResult.data);
       else { setAds(null); setAdsError(adsResult.message); }
-    }).catch((reason) => { if (active && reason?.name !== "AbortError") { setOverview(null); setTraffic(null); setAds(null); setError(reason instanceof Error ? reason.message : "분석 데이터를 불러오지 못했습니다."); } }).finally(() => { if (active) setLoading(false); });
+      if (naverAdsResult.ok) setNaverAds(naverAdsResult.data);
+      else { setNaverAds(null); setNaverAdsError(naverAdsResult.message); }
+    }).catch((reason) => { if (active && reason?.name !== "AbortError") { setOverview(null); setTraffic(null); setAds(null); setNaverAds(null); setError(reason instanceof Error ? reason.message : "분석 데이터를 불러오지 못했습니다."); } }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; controller.abort(); };
   }, [range]);
 
@@ -215,7 +251,7 @@ export default function AnalyticsDashboard() {
           </> : ["광고비", "광고 노출", "광고 클릭", "CTR", "평균 CPC", "광고 전환"].map((label) => <article className="is-pending" key={label}><span>{label}</span><strong>—</strong><p>{adsError || "Google Ads 조회 중"} <em>Google Ads</em></p></article>)}
         </section>
         <TrendChart rows={traffic.trend} />
-        <PaidChannelPerformance acquisition={traffic.acquisition} ads={ads} adsError={adsError} />
+        <PaidChannelPerformance acquisition={traffic.acquisition} ads={ads} adsError={adsError} naverAds={naverAds} naverAdsError={naverAdsError} />
         <AcquisitionTable data={traffic.acquisition} />
         <div className="admin-analytics-grid">
           <DataTable title="유입 채널" rows={traffic.channels} columns={[{ label: "채널", value: (r) => r.dimensions.sessionDefaultChannelGroup || "기타" }, { label: "사용자", value: (r) => number(r.metrics.activeUsers || 0) }, { label: "세션", value: (r) => number(r.metrics.sessions || 0) }, { label: "참여 세션", value: (r) => number(r.metrics.engagedSessions || 0) }, { label: "문의 전환", value: (r) => number(r.conversions) }, { label: "전환율", value: (r) => percent(r.conversionRate) }]} />
