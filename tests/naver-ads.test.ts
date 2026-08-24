@@ -53,6 +53,15 @@ async function run() {
   });
 
   naverAds.resetNaverAdsStateForTests();
+  process.env.NAVER_ADS_CUSTOMER_ID = "123-456-7";
+  globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
+    assert.equal(new Headers(init?.headers).get("x-customer"), "1234567");
+    const url = new URL(String(input));
+    return new Response(JSON.stringify(url.pathname === "/ncc/campaigns" ? [] : []), { status: 200 });
+  }) as typeof fetch;
+  await naverAds.getNaverAdsReport({ startDate: "2026-08-24", endDate: "2026-08-24" });
+
+  naverAds.resetNaverAdsStateForTests();
   globalThis.fetch = (async () => new Response(JSON.stringify({ code: 1004, message: "authentication failed" }), { status: 403 })) as typeof fetch;
   await assert.rejects(
     () => naverAds.getNaverAdsReport({ startDate: "2026-08-18", endDate: "2026-08-24" }),

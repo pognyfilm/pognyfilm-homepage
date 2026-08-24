@@ -42,7 +42,10 @@ export type NaverAdsReport = {
 const cache = new Map<string, { expires: number; value: NaverAdsReport }>();
 
 function config(): NaverAdsConfig {
-  const customerId = process.env.NAVER_ADS_CUSTOMER_ID?.trim();
+  const rawCustomerId = process.env.NAVER_ADS_CUSTOMER_ID?.trim();
+  const customerId = rawCustomerId
+    ?.replace(/^(["'])(.*)\1$/, "$2")
+    .replace(/[\s-]/g, "");
   const accessLicense = process.env.NAVER_ADS_ACCESS_LICENSE?.trim();
   const secretKey = process.env.NAVER_ADS_SECRET_KEY?.trim();
   if (!customerId || !accessLicense || !secretKey) {
