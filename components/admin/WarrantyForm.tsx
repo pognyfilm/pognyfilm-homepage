@@ -60,133 +60,155 @@ export default function WarrantyForm({
         <div className="admin-form-section-head">
           <div>
             <span className="admin-form-step">WARRANTY</span>
-            <h2>품질보증 정보</h2>
+            <h2>품질보증서 등록 정보</h2>
           </div>
-          <span>필수 항목을 모두 입력해주세요.</span>
+          <span>* 표시는 필수 입력 항목입니다.</span>
         </div>
 
-        <div className="admin-form-grid">
-          <label className="admin-field-full">
-            <span>품질보증번호</span>
-            <input
-              type="text"
-              value={initialItem?.warranty_number || "등록 완료 시 자동 생성"}
-              readOnly
-              aria-readonly="true"
-              className="admin-readonly-field"
-            />
-            <small>등록일 기준 PG-YYMMDDNN 형식으로 중복 없이 자동 생성됩니다.</small>
-          </label>
-          <label>
-            <span>고객명 *</span>
-            <input
-              name="customer_name"
-              type="text"
-              defaultValue={initialItem?.customer_name || ""}
-              maxLength={80}
-              autoComplete="name"
-              required
-            />
-          </label>
-          <label>
-            <span>연락처 *</span>
-            <input
-              name="phone"
-              type="tel"
-              defaultValue={initialItem?.phone || ""}
-              placeholder="010-0000-0000"
-              maxLength={20}
-              autoComplete="tel"
-              required
-            />
-          </label>
-          <label>
-            <span>시공지역 *</span>
-            <input
-              name="region"
-              type="text"
-              defaultValue={initialItem?.region || ""}
-              placeholder="예: 서울 강남구"
-              maxLength={100}
-              required
-            />
-          </label>
-          <label>
-            <span>시공장소 *</span>
-            <input
-              name="place"
-              type="text"
-              defaultValue={initialItem?.place || ""}
-              placeholder="예: 아파트 거실"
-              maxLength={150}
-              required
-            />
-          </label>
-          <label>
-            <span>시공일 *</span>
-            <input
-              name="installation_date"
-              type="date"
-              defaultValue={initialItem?.installation_date || ""}
-              required
-            />
-          </label>
-          <label>
-            <span>제품명 *</span>
-            <input
-              name="product_name"
-              type="text"
-              defaultValue={initialItem?.product_name || ""}
-              placeholder="예: PG-PRO"
-              maxLength={120}
-              required
-            />
-          </label>
-          <label>
-            <span>시공면적 (㎡)</span>
-            <input
-              name="installation_area"
-              type="number"
-              inputMode="decimal"
-              min="0.01"
-              max="99999"
-              step="0.01"
-              defaultValue={initialItem?.installation_area ?? ""}
-              placeholder="예: 28"
-            />
-            <small>숫자만 입력하면 보증서에 ㎡ 단위로 표시됩니다.</small>
-          </label>
-          <label>
-            <span>보증기간 *</span>
-            <input
-              name="warranty_period"
-              type="text"
-              defaultValue={initialItem?.warranty_period || ""}
-              placeholder="예: 시공일로부터 10년"
-              maxLength={80}
-              required
-            />
-          </label>
-          <label>
-            <span>시공담당자 *</span>
-            <input
-              name="installer"
-              type="text"
-              defaultValue={initialItem?.installer || ""}
-              maxLength={80}
-              required
-            />
-          </label>
-          <label className="admin-field-full">
-            <span>비고</span>
-            <textarea
-              name="notes"
-              defaultValue={initialItem?.notes || ""}
-              rows={6}
-              maxLength={5000}
-              placeholder="추가로 기록할 내용을 입력해주세요."
-            />
-          </label>
+        <div className="admin-warranty-auto-info">
+          <div>
+            <strong>자동 반영 정보</strong>
+            <span>품질보증번호, 시공사 정보, 발급일과 직인은 자동으로 품질보증서에 반영됩니다.</span>
+          </div>
+          <b>{initialItem?.warranty_number || "저장 시 자동 생성"}</b>
+        </div>
+
+        <div className="admin-warranty-form-groups">
+          <fieldset className="admin-warranty-form-group">
+            <legend>고객 정보</legend>
+            <div className="admin-form-grid">
+              <label>
+                <span>고객명 *</span>
+                <input
+                  name="customer_name"
+                  type="text"
+                  defaultValue={initialItem?.customer_name || ""}
+                  maxLength={80}
+                  autoComplete="name"
+                  required
+                />
+              </label>
+              <label>
+                <span>연락처 *</span>
+                <input
+                  name="phone"
+                  type="tel"
+                  defaultValue={initialItem?.phone || ""}
+                  placeholder="010-0000-0000"
+                  maxLength={20}
+                  autoComplete="tel"
+                  required
+                />
+              </label>
+              <label>
+                <span>시공지역 *</span>
+                <input
+                  name="region"
+                  type="text"
+                  defaultValue={initialItem?.region || ""}
+                  placeholder="예: 경기도 파주시, 서울 강남구"
+                  maxLength={100}
+                  required
+                />
+              </label>
+              <label>
+                <span>시공장소 *</span>
+                <input
+                  name="place"
+                  type="text"
+                  defaultValue={initialItem?.place || ""}
+                  placeholder="예: OO아파트 102동 1301호 거실/베란다"
+                  maxLength={150}
+                  required
+                />
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset className="admin-warranty-form-group">
+            <legend>시공 정보</legend>
+            <div className="admin-form-grid">
+              <label>
+                <span>시공일 *</span>
+                <input
+                  name="installation_date"
+                  type="date"
+                  defaultValue={initialItem?.installation_date || ""}
+                  required
+                />
+              </label>
+              <label>
+                <span>제품명 *</span>
+                <input
+                  name="product_name"
+                  type="text"
+                  defaultValue={initialItem?.product_name || ""}
+                  placeholder="예: PG PRO 1590"
+                  maxLength={120}
+                  required
+                />
+              </label>
+              <label>
+                <span>시공면적 (㎡)</span>
+                <input
+                  name="installation_area"
+                  type="number"
+                  inputMode="decimal"
+                  min="0.01"
+                  max="99999"
+                  step="0.01"
+                  defaultValue={initialItem?.installation_area ?? ""}
+                  placeholder="예: 28"
+                />
+                <small>숫자만 입력하면 보증서에 ㎡ 단위로 표시됩니다.</small>
+              </label>
+              <label>
+                <span>보증기간 *</span>
+                <input
+                  name="warranty_period"
+                  type="text"
+                  list="warranty-period-options"
+                  defaultValue={initialItem?.warranty_period || ""}
+                  placeholder="예: 7년, 10년"
+                  maxLength={80}
+                  required
+                />
+                <datalist id="warranty-period-options">
+                  <option value="7년" />
+                  <option value="10년" />
+                </datalist>
+                <small>추천값을 선택하거나 다른 보증기간을 직접 입력할 수 있습니다.</small>
+              </label>
+              <label>
+                <span>시공담당자 *</span>
+                <input
+                  name="installer"
+                  type="text"
+                  defaultValue={initialItem?.installer || ""}
+                  placeholder="예: 이성화"
+                  maxLength={80}
+                  required
+                />
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset className="admin-warranty-form-group">
+            <legend>추가 정보</legend>
+            <div className="admin-form-grid">
+              <label className="admin-field-full">
+                <span>내부 메모</span>
+                <textarea
+                  name="notes"
+                  defaultValue={initialItem?.notes || ""}
+                  rows={5}
+                  maxLength={5000}
+                  placeholder="관리자 확인용 메모를 입력해주세요."
+                />
+                <small>내부 관리용 정보이며 고객용 품질보증서에는 표시되지 않습니다.</small>
+              </label>
+            </div>
+          </fieldset>
         </div>
       </section>
 
