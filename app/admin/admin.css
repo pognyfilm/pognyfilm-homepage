@@ -1498,10 +1498,10 @@
     white-space: normal;
   }
 
-  .admin-warranty-table th:nth-child(1) { width: 13%; }
-  .admin-warranty-table th:nth-child(2) { width: 16%; }
-  .admin-warranty-table th:nth-child(3) { width: 24%; }
-  .admin-warranty-table th:nth-child(4) { width: 11%; }
+  .admin-warranty-table th:nth-child(1) { width: 15%; }
+  .admin-warranty-table th:nth-child(2) { width: 15%; }
+  .admin-warranty-table th:nth-child(3) { width: 21%; }
+  .admin-warranty-table th:nth-child(4) { width: 13%; }
   .admin-warranty-table th:nth-child(5) { width: 13%; }
   .admin-warranty-table th:nth-child(6) { width: 23%; }
 
