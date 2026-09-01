@@ -932,6 +932,14 @@
   text-decoration: none;
 }
 
+.admin-warranty-create-link {
+  min-width: 164px;
+  min-height: 68px;
+  padding: 0 32px;
+  border-radius: 12px;
+  font-size: 18px;
+}
+
 .admin-portfolio-panel,
 .admin-form-section {
   border: 1px solid #dfe6ee;
@@ -1556,19 +1564,19 @@
     white-space: normal;
   }
 
-  .admin-warranty-table th:nth-child(1) { width: 15%; }
+  .admin-warranty-table th:nth-child(1) { width: 14%; }
   .admin-warranty-table th:nth-child(2) { width: 15%; }
-  .admin-warranty-table th:nth-child(3) { width: 21%; }
-  .admin-warranty-table th:nth-child(4) { width: 13%; }
-  .admin-warranty-table th:nth-child(5) { width: 13%; }
-  .admin-warranty-table th:nth-child(6) { width: 23%; }
+  .admin-warranty-table th:nth-child(3) { width: 20%; }
+  .admin-warranty-table th:nth-child(4) { width: 12%; }
+  .admin-warranty-table th:nth-child(5) { width: 12%; }
+  .admin-warranty-table th:nth-child(6) { width: 27%; }
 
   .admin-warranty-table td:first-child {
     min-width: 0;
   }
 
   .admin-warranty-table td:last-child {
-    min-width: 220px;
+    min-width: 238px;
   }
 
   .admin-warranty-table .admin-row-actions {
@@ -1578,9 +1586,9 @@
 
   .admin-warranty-table .admin-row-actions a,
   .admin-warranty-table .admin-row-actions button {
-    padding-right: 8px;
-    padding-left: 8px;
-    font-size: 15px;
+    padding-right: 7px;
+    padding-left: 7px;
+    font-size: 12px;
   }
 }
 
@@ -1863,6 +1871,14 @@
   .admin-page-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .admin-warranty-create-link {
+    width: 100%;
+    min-width: 0;
+    min-height: 58px;
+    padding: 0 24px;
+    font-size: 18px;
   }
 
   .admin-metric-grid {

@@ -4,11 +4,18 @@ import { useEffect } from "react";
 import type { Warranty } from "../../lib/warranty/types";
 import WarrantyCertificate from "../warranty/WarrantyCertificate";
 
-export default function WarrantyPrintDocument({ item }: { item: Warranty }) {
+export default function WarrantyPrintDocument({
+  item,
+  autoPrint = true,
+}: {
+  item: Warranty;
+  autoPrint?: boolean;
+}) {
   useEffect(() => {
+    if (!autoPrint) return;
     const timer = window.setTimeout(() => window.print(), 450);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [autoPrint]);
 
   return (
     <section className="warranty-print-screen">

@@ -106,6 +106,13 @@ export default function WarrantyList({
                   <td data-label="관리">
                     <div className="admin-row-actions">
                       <Link
+                        href={`/admin/warranty/${item.id}/preview`}
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        미리보기
+                      </Link>
+                      <Link
                         href={`/admin/warranty/${item.id}/print`}
                         target="_blank"
                         rel="noopener"
