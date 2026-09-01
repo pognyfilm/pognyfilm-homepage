@@ -81,13 +81,10 @@ export default function WarrantyList({
             <thead>
               <tr>
                 <th>보증번호</th>
-                <th>고객명</th>
-                <th>연락처</th>
+                <th>고객명/연락처</th>
                 <th>시공지역·장소</th>
                 <th>시공일</th>
                 <th>제품명</th>
-                <th>보증기간</th>
-                <th>시공담당자</th>
                 <th>관리</th>
               </tr>
             </thead>
@@ -97,15 +94,15 @@ export default function WarrantyList({
                   <td data-label="보증번호">
                     <strong className="admin-warranty-number">{item.warranty_number}</strong>
                   </td>
-                  <td data-label="고객명"><strong>{item.customer_name}</strong></td>
-                  <td data-label="연락처">{item.phone}</td>
+                  <td data-label="고객명/연락처">
+                    <strong>{item.customer_name}</strong>
+                    <small className="admin-table-subline">{item.phone}</small>
+                  </td>
                   <td data-label="시공지역·장소">
                     {item.region}<small className="admin-table-subline">{item.place}</small>
                   </td>
                   <td data-label="시공일">{item.installation_date}</td>
                   <td data-label="제품명">{item.product_name}</td>
-                  <td data-label="보증기간">{item.warranty_period}</td>
-                  <td data-label="시공담당자">{item.installer}</td>
                   <td data-label="관리">
                     <div className="admin-row-actions">
                       <Link

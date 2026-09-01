@@ -1486,6 +1486,39 @@
   vertical-align: top;
 }
 
+@media (min-width: 768px) {
+  .admin-warranty-table {
+    table-layout: fixed;
+  }
+
+  .admin-warranty-table th,
+  .admin-warranty-table td {
+    padding-right: 10px;
+    padding-left: 10px;
+    white-space: normal;
+  }
+
+  .admin-warranty-table th:nth-child(1) { width: 13%; }
+  .admin-warranty-table th:nth-child(2) { width: 16%; }
+  .admin-warranty-table th:nth-child(3) { width: 24%; }
+  .admin-warranty-table th:nth-child(4) { width: 11%; }
+  .admin-warranty-table th:nth-child(5) { width: 13%; }
+  .admin-warranty-table th:nth-child(6) { width: 23%; }
+
+  .admin-warranty-table td:first-child {
+    min-width: 0;
+  }
+
+  .admin-warranty-table td:last-child {
+    min-width: 220px;
+  }
+
+  .admin-warranty-table .admin-row-actions {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+}
+
 .admin-form-actions .admin-pdf-link {
   border-color: #1769d8;
   color: #1769d8;
