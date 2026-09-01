@@ -35,6 +35,7 @@ export default function WarrantyForm({
       place: String(formData.get("place") || ""),
       installation_date: String(formData.get("installation_date") || ""),
       product_name: String(formData.get("product_name") || ""),
+      installation_area: String(formData.get("installation_area") || ""),
       warranty_period: String(formData.get("warranty_period") || ""),
       installer: String(formData.get("installer") || ""),
       notes: String(formData.get("notes") || ""),
@@ -140,6 +141,20 @@ export default function WarrantyForm({
               maxLength={120}
               required
             />
+          </label>
+          <label>
+            <span>시공면적 (㎡)</span>
+            <input
+              name="installation_area"
+              type="number"
+              inputMode="decimal"
+              min="0.01"
+              max="99999"
+              step="0.01"
+              defaultValue={initialItem?.installation_area ?? ""}
+              placeholder="예: 28"
+            />
+            <small>숫자만 입력하면 보증서에 ㎡ 단위로 표시됩니다.</small>
           </label>
           <label>
             <span>보증기간 *</span>

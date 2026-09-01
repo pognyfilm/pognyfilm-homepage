@@ -31,7 +31,7 @@ export default async function WarrantyDocumentPage({
   const { data, error } = await supabase
     .from("warranties")
     .select(
-      "id,warranty_number,customer_name,phone,region,place,installation_date,product_name,warranty_period,installer,notes,created_at,updated_at,created_by,updated_by",
+      "id,warranty_number,customer_name,phone,region,place,installation_date,product_name,installation_area,warranty_period,installer,notes,created_at,updated_at,created_by,updated_by",
     )
     .eq("id", payload.warrantyId)
     .maybeSingle();
