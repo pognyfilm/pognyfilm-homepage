@@ -1517,6 +1517,13 @@
     flex-wrap: nowrap;
     white-space: nowrap;
   }
+
+  .admin-warranty-table .admin-row-actions a,
+  .admin-warranty-table .admin-row-actions button {
+    padding-right: 8px;
+    padding-left: 8px;
+    font-size: 15px;
+  }
 }
 
 .admin-form-actions .admin-pdf-link {
