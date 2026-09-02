@@ -6,6 +6,7 @@ export type Warranty = {
   region: string;
   place: string;
   installation_date: string;
+  issued_date: string | null;
   product_name: string;
   installation_area: number | null;
   warranty_period: string;
@@ -24,6 +25,7 @@ export type WarrantySaveInput = {
   region: string;
   place: string;
   installation_date: string;
+  issued_date: string;
   product_name: string;
   installation_area: string;
   warranty_period: string;

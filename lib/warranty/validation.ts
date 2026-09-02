@@ -21,6 +21,9 @@ export function validateWarrantyInput(input: WarrantySaveInput) {
   if (!DATE_PATTERN.test(input.installation_date)) {
     throw new Error("시공일을 정확히 입력해주세요.");
   }
+  if (!DATE_PATTERN.test(input.issued_date)) {
+    throw new Error("발급일을 정확히 입력해주세요.");
+  }
   const installationAreaText = input.installation_area.trim();
   const installationArea = installationAreaText
     ? Number(installationAreaText)
@@ -39,6 +42,7 @@ export function validateWarrantyInput(input: WarrantySaveInput) {
     region: text(input.region, "시공지역", 100),
     place: text(input.place, "시공장소", 150),
     installation_date: input.installation_date,
+    issued_date: input.issued_date,
     product_name: text(input.product_name, "제품명", 120),
     installation_area: installationArea,
     warranty_period: text(input.warranty_period, "보증기간", 80),

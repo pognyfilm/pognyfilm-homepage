@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Warranty, WarrantySaveInput } from "../../lib/warranty/types";
 import { saveWarrantyAction } from "../../app/admin/(protected)/warranty/actions";
+import AdminDatePicker, { getTodayInKorea } from "./AdminDatePicker";
 
 export default function WarrantyForm({
   mode,
@@ -34,6 +35,7 @@ export default function WarrantyForm({
       region: String(formData.get("region") || ""),
       place: String(formData.get("place") || ""),
       installation_date: String(formData.get("installation_date") || ""),
+      issued_date: String(formData.get("issued_date") || ""),
       product_name: String(formData.get("product_name") || ""),
       installation_area: String(formData.get("installation_area") || ""),
       warranty_period: String(formData.get("warranty_period") || ""),
@@ -68,7 +70,7 @@ export default function WarrantyForm({
         <div className="admin-warranty-auto-info">
           <div>
             <strong>자동 반영 정보</strong>
-            <span>품질보증번호, 시공사 정보, 발급일과 직인은 자동으로 품질보증서에 반영됩니다.</span>
+            <span>품질보증번호, 시공사 정보와 직인은 자동으로 품질보증서에 반영됩니다.</span>
           </div>
           <b>{initialItem?.warranty_number || "저장 시 자동 생성"}</b>
         </div>
@@ -128,15 +130,18 @@ export default function WarrantyForm({
           <fieldset className="admin-warranty-form-group">
             <legend>시공 정보</legend>
             <div className="admin-form-grid">
-              <label>
-                <span>시공일 *</span>
-                <input
-                  name="installation_date"
-                  type="date"
-                  defaultValue={initialItem?.installation_date || ""}
-                  required
-                />
-              </label>
+              <AdminDatePicker
+                name="installation_date"
+                label="시공일"
+                defaultValue={initialItem?.installation_date || ""}
+                required
+              />
+              <AdminDatePicker
+                name="issued_date"
+                label="발급일"
+                defaultValue={initialItem?.issued_date || getTodayInKorea()}
+                required
+              />
               <label>
                 <span>제품명 *</span>
                 <input
