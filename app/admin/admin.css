@@ -932,7 +932,7 @@
   text-decoration: none;
 }
 
-.admin-warranty-create-link {
+.admin-primary-link.admin-warranty-create-link {
   width: 132px;
   min-width: 132px;
   min-height: 56px;
@@ -943,7 +943,7 @@
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
-.admin-warranty-create-link:hover {
+.admin-primary-link.admin-warranty-create-link:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 26px rgba(23, 105, 216, 0.24);
 }
@@ -1885,7 +1885,7 @@
     flex-direction: column;
   }
 
-  .admin-warranty-create-link {
+  .admin-primary-link.admin-warranty-create-link {
     width: 150px;
     min-width: 150px;
     min-height: 52px;
