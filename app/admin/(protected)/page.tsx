@@ -134,9 +134,7 @@ export default async function AdminDashboardPage() {
           <h2 id="quick-actions-title">빠른 작업</h2>
         </div>
         <Link className="admin-quick-link" href="/admin/portfolio/new">포트폴리오 등록</Link>
-        <button type="button" disabled title="다음 단계에서 제공됩니다.">
-          품질보증서 등록
-        </button>
+        <Link className="admin-quick-link" href="/admin/warranty/new">품질보증서 등록</Link>
       </section>
     </>
   );
