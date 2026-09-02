@@ -78,7 +78,6 @@ export default function WarrantyLookupClient() {
         ["시공 주소", result.installationAddress],
         ["시공 제품", result.productName],
         ["보증기간", result.warrantyPeriod],
-        ["시공 담당자", result.installerName],
         ["보증 상태", result.status],
       ]
     : [];

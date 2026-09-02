@@ -39,7 +39,7 @@ export default function WarrantyForm({
       product_name: String(formData.get("product_name") || ""),
       installation_area: String(formData.get("installation_area") || ""),
       warranty_period: String(formData.get("warranty_period") || ""),
-      installer: String(formData.get("installer") || ""),
+      installer: initialItem?.installer || "포그니필름 본사 직영팀",
       notes: String(formData.get("notes") || ""),
     };
 
@@ -183,17 +183,6 @@ export default function WarrantyForm({
                   <option value="10년" />
                 </datalist>
                 <small>추천값을 선택하거나 다른 보증기간을 직접 입력할 수 있습니다.</small>
-              </label>
-              <label>
-                <span>시공담당자 *</span>
-                <input
-                  name="installer"
-                  type="text"
-                  defaultValue={initialItem?.installer || ""}
-                  placeholder="예: 이성화"
-                  maxLength={80}
-                  required
-                />
               </label>
             </div>
           </fieldset>
