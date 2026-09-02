@@ -16,6 +16,17 @@ const formatArea = (value: number | null) =>
     ? "—"
     : `${new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 2 }).format(value)}㎡`;
 
+const formatPhone = (value: string) => {
+  const digits = value.replace(/\D/g, "");
+  if (digits.length === 11) {
+    return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+  }
+  if (digits.length === 10) {
+    return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+  }
+  return value;
+};
+
 export default function WarrantyCertificate({
   item,
   isPublic = false,
@@ -48,7 +59,7 @@ export default function WarrantyCertificate({
           <div className={styles.partyLabel}><strong>고 객</strong><span aria-hidden="true">◇</span></div>
           <dl>
             <div><dt>성명</dt><dd>{isPublic ? maskCustomerName(item.customer_name) : item.customer_name}</dd></div>
-            <div><dt>전화번호</dt><dd>{isPublic ? "비공개" : item.phone}</dd></div>
+            <div><dt>전화번호</dt><dd>{isPublic ? "비공개" : formatPhone(item.phone)}</dd></div>
             <div><dt>시공지역</dt><dd>{item.region}</dd></div>
             <div><dt>시공장소</dt><dd>{item.place}</dd></div>
           </dl>
