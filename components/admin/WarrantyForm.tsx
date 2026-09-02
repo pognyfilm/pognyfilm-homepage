@@ -24,6 +24,9 @@ export default function WarrantyForm({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
+  const [phoneValue, setPhoneValue] = useState(() =>
+    formatMobilePhone(initialItem?.phone || ""),
+  );
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -103,13 +106,11 @@ export default function WarrantyForm({
                   name="phone"
                   type="tel"
                   inputMode="numeric"
-                  defaultValue={formatMobilePhone(initialItem?.phone || "")}
+                  value={phoneValue}
                   placeholder="010-0000-0000"
                   maxLength={13}
                   autoComplete="tel"
-                  onInput={(event) => {
-                    event.currentTarget.value = formatMobilePhone(event.currentTarget.value);
-                  }}
+                  onChange={(event) => setPhoneValue(formatMobilePhone(event.target.value))}
                   required
                 />
               </label>
