@@ -35,7 +35,7 @@ export default function WarrantyForm({
       region: String(formData.get("region") || ""),
       place: String(formData.get("place") || ""),
       installation_date: String(formData.get("installation_date") || ""),
-      issued_date: String(formData.get("issued_date") || ""),
+      issued_date: initialItem?.issued_date || getTodayInKorea(),
       product_name: String(formData.get("product_name") || ""),
       installation_area: String(formData.get("installation_area") || ""),
       warranty_period: String(formData.get("warranty_period") || ""),
@@ -134,12 +134,6 @@ export default function WarrantyForm({
                 name="installation_date"
                 label="시공일"
                 defaultValue={initialItem?.installation_date || ""}
-                required
-              />
-              <AdminDatePicker
-                name="issued_date"
-                label="발급일"
-                defaultValue={initialItem?.issued_date || getTodayInKorea()}
                 required
               />
               <label>

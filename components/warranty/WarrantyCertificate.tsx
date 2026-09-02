@@ -1,7 +1,6 @@
 import type { Warranty } from "../../lib/warranty/types";
 import { maskCustomerName } from "../../lib/warranty/client-mask";
 import { POGNY_COMPANY, WARRANTY_NOTICES } from "../../lib/warranty/certificate";
-import { getWarrantyIssuedDateValue } from "../../lib/warranty/date";
 import styles from "./WarrantyCertificate.module.css";
 
 const formatDate = (value: string) =>
@@ -66,7 +65,6 @@ export default function WarrantyCertificate({
           <div><dt>보증기간</dt><dd>{item.warranty_period}</dd></div>
           <div><dt>제품명</dt><dd>{item.product_name}</dd></div>
           <div><dt>시공면적</dt><dd>{formatArea(item.installation_area)}</dd></div>
-          <div><dt>발급일</dt><dd>{formatDate(getWarrantyIssuedDateValue(item.issued_date, item.created_at))}</dd></div>
         </dl>
 
         <section className={styles.notice}>
