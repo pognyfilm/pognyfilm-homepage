@@ -172,7 +172,7 @@
 .admin-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-columns: 290px minmax(0, 1fr);
 }
 
 .admin-sidebar {
@@ -226,6 +226,10 @@
   font-size: 14px;
   font-weight: 750;
   text-decoration: none;
+}
+
+.admin-sidebar nav > * {
+  white-space: nowrap;
 }
 
 .admin-sidebar nav > *.is-active,
