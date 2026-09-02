@@ -933,11 +933,23 @@
 }
 
 .admin-warranty-create-link {
-  min-width: 164px;
-  min-height: 68px;
-  padding: 0 32px;
-  border-radius: 12px;
-  font-size: 18px;
+  width: 132px;
+  min-width: 132px;
+  min-height: 56px;
+  padding: 0 22px;
+  border-radius: 11px;
+  font-size: 19px;
+  box-shadow: 0 9px 22px rgba(23, 105, 216, 0.18);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.admin-warranty-create-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(23, 105, 216, 0.24);
+}
+
+.admin-warranty-page-heading {
+  align-items: center;
 }
 
 .admin-portfolio-panel,
@@ -1874,11 +1886,30 @@
   }
 
   .admin-warranty-create-link {
-    width: 100%;
-    min-width: 0;
-    min-height: 58px;
-    padding: 0 24px;
+    width: 150px;
+    min-width: 150px;
+    min-height: 52px;
+    padding: 0 20px;
+    border-radius: 10px;
     font-size: 18px;
+  }
+
+  .admin-warranty-page-heading {
+    min-height: 0;
+  }
+
+  .admin-warranty-table .admin-row-actions {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .admin-warranty-table .admin-row-actions a,
+  .admin-warranty-table .admin-row-actions button {
+    width: 100%;
+    justify-content: center;
+    white-space: nowrap;
   }
 
   .admin-metric-grid {

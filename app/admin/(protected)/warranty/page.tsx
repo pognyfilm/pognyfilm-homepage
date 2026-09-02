@@ -10,7 +10,7 @@ export default async function AdminWarrantyPage() {
 
   return (
     <>
-      <div className="admin-page-heading">
+      <div className="admin-page-heading admin-warranty-page-heading">
         <div><p>WARRANTY</p><h1>품질보증서</h1></div>
         <Link
           className="admin-primary-link admin-warranty-create-link"
