@@ -7,6 +7,13 @@ import type { Warranty, WarrantySaveInput } from "../../lib/warranty/types";
 import { saveWarrantyAction } from "../../app/admin/(protected)/warranty/actions";
 import AdminDatePicker, { getTodayInKorea } from "./AdminDatePicker";
 
+const formatMobilePhone = (value: string) => {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+};
+
 export default function WarrantyForm({
   mode,
   initialItem,
@@ -95,10 +102,14 @@ export default function WarrantyForm({
                 <input
                   name="phone"
                   type="tel"
-                  defaultValue={initialItem?.phone || ""}
+                  inputMode="numeric"
+                  defaultValue={formatMobilePhone(initialItem?.phone || "")}
                   placeholder="010-0000-0000"
-                  maxLength={20}
+                  maxLength={13}
                   autoComplete="tel"
+                  onInput={(event) => {
+                    event.currentTarget.value = formatMobilePhone(event.currentTarget.value);
+                  }}
                   required
                 />
               </label>
