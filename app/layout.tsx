@@ -82,9 +82,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             })(window, document, "clarity", "script", "${CLARITY_PROJECT_ID}");
           `}
         </Script>
-        <Script id="smartlog-config" strategy="beforeInteractive">
-          {`window.hpt_info={_account:"${SMARTLOG_ACCOUNT}",_server:"${SMARTLOG_SERVER}"};`}
-        </Script>
+        <script
+          id="smartlog-config"
+          dangerouslySetInnerHTML={{
+            __html: `window.hpt_info={_account:"${SMARTLOG_ACCOUNT}",_server:"${SMARTLOG_SERVER}"};`,
+          }}
+        />
         <Script
           id="smartlog-core"
           src="https://cdn.smlog.co.kr/core/smart.js"
