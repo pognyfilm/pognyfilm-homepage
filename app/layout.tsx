@@ -5,6 +5,8 @@ import "./globals.css";
 
 const GTM_CONTAINER_ID = "GTM-WQ6VN9VQ";
 const CLARITY_PROJECT_ID = "xsrswb4u08";
+const SMARTLOG_ACCOUNT = "UHPT-78623";
+const SMARTLOG_SERVER = "a78";
 const siteTitle = "단열필름 전문 브랜드 | 포그니필름";
 const siteDescription =
   "NSN 스퍼터링 기술로 검증된 열차단 성능, 측정 장비를 통한 실시간 현장 확인, 정품 품질보증서 발급 및 공식 홈페이지 조회 서비스, 본사 직영 시공팀의 무제한 책임 시공제를 제공합니다.";
@@ -80,6 +82,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             })(window, document, "clarity", "script", "${CLARITY_PROJECT_ID}");
           `}
         </Script>
+        <Script id="smartlog-config" strategy="beforeInteractive">
+          {`window.hpt_info={_account:"${SMARTLOG_ACCOUNT}",_server:"${SMARTLOG_SERVER}"};`}
+        </Script>
+        <Script
+          id="smartlog-core"
+          src="https://cdn.smlog.co.kr/core/smart.js"
+          strategy="beforeInteractive"
+          charSet="utf-8"
+        />
       </head>
       <body>
         <noscript>
@@ -89,6 +100,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             width="0"
             style={{ display: "none", visibility: "hidden" }}
             title="Google Tag Manager"
+          />
+        </noscript>
+        <noscript>
+          <img
+            src="https://a78.smlog.co.kr/smart_bda.php?_account=78623"
+            alt=""
+            width={0}
+            height={0}
+            style={{ display: "none", width: 0, height: 0 }}
           />
         </noscript>
         <GoogleTagManagerEvents />
